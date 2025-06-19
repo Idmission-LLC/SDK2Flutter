@@ -201,7 +201,7 @@ class _MyAppState extends State<MyApp> {
                 children: <Widget>[
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlue,
+                      backgroundColor: Colors.lightBlue,
                       padding: EdgeInsets.all(10),
                       textStyle: TextStyle(fontSize: 14),
                     ),
@@ -215,7 +215,7 @@ class _MyAppState extends State<MyApp> {
                 children: <Widget>[
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlue,
+                      backgroundColor: Colors.lightBlue,
                       padding: EdgeInsets.all(10),
                       textStyle: TextStyle(fontSize: 14),
                     ),
@@ -229,7 +229,7 @@ class _MyAppState extends State<MyApp> {
                 children: <Widget>[
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlue,
+                      backgroundColor: Colors.lightBlue,
                       padding: EdgeInsets.all(10),
                       textStyle: TextStyle(fontSize: 14),
                     ),
@@ -243,7 +243,7 @@ class _MyAppState extends State<MyApp> {
                 children: <Widget>[
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlue,
+                      backgroundColor: Colors.lightBlue,
                       padding: EdgeInsets.all(10),
                       textStyle: TextStyle(fontSize: 14),
                     ),
@@ -257,7 +257,7 @@ class _MyAppState extends State<MyApp> {
                 children: <Widget>[
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlue,
+                      backgroundColor: Colors.lightBlue,
                       padding: EdgeInsets.all(10),
                       textStyle: TextStyle(fontSize: 14),
                     ),
@@ -271,7 +271,7 @@ class _MyAppState extends State<MyApp> {
                 children: <Widget>[
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlue,
+                      backgroundColor: Colors.lightBlue,
                       padding: EdgeInsets.all(10),
                       textStyle: TextStyle(fontSize: 14),
                     ),
@@ -285,7 +285,7 @@ class _MyAppState extends State<MyApp> {
                 children: <Widget>[
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlue,
+                      backgroundColor: Colors.lightBlue,
                       padding: EdgeInsets.all(10),
                       textStyle: TextStyle(fontSize: 14),
                     ),
@@ -299,7 +299,7 @@ class _MyAppState extends State<MyApp> {
                 children: <Widget>[
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlue,
+                      backgroundColor: Colors.lightBlue,
                       padding: EdgeInsets.all(10),
                       textStyle: TextStyle(fontSize: 14),
                     ),
@@ -313,7 +313,7 @@ class _MyAppState extends State<MyApp> {
                 children: <Widget>[
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlue,
+                      backgroundColor: Colors.lightBlue,
                       padding: EdgeInsets.all(10),
                       textStyle: TextStyle(fontSize: 14),
                     ),
