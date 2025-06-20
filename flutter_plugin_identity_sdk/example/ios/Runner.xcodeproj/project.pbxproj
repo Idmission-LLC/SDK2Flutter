@@ -7,29 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0244CC9394EA99FCF9A1B38B /* libPods-RunnerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 111338C21DF420449EC5A38F /* libPods-RunnerTests.a */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
-		24F9C7052E03426E0025A599 /* FingerPrintCapture_Swift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6F72E0342660025A599 /* FingerPrintCapture_Swift.xcframework */; };
-		24F9C7062E03426E0025A599 /* FingerPrintCapture_Swift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6F72E0342660025A599 /* FingerPrintCapture_Swift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		24F9C7072E03426F0025A599 /* IDCapture_Swift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6F82E0342660025A599 /* IDCapture_Swift.xcframework */; };
-		24F9C7082E03426F0025A599 /* IDCapture_Swift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6F82E0342660025A599 /* IDCapture_Swift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		24F9C7092E0342700025A599 /* IDentityModels.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6F92E0342660025A599 /* IDentityModels.xcframework */; };
-		24F9C70A2E0342700025A599 /* IDentityModels.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6F92E0342660025A599 /* IDentityModels.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		24F9C70B2E0342720025A599 /* IDentitySDK_Swift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6FA2E0342660025A599 /* IDentitySDK_Swift.xcframework */; };
-		24F9C70C2E0342720025A599 /* IDentitySDK_Swift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6FA2E0342660025A599 /* IDentitySDK_Swift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		24F9C70D2E0342730025A599 /* SelfieCapture_Swift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6FB2E0342660025A599 /* SelfieCapture_Swift.xcframework */; };
-		24F9C70E2E0342730025A599 /* SelfieCapture_Swift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6FB2E0342660025A599 /* SelfieCapture_Swift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		24F9C70F2E0342750025A599 /* SignatureCapture_Swift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6FC2E0342660025A599 /* SignatureCapture_Swift.xcframework */; };
-		24F9C7102E0342750025A599 /* SignatureCapture_Swift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6FC2E0342660025A599 /* SignatureCapture_Swift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		24F9C7112E0342760025A599 /* VoiceCapture_Swift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6FD2E0342660025A599 /* VoiceCapture_Swift.xcframework */; };
-		24F9C7122E0342760025A599 /* VoiceCapture_Swift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24F9C6FD2E0342660025A599 /* VoiceCapture_Swift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		24A864872E0525130051ADBD /* FingerPrintCapture_Swift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A864792E05250F0051ADBD /* FingerPrintCapture_Swift.xcframework */; };
+		24A864882E0525130051ADBD /* FingerPrintCapture_Swift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A864792E05250F0051ADBD /* FingerPrintCapture_Swift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		24A864892E0525140051ADBD /* IDCapture_Swift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A8647A2E05250F0051ADBD /* IDCapture_Swift.xcframework */; };
+		24A8648A2E0525140051ADBD /* IDCapture_Swift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A8647A2E05250F0051ADBD /* IDCapture_Swift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		24A8648B2E0525150051ADBD /* IDentityModels.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A8647B2E05250F0051ADBD /* IDentityModels.xcframework */; };
+		24A8648C2E0525150051ADBD /* IDentityModels.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A8647B2E05250F0051ADBD /* IDentityModels.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		24A8648D2E0525160051ADBD /* IDentitySDK_Swift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A8647C2E05250F0051ADBD /* IDentitySDK_Swift.xcframework */; };
+		24A8648E2E0525160051ADBD /* IDentitySDK_Swift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A8647C2E05250F0051ADBD /* IDentitySDK_Swift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		24A8648F2E0525180051ADBD /* SelfieCapture_Swift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A8647D2E05250F0051ADBD /* SelfieCapture_Swift.xcframework */; };
+		24A864902E0525180051ADBD /* SelfieCapture_Swift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A8647D2E05250F0051ADBD /* SelfieCapture_Swift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		24A864912E0525190051ADBD /* SignatureCapture_Swift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A8647E2E05250F0051ADBD /* SignatureCapture_Swift.xcframework */; };
+		24A864922E0525190051ADBD /* SignatureCapture_Swift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A8647E2E05250F0051ADBD /* SignatureCapture_Swift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		24A864932E05251B0051ADBD /* VoiceCapture_Swift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A8647F2E05250F0051ADBD /* VoiceCapture_Swift.xcframework */; };
+		24A864942E05251B0051ADBD /* VoiceCapture_Swift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A8647F2E05250F0051ADBD /* VoiceCapture_Swift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
-		445976E62694A8541931DF9F /* libPods-RunnerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FF1124AECFD5EF8D703C871 /* libPods-RunnerTests.a */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		9A6E8614FF64290C16FFAFB3 /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF390F37EB6CDFEC700D7862 /* libPods-Runner.a */; };
+		E750330D65BC1C9DFBD7EB2B /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E098FFDBCE2654ABC4FD1B15 /* libPods-Runner.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,13 +49,13 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				24F9C70E2E0342730025A599 /* SelfieCapture_Swift.xcframework in Embed Frameworks */,
-				24F9C7102E0342750025A599 /* SignatureCapture_Swift.xcframework in Embed Frameworks */,
-				24F9C7122E0342760025A599 /* VoiceCapture_Swift.xcframework in Embed Frameworks */,
-				24F9C70C2E0342720025A599 /* IDentitySDK_Swift.xcframework in Embed Frameworks */,
-				24F9C7062E03426E0025A599 /* FingerPrintCapture_Swift.xcframework in Embed Frameworks */,
-				24F9C70A2E0342700025A599 /* IDentityModels.xcframework in Embed Frameworks */,
-				24F9C7082E03426F0025A599 /* IDCapture_Swift.xcframework in Embed Frameworks */,
+				24A864902E0525180051ADBD /* SelfieCapture_Swift.xcframework in Embed Frameworks */,
+				24A864922E0525190051ADBD /* SignatureCapture_Swift.xcframework in Embed Frameworks */,
+				24A864942E05251B0051ADBD /* VoiceCapture_Swift.xcframework in Embed Frameworks */,
+				24A8648E2E0525160051ADBD /* IDentitySDK_Swift.xcframework in Embed Frameworks */,
+				24A864882E0525130051ADBD /* FingerPrintCapture_Swift.xcframework in Embed Frameworks */,
+				24A8648C2E0525150051ADBD /* IDentityModels.xcframework in Embed Frameworks */,
+				24A8648A2E0525140051ADBD /* IDCapture_Swift.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -63,24 +63,28 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0D19FC80B98E4AA97857F10A /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		111338C21DF420449EC5A38F /* libPods-RunnerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RunnerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
-		24F9C6F72E0342660025A599 /* FingerPrintCapture_Swift.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = FingerPrintCapture_Swift.xcframework; sourceTree = "<group>"; };
-		24F9C6F82E0342660025A599 /* IDCapture_Swift.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = IDCapture_Swift.xcframework; sourceTree = "<group>"; };
-		24F9C6F92E0342660025A599 /* IDentityModels.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = IDentityModels.xcframework; sourceTree = "<group>"; };
-		24F9C6FA2E0342660025A599 /* IDentitySDK_Swift.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = IDentitySDK_Swift.xcframework; sourceTree = "<group>"; };
-		24F9C6FB2E0342660025A599 /* SelfieCapture_Swift.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = SelfieCapture_Swift.xcframework; sourceTree = "<group>"; };
-		24F9C6FC2E0342660025A599 /* SignatureCapture_Swift.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = SignatureCapture_Swift.xcframework; sourceTree = "<group>"; };
-		24F9C6FD2E0342660025A599 /* VoiceCapture_Swift.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = VoiceCapture_Swift.xcframework; sourceTree = "<group>"; };
+		17B731DADAC3219E73B09209 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		24A864792E05250F0051ADBD /* FingerPrintCapture_Swift.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = FingerPrintCapture_Swift.xcframework; sourceTree = "<group>"; };
+		24A8647A2E05250F0051ADBD /* IDCapture_Swift.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = IDCapture_Swift.xcframework; sourceTree = "<group>"; };
+		24A8647B2E05250F0051ADBD /* IDentityModels.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = IDentityModels.xcframework; sourceTree = "<group>"; };
+		24A8647C2E05250F0051ADBD /* IDentitySDK_Swift.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = IDentitySDK_Swift.xcframework; sourceTree = "<group>"; };
+		24A8647D2E05250F0051ADBD /* SelfieCapture_Swift.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = SelfieCapture_Swift.xcframework; sourceTree = "<group>"; };
+		24A8647E2E05250F0051ADBD /* SignatureCapture_Swift.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = SignatureCapture_Swift.xcframework; sourceTree = "<group>"; };
+		24A8647F2E05250F0051ADBD /* VoiceCapture_Swift.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:SXB7K82DRL:Idmission LLC"; lastKnownFileType = wrapper.xcframework; path = VoiceCapture_Swift.xcframework; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
-		3FF1124AECFD5EF8D703C871 /* libPods-RunnerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RunnerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4452340EA87403D4DC3B2CBD /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7522582A6B6D5795F5DBCC69 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
-		7EE9EA0A99197425EFCA96BB /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
-		8E358426EC0DE3BD47061208 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		84F5F6CC7F6D4F54415B036E /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+		89D03FBFD69AE6B539C9675B /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,11 +92,7 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9936192ED7AAFA4F7AE195D3 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
-		BBBA192F93D75B3EE365C1D5 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
-		CB4295FE9DAAE5201EDF69C8 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
-		D9C741446A237448D6BE693D /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
-		EF390F37EB6CDFEC700D7862 /* libPods-Runner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Runner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E098FFDBCE2654ABC4FD1B15 /* libPods-Runner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Runner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,14 +100,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9A6E8614FF64290C16FFAFB3 /* libPods-Runner.a in Frameworks */,
-				24F9C7052E03426E0025A599 /* FingerPrintCapture_Swift.xcframework in Frameworks */,
-				24F9C70B2E0342720025A599 /* IDentitySDK_Swift.xcframework in Frameworks */,
-				24F9C7112E0342760025A599 /* VoiceCapture_Swift.xcframework in Frameworks */,
-				24F9C7072E03426F0025A599 /* IDCapture_Swift.xcframework in Frameworks */,
-				24F9C70D2E0342730025A599 /* SelfieCapture_Swift.xcframework in Frameworks */,
-				24F9C7092E0342700025A599 /* IDentityModels.xcframework in Frameworks */,
-				24F9C70F2E0342750025A599 /* SignatureCapture_Swift.xcframework in Frameworks */,
+				E750330D65BC1C9DFBD7EB2B /* libPods-Runner.a in Frameworks */,
+				24A864872E0525130051ADBD /* FingerPrintCapture_Swift.xcframework in Frameworks */,
+				24A8648D2E0525160051ADBD /* IDentitySDK_Swift.xcframework in Frameworks */,
+				24A864932E05251B0051ADBD /* VoiceCapture_Swift.xcframework in Frameworks */,
+				24A864892E0525140051ADBD /* IDCapture_Swift.xcframework in Frameworks */,
+				24A8648F2E0525180051ADBD /* SelfieCapture_Swift.xcframework in Frameworks */,
+				24A8648B2E0525150051ADBD /* IDentityModels.xcframework in Frameworks */,
+				24A864912E0525190051ADBD /* SignatureCapture_Swift.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,7 +115,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				445976E62694A8541931DF9F /* libPods-RunnerTests.a in Frameworks */,
+				0244CC9394EA99FCF9A1B38B /* libPods-RunnerTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,15 +125,15 @@
 		051B33121F26A8939687DE2F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				24F9C6F72E0342660025A599 /* FingerPrintCapture_Swift.xcframework */,
-				24F9C6F82E0342660025A599 /* IDCapture_Swift.xcframework */,
-				24F9C6F92E0342660025A599 /* IDentityModels.xcframework */,
-				24F9C6FA2E0342660025A599 /* IDentitySDK_Swift.xcframework */,
-				24F9C6FB2E0342660025A599 /* SelfieCapture_Swift.xcframework */,
-				24F9C6FC2E0342660025A599 /* SignatureCapture_Swift.xcframework */,
-				24F9C6FD2E0342660025A599 /* VoiceCapture_Swift.xcframework */,
-				EF390F37EB6CDFEC700D7862 /* libPods-Runner.a */,
-				3FF1124AECFD5EF8D703C871 /* libPods-RunnerTests.a */,
+				24A864792E05250F0051ADBD /* FingerPrintCapture_Swift.xcframework */,
+				24A8647A2E05250F0051ADBD /* IDCapture_Swift.xcframework */,
+				24A8647B2E05250F0051ADBD /* IDentityModels.xcframework */,
+				24A8647C2E05250F0051ADBD /* IDentitySDK_Swift.xcframework */,
+				24A8647D2E05250F0051ADBD /* SelfieCapture_Swift.xcframework */,
+				24A8647E2E05250F0051ADBD /* SignatureCapture_Swift.xcframework */,
+				24A8647F2E05250F0051ADBD /* VoiceCapture_Swift.xcframework */,
+				E098FFDBCE2654ABC4FD1B15 /* libPods-Runner.a */,
+				111338C21DF420449EC5A38F /* libPods-RunnerTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -149,12 +149,12 @@
 		4BADEE1CC076CA16AD5B3D7A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				CB4295FE9DAAE5201EDF69C8 /* Pods-Runner.debug.xcconfig */,
-				BBBA192F93D75B3EE365C1D5 /* Pods-Runner.release.xcconfig */,
-				9936192ED7AAFA4F7AE195D3 /* Pods-Runner.profile.xcconfig */,
-				8E358426EC0DE3BD47061208 /* Pods-RunnerTests.debug.xcconfig */,
-				D9C741446A237448D6BE693D /* Pods-RunnerTests.release.xcconfig */,
-				7EE9EA0A99197425EFCA96BB /* Pods-RunnerTests.profile.xcconfig */,
+				84F5F6CC7F6D4F54415B036E /* Pods-Runner.debug.xcconfig */,
+				89D03FBFD69AE6B539C9675B /* Pods-Runner.release.xcconfig */,
+				0D19FC80B98E4AA97857F10A /* Pods-Runner.profile.xcconfig */,
+				17B731DADAC3219E73B09209 /* Pods-RunnerTests.debug.xcconfig */,
+				4452340EA87403D4DC3B2CBD /* Pods-RunnerTests.release.xcconfig */,
+				7522582A6B6D5795F5DBCC69 /* Pods-RunnerTests.profile.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -213,7 +213,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 331C8087294A63A400263BE5 /* Build configuration list for PBXNativeTarget "RunnerTests" */;
 			buildPhases = (
-				CF0F2A43566A7F5D572A7317 /* [CP] Check Pods Manifest.lock */,
+				335792FF10D63FDB38B01143 /* [CP] Check Pods Manifest.lock */,
 				331C807D294A63A400263BE5 /* Sources */,
 				331C807F294A63A400263BE5 /* Resources */,
 				E3CE2F8362A1E3BFE82BB8BA /* Frameworks */,
@@ -232,15 +232,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
-				D2D5F17D396448A855C2ECE7 /* [CP] Check Pods Manifest.lock */,
+				923750A6FAE01D3F6A7E9DD5 /* [CP] Check Pods Manifest.lock */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
-				13BB58B438F87C92EBF55F2C /* [CP] Embed Pods Frameworks */,
-				0EEE243C5077206F6A2937F7 /* [CP] Copy Pods Resources */,
+				7F7D1381113ED2721B0D9952 /* [CP] Embed Pods Frameworks */,
+				1649C07EFDDEADC632005005 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -312,7 +312,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0EEE243C5077206F6A2937F7 /* [CP] Copy Pods Resources */ = {
+		1649C07EFDDEADC632005005 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -329,55 +329,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		13BB58B438F87C92EBF55F2C /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
-			);
-			name = "Thin Binary";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
-		};
-		9740EEB61CF901F6004384FC /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\nfind \"$BUILD_DIR\" -type f -name \"*.signature\" -exec rm {} \\;\n";
-		};
-		CF0F2A43566A7F5D572A7317 /* [CP] Check Pods Manifest.lock */ = {
+		335792FF10D63FDB38B01143 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -399,7 +351,40 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D2D5F17D396448A855C2ECE7 /* [CP] Check Pods Manifest.lock */ = {
+		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
+			);
+			name = "Thin Binary";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
+		};
+		7F7D1381113ED2721B0D9952 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		923750A6FAE01D3F6A7E9DD5 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -420,6 +405,21 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		9740EEB61CF901F6004384FC /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\nfind \"$BUILD_DIR\" -type f -name \"*.signature\" -exec rm {} \\;\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -546,7 +546,7 @@
 		};
 		331C8088294A63A400263BE5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8E358426EC0DE3BD47061208 /* Pods-RunnerTests.debug.xcconfig */;
+			baseConfigurationReference = 17B731DADAC3219E73B09209 /* Pods-RunnerTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -564,7 +564,7 @@
 		};
 		331C8089294A63A400263BE5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D9C741446A237448D6BE693D /* Pods-RunnerTests.release.xcconfig */;
+			baseConfigurationReference = 4452340EA87403D4DC3B2CBD /* Pods-RunnerTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -580,7 +580,7 @@
 		};
 		331C808A294A63A400263BE5 /* Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7EE9EA0A99197425EFCA96BB /* Pods-RunnerTests.profile.xcconfig */;
+			baseConfigurationReference = 7522582A6B6D5795F5DBCC69 /* Pods-RunnerTests.profile.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;

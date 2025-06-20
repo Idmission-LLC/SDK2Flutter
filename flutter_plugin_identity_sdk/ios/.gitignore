@@ -14,6 +14,7 @@ GeneratedPluginRegistrant.m
 
 .generated/
 
+*.xcframework
 *.pbxuser
 *.mode1v3
 *.mode2v3
