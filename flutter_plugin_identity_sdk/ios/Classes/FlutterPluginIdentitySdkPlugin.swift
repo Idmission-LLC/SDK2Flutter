@@ -1,6 +1,8 @@
 import Flutter
 import UIKit
-import IDentitySDK_Swift
+import IDentityMediumSDK
+import SelfieCaptureMedium
+import IDCaptureMedium
 
 public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -14,7 +16,7 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
     case "getPlatformVersion":
       result("iOS " + UIDevice.current.systemVersion)
     case "idm_sdk_init":
-        
+
         if let args = call.arguments as? Dictionary<String, Any>,
           let apiBaseUrl = args["apiBaseUrl"] as? String,
           let debug = args["debug"] as? String,
@@ -23,8 +25,6 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
           UserDefaults.standard.set(String(apiBaseUrl), forKey: "apiBaseUrl")
           UserDefaults.standard.set(String(accessToken), forKey: "accessToken")
             
-            IDCapture.options.enableRealId = false
-      
             if(debug.contains("y")){
                 IDCapture.options.isDebugMode = true
                 SelfieCapture.options.isDebugMode = true
@@ -35,7 +35,7 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
                 DocumentCapture.options.isDebugMode = false
             }
         }
-      
+        
         IDentitySDKHelper().initializeSDK(result: result)
     case "idm_sdk_serviceID20":
         if let args = call.arguments as? Dictionary<String, Any>,

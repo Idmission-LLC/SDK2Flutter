@@ -1,24 +1,26 @@
 import Foundation
-import IDentitySDK_Swift
-import IDCapture_Swift
-import SelfieCapture_Swift
+import IDentityMediumSDK
+import SelfieCaptureMedium
+import IDCaptureMedium
 import Flutter
 
 class IDentitySDKHelper : NSObject{
   
     @IBAction func initializeSDK(result: @escaping FlutterResult){
+        print("initializeSDK")
+        print(IDentitySDK.version)
+        
         IDentitySDK.apiBaseUrl = UserDefaults.apiBaseURL
-        IDentitySDK.initializeSDK(language: UserDefaults.SDKlanguage, isGPSEnabled: false, isUpdateModelsData: UserDefaults.isUpdateModelData, accessToken: UserDefaults.accessToken) { error in
+        IDentitySDK.initializeSDK(language: UserDefaults.SDKlanguage, isUpdateModelsData: UserDefaults.isUpdateModelData, accessToken: UserDefaults.accessToken) { error in
             if let error = error {
                 print("!!! initialize SDK ERROR: \(error.localizedDescription)")
-                result("Error")
             } else {
                 print("!!! initialize SDK SUCCESS")
                 result("SDK successfully initialized")
             }
-        }        
+        }
   }
-     
+        
   // 20 - ID Validation
   @IBAction func startIDValidations(result: @escaping FlutterResult, instance: UIViewController) {
        ViewController().startIDValidation(result: result, instance: instance);

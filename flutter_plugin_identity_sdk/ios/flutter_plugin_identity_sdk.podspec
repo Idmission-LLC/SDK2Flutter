@@ -15,6 +15,8 @@ A new Flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
+  s.dependency 'IDentityMediumSDK2.0'
+  s.dependency 'IDentityMediumModels'
   s.dependency 'TensorFlowLiteSwift'
   s.dependency 'GoogleMLKit/TextRecognition'
   s.dependency 'GoogleMLKit/FaceDetection'

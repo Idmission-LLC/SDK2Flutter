@@ -1,7 +1,7 @@
 import UIKit
-import IDentitySDK_Swift
-import IDCapture_Swift
-import SelfieCapture_Swift
+import IDentityMediumSDK
+import SelfieCaptureMedium
+import IDCaptureMedium
 import Flutter
 
 class SuccessViewController: UIViewController {
@@ -66,11 +66,12 @@ class SuccessViewController: UIViewController {
                 request.customerData.idData.idImageBack = "..."
             }
             
+            //UserDefaults.standard.set(request.customerData.biometricData.selfie , forKey: "selfie")
             request.customerData.biometricData.selfie = "..."
         
             let requestObfuscated = request
           
-            if let data = try? encoder.encode(request.additionalData),
+            if let data = try? encoder.encode(request.customerData),
                let json = String(data: data, encoding: .utf8)  {
                 texts = json
             } else {
@@ -89,6 +90,7 @@ class SuccessViewController: UIViewController {
             if request.customerData.idData.idImageBack != nil {
                 request.customerData.idData.idImageBack = "..."
             }
+            //request.customerData.biometericData.selfie = "..."
             let requestObfuscated = request
           
             if let data = try? encoder.encode(request),
@@ -104,8 +106,9 @@ class SuccessViewController: UIViewController {
             } else {
                 textObfuscated = "ERROR"
             }
-        } else if let _ = customerEnrollBiometricsResult, var request = IDentitySDK.customerEnrollBiometricsRequest {
+        } else if let _ = customerEnrollBiometricsResult, let request = IDentitySDK.customerEnrollBiometricsRequest {
             // stub out the base64 image text for logging
+            //request.customerData.biometericData.selfie = "..."
             let requestObfuscated = request
           
             if let data = try? encoder.encode(request),
@@ -121,8 +124,9 @@ class SuccessViewController: UIViewController {
             } else {
                 textObfuscated = "ERROR"
             }
-        } else if let _ = customerVerificationResult, var request = IDentitySDK.customerVerifyRequest {
+        } else if let _ = customerVerificationResult, let request = IDentitySDK.customerVerifyRequest {
             // stub out the base64 image text for logging
+            //request.customerData.biometericData.selfie = "..."
             let requestObfuscated = request
           
             if let data = try? encoder.encode(request),
@@ -138,8 +142,9 @@ class SuccessViewController: UIViewController {
             } else {
                 textObfuscated = "ERROR"
             }
-        } else if let _ = customerIdentifyResult, var request = IDentitySDK.customerIdentifyRequest {
+        } else if let _ = customerIdentifyResult, let request = IDentitySDK.customerIdentifyRequest {
             // stub out the base64 image text for logging
+            //request.biometericData.selfie = "..."
             let requestObfuscated = request
           
             if let data = try? encoder.encode(request),
@@ -155,8 +160,9 @@ class SuccessViewController: UIViewController {
             } else {
                 textObfuscated = "ERROR"
             }
-        } else if let _ = liveFaceCheckResult, var request = IDentitySDK.customerLiveCheckRequest {
+        } else if let _ = liveFaceCheckResult, let request = IDentitySDK.customerLiveCheckRequest {
             // stub out the base64 image text for logging
+            //request.customerData.biometericData.selfie = "..."
             let requestObfuscated = request
           
             if let data = try? encoder.encode(request),

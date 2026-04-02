@@ -1,71 +1,47 @@
-import 'dart:async';
 
-import 'package:flutter/services.dart';
+import 'flutter_plugin_identity_sdk_platform_interface.dart';
 
 class FlutterPluginIdentitySdk {
-  static const MethodChannel _channel =
-      MethodChannel('flutter_plugin_identity_sdk');
-
-  static Future<String?> get platformVersion async {
-    final String? version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
+  Future<String?> getPlatformVersion() {
+    return FlutterPluginIdentitySdkPlatform.instance.getPlatformVersion();
   }
 
   static Future<String?> idm_sdk_init(
       String apiBaseUrl, String debug, String accessToken) async {
-    final String? resultData = await _channel.invokeMethod(
-        'idm_sdk_init', {"apiBaseUrl": apiBaseUrl, "debug": debug, "accessToken": accessToken});
-    return resultData;
+      return FlutterPluginIdentitySdkPlatform.instance.idm_sdk_init(apiBaseUrl, debug, accessToken);
   }
 
   static Future<String?> idm_sdk_serviceID20(
       String captureBack, int clientTraceId) async {
-    final String? resultData = await _channel.invokeMethod(
-        'idm_sdk_serviceID20',
-        {"captureBack": captureBack, "clientTraceId": clientTraceId});
-    return resultData;
+    return FlutterPluginIdentitySdkPlatform.instance.idm_sdk_serviceID20(captureBack, clientTraceId);
   }
 
   static Future<String?> idm_sdk_serviceID10(
       String captureBack, int clientTraceId) async {
-    final String? resultData = await _channel.invokeMethod(
-        'idm_sdk_serviceID10',
-        {"captureBack": captureBack, "clientTraceId": clientTraceId});
-    return resultData;
+    return FlutterPluginIdentitySdkPlatform.instance.idm_sdk_serviceID10(captureBack, clientTraceId);
   }
 
   static Future<String?> idm_sdk_serviceID50(int uniqueCustomerNumber) async {
-    final String? resultData = await _channel.invokeMethod(
-        'idm_sdk_serviceID50', {"uniqueCustomerNumber": uniqueCustomerNumber});
-    return resultData;
+    return FlutterPluginIdentitySdkPlatform.instance.idm_sdk_serviceID50(uniqueCustomerNumber);
   }
 
   static Future<String?> idm_sdk_serviceID175(int uniqueCustomerNumber) async {
-    final String? resultData = await _channel.invokeMethod(
-        'idm_sdk_serviceID175', {"uniqueCustomerNumber": uniqueCustomerNumber});
-    return resultData;
+    return FlutterPluginIdentitySdkPlatform.instance.idm_sdk_serviceID175(uniqueCustomerNumber);
   }
 
   static Future<String?> idm_sdk_serviceID105(int uniqueCustomerNumber) async {
-    final String? resultData = await _channel.invokeMethod(
-        'idm_sdk_serviceID105', {"uniqueCustomerNumber": uniqueCustomerNumber});
-    return resultData;
+    return FlutterPluginIdentitySdkPlatform.instance.idm_sdk_serviceID105(uniqueCustomerNumber);
   }
 
   static Future<String?> idm_sdk_serviceID185() async {
-    final String? resultData =
-        await _channel.invokeMethod('idm_sdk_serviceID185');
-    return resultData;
+    return FlutterPluginIdentitySdkPlatform.instance.idm_sdk_serviceID185();
   }
 
   static Future<String?> idm_sdk_serviceID660() async {
-    final String? resultData =
-        await _channel.invokeMethod('idm_sdk_serviceID660');
-    return resultData;
+    return FlutterPluginIdentitySdkPlatform.instance.idm_sdk_serviceID660();
   }
 
   static Future<String?> submit_result() async {
-    final String? resultData = await _channel.invokeMethod('submit_result');
-    return resultData;
+    return FlutterPluginIdentitySdkPlatform.instance.submit_result();
   }
 }

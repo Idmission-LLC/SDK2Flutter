@@ -1,4 +1,5 @@
-import IDentitySDK_Swift
+import IDentityMediumSDK
+
 
 struct ServiceOptions: Codable {
     enum ManualReviewRequired: Int, Codable {

@@ -1,7 +1,7 @@
 import UIKit
-import IDentitySDK_Swift
-import IDCapture_Swift
-import SelfieCapture_Swift
+import IDentityMediumSDK
+import SelfieCaptureMedium
+import IDCaptureMedium
 import Flutter
 
 
@@ -27,13 +27,11 @@ class ViewController: UIViewController {
     func startIDValidation(result: @escaping FlutterResult, instance: UIViewController) {
         // start ID capture, presenting it from this view controller
         
-        let cbs:String = UserDefaults.standard.string(forKey: "captureBack")!
-        
-        var options = AdditionalCustomerWFlagCommonDataV3()
+        var commonCustomerData = CommonCustomerDataRequest()
+        var options = AdditionalCustomerWFlagCommonData()
         options.clientTraceId = UserDefaults.standard.string(forKey: "clientTraceId")
-        options.sendProcessedImagesInResponse = .no
         options.sendInputImagesInResponse = .no
-        IDentitySDK.idValidation(from: instance, options: options) { result1 in
+        IDentitySDK.idValidation(from: instance, customerDataOptions: commonCustomerData,options: options) { result1 in
             switch result1 {
             case .success(let validateIdResult):
                 self.emptyResults()
@@ -57,15 +55,13 @@ class ViewController: UIViewController {
   
     // 10 - ID Validation and Match Face
     func startIDValidationAndMatchFace(result: @escaping FlutterResult, instance: UIViewController) {
-        let cbs:String = UserDefaults.standard.string(forKey: "captureBack")!
-                
-        var options = AdditionalCustomerWFlagCommonDataV3()
-        options.clientTraceId = UserDefaults.standard.string(forKey: "clientTraceId")
-        options.sendProcessedImagesInResponse = .yes
-        options.sendInputImagesInResponse = .no
-        options.idBackImageRequired = .no
         
-        IDentitySDK.idValidationAndMatchFace(from: instance, options: options) { result1 in
+        var commonCustomerData = CommonCustomerDataRequest()
+        var options = AdditionalCustomerWFlagCommonData()
+        options.clientTraceId = UserDefaults.standard.string(forKey: "clientTraceId")
+        options.sendInputImagesInResponse = .no
+        
+        IDentitySDK.idValidationAndMatchFace(from: instance, customerDataOptions: commonCustomerData,options: options) { result1 in
             switch result1 {
             case .success(let validateIdMatchFaceResult):
                     self.emptyResults()
@@ -88,13 +84,12 @@ class ViewController: UIViewController {
 
     // 50 - ID Validation And Customer Enroll
     func startIDValidationAndCustomerEnroll(result: @escaping FlutterResult, instance: UIViewController) {
-        let personalData = PersonalCustomerCommonRequestEnrollDataV3(uniqueNumber: UserDefaults.standard.string(forKey: "uniqueCustomerNumber") ?? "0")
-        var options = AdditionalCustomerWFlagCommonDataV3()
-        options.sendProcessedImagesInResponse = .no
+        let personalData = PersonalCustomerCommonRequestEnrollData(uniqueNumber: UserDefaults.standard.string(forKey: "uniqueCustomerNumber") ?? "0")
+        var options = AdditionalCustomerWFlagCommonData()
         options.sendInputImagesInResponse = .no
           IDentitySDK.idValidationAndCustomerEnroll(from: instance, personalData: personalData, options: options) { result1 in
               switch result1 {
-              case .success(var customerEnrollResult):
+              case .success(let customerEnrollResult):
                       self.emptyResults()
                       self.result = result
                       customerEnrollResult2=customerEnrollResult
@@ -115,11 +110,12 @@ class ViewController: UIViewController {
   
     // 175 - Customer Enroll Biometrics
     func startCustomerEnrollBiometrics(result: @escaping FlutterResult, instance: UIViewController) {
-        let personalData = PersonalCustomerCommonRequestDataV3(uniqueNumber: UserDefaults.standard.string(forKey: "uniqueCustomerNumber") ?? "0")
-        let options = AdditionalCustomerEnrollBiometricRequestDataV3()
-        IDentitySDK.customerEnrollBiometrics(from: instance, personalData: personalData, options: options) { result1 in
+        let personalData = PersonalCustomerEnrollBiometricsRequestData(uniqueNumber: UserDefaults.standard.string(forKey: "uniqueCustomerNumber") ?? "0")
+        let commonCustomerData = CommonCustomerDataRequest()
+        let options = AdditionalCustomerEnrollBiometricRequestData()
+        IDentitySDK.customerEnrollBiometrics(from: instance, customerDataOptions: commonCustomerData, personalData: personalData, options: options) { result1 in
             switch result1 {
-            case .success(var customerEnrollBiometricsResult):
+            case .success(let customerEnrollBiometricsResult):
                     self.emptyResults()
                     self.result = result
                     customerEnrollBiometricsResult2=customerEnrollBiometricsResult
@@ -138,10 +134,12 @@ class ViewController: UIViewController {
 
     // 105 - Customer Verification
     func startCustomerVerification(result: @escaping FlutterResult, instance: UIViewController) {
+        let commonCustomerData = CommonCustomerDataRequest()
+        let options = AdditionalCustomerCommonData()
         let personalData = PersonalCustomerVerifyData(uniqueNumber: UserDefaults.standard.string(forKey: "uniqueCustomerNumber") ?? "0")
-        IDentitySDK.customerVerification(from: instance, personalData: personalData) { result1 in
+        IDentitySDK.customerVerification(from: instance, customerDataOptions: commonCustomerData, personalData: personalData, options: options) { result1 in
             switch result1 {
-            case .success(var customerVerificationResult):
+            case .success(let customerVerificationResult):
                     self.emptyResults()
                     self.result = result
                     customerVerificationResult2=customerVerificationResult
@@ -160,7 +158,9 @@ class ViewController: UIViewController {
 
     // 185 - Identify Customer
     func startIdentifyCustomer(result: @escaping FlutterResult, instance: UIViewController) {
-        IDentitySDK.identifyCustomer(from: instance) { result1 in
+            let commonCustomerData = CommonCustomerDataRequest()
+            let options = AdditionalCustomerCommonData()
+            IDentitySDK.identifyCustomer(from: instance, customerDataOptions: commonCustomerData, options: options) { result1 in
             switch result1 {
             case .success(let customerIdentifyResult):
                     self.emptyResults()
@@ -208,12 +208,17 @@ class ViewController: UIViewController {
 
     @objc func submit() {
         if let validateIdResult = validateIdResult2 {
-            validateIdResult.submit { result in
+            validateIdResult.finalSubmit { result in
                 self.navigationItem.leftBarButtonItem = nil
                 validateIdResult2 = nil
                 switch result {
                 case .success(let response):
-                    var hostDataString = ""
+                    let hostDataString = ""
+                    //if let hostData = hostData,
+                    //   let data = try? JSONSerialization.data(withJSONObject: hostData, options: [.prettyPrinted]),
+                    //   let json = String(data: data, encoding: .utf8) {
+                    //    hostDataString = "Host Data:\n\n" + json + "\n\n"
+                    //}
                     
                     let encoder = JSONEncoder()
                     encoder.outputFormatting = .prettyPrinted
@@ -227,12 +232,12 @@ class ViewController: UIViewController {
                 }
             }
         } else if let validateIdMatchFaceResult = validateIdMatchFaceResult2 {
-            validateIdMatchFaceResult.submit { result in
+            validateIdMatchFaceResult.finalSubmit { result in
                 self.navigationItem.leftBarButtonItem = nil
                 validateIdMatchFaceResult2 = nil
                 switch result {
                 case .success(let response):
-                    var hostDataString = ""
+                    let hostDataString = ""
                     
                     let encoder = JSONEncoder()
                     encoder.outputFormatting = .prettyPrinted
@@ -246,16 +251,22 @@ class ViewController: UIViewController {
                 }
             }
         } else if let customerEnrollResult = customerEnrollResult2 {
-            customerEnrollResult.submit { result in
+            customerEnrollResult.finalSubmit { result in
                 self.navigationItem.leftBarButtonItem = nil
                 customerEnrollResult2 = nil
                 switch result {
                 case .success(let response):
-                    var hostDataString = ""
-                    
+                    let hostDataString = ""
+                    //if let hostData = hostData,
+                    //   let data = try? JSONSerialization.data(withJSONObject: hostData, options: [.prettyPrinted]),
+                    //   let json = String(data: data, encoding: .utf8) {
+                    //    hostDataString = "Host Data:\n\n" + json + "\n\n"
+                    //}
+
                     let encoder = JSONEncoder()
                     encoder.outputFormatting = .prettyPrinted
                     if let data = try? encoder.encode(response), let json = String(data: data, encoding: .utf8) {
+                      //self.texts = json + "\n\n\(hostDataString)- - -\n\n"
                       self.texts = json
                     }
                     self.sendData()
@@ -265,7 +276,7 @@ class ViewController: UIViewController {
                 }
             }
         } else if let customerEnrollBiometricsResult = customerEnrollBiometricsResult2 {
-            customerEnrollBiometricsResult.submit { result in
+            customerEnrollBiometricsResult.finalSubmit { result in
                 self.navigationItem.leftBarButtonItem = nil
                 customerEnrollBiometricsResult2 = nil
                 switch result {
@@ -282,7 +293,7 @@ class ViewController: UIViewController {
                 }
             }
         } else if let customerVerificationResult = customerVerificationResult2 {
-            customerVerificationResult.submit { result in
+            customerVerificationResult.finalSubmit { result in
                 self.navigationItem.leftBarButtonItem = nil
                 customerVerificationResult2 = nil
                 switch result {
@@ -302,7 +313,7 @@ class ViewController: UIViewController {
                 }
             }
         } else if let customerIdentifyResult = customerIdentifyResult2 {
-            customerIdentifyResult.submit { result in
+            customerIdentifyResult.finalSubmit { result in
                 self.navigationItem.leftBarButtonItem = nil
                 customerIdentifyResult2 = nil
                 switch result {
@@ -322,7 +333,7 @@ class ViewController: UIViewController {
                 }
             }
         } else if let liveFaceCheckResult = liveFaceCheckResult2 {
-            liveFaceCheckResult.submit { result in
+            liveFaceCheckResult.finalSubmit { result in
                 self.navigationItem.leftBarButtonItem = nil
                 liveFaceCheckResult2 = nil
                 switch result {
