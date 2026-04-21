@@ -6,54 +6,9 @@ import android.os.Bundle;
 import com.idmission.sdk2.capture.IdMissionCaptureLauncher;
 import com.idmission.sdk2.capture.presentation.camera.helpers.CaptureBack;
 import com.idmission.sdk2.capture.presentation.camera.helpers.ProcessedCapture;
-import com.idmission.sdk2.client.model.AdditionalCustomerFlagData;
-import com.idmission.sdk2.client.model.BypassAgeValidation;
-import com.idmission.sdk2.client.model.BypassNameMatching;
-import com.idmission.sdk2.client.model.CameraFacing;
-import com.idmission.sdk2.client.model.CameraOrientation;
-import com.idmission.sdk2.client.model.DeDupDataRequiredInResponse;
-import com.idmission.sdk2.client.model.DeDuplicationRequired;
-import com.idmission.sdk2.client.model.DeduplicationSynchronous;
-import com.idmission.sdk2.client.model.DocumentCaptureCustomizationOptions;
-import com.idmission.sdk2.client.model.IDCaptureCustomizationOptions;
-import com.idmission.sdk2.client.model.IDCaptureOptions;
-import com.idmission.sdk2.client.model.IDColorOptions;
-import com.idmission.sdk2.client.model.IDFontOptions;
-import com.idmission.sdk2.client.model.IDImageOptions;
-import com.idmission.sdk2.client.model.IDImageResolutionCheck;
-import com.idmission.sdk2.client.model.IDLayoutOptions;
-import com.idmission.sdk2.client.model.IDStringOptions;
-import com.idmission.sdk2.client.model.IdBackImageRequired;
-import com.idmission.sdk2.client.model.ManualReviewRequired;
-import com.idmission.sdk2.client.model.NeedImmediateResponse;
-import com.idmission.sdk2.client.model.PostDataAPIRequired;
-import com.idmission.sdk2.client.model.PostDataOnReviewRequired;
-import com.idmission.sdk2.client.model.SDKCustomizationOptions;
-import com.idmission.sdk2.client.model.SelfieCaptureCustomizationOptions;
-import com.idmission.sdk2.client.model.SendInputImagesInPost;
-import com.idmission.sdk2.client.model.SendInputImagesInResponse;
-import com.idmission.sdk2.client.model.SendProcessedImagesInPost;
-import com.idmission.sdk2.client.model.SendProcessedImagesInResponse;
-import com.idmission.sdk2.client.model.SignatureCaptureCustomizationOptions;
-import com.idmission.sdk2.client.model.StripSpecialCharacter;
-import com.idmission.sdk2.client.model.VerifyDataWithHost;
-import com.idmission.sdk2.client.model.VideoIdCaptureCustomizationOptions;
 import com.idmission.sdk2.identityproofing.IdentityProofingSDK;
-import com.idmission.sdk2.utils.LANGUAGE;
-
 import android.os.Parcelable;
-import android.util.Base64;
-import android.util.Base64OutputStream;
-import android.util.Log;
-
 import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,88 +25,96 @@ public class CallPluginActivity extends Activity {
         int serviceID = getIntent().getIntExtra("serviceID", 20);
 
         if(serviceID==20){
-            IDCaptureCustomizationOptions icc = new IDCaptureCustomizationOptions(false);
-            SDKCustomizationOptions sco = new SDKCustomizationOptions(
-                    LANGUAGE.EN,
-                    false,
-                    false,
-                    false,
-                    CameraFacing.FRONT,
-                    CameraFacing.BACK,
-                    CameraOrientation.PORTRAIT,
-                    true,
-                    new SelfieCaptureCustomizationOptions(),
-                    icc
-            );
-
-            int clientTraceId = getIntent().getIntExtra("clientTraceId",0);
-
-            AdditionalCustomerFlagData acfd = new AdditionalCustomerFlagData(
-                    clientTraceId+"",
-                    null,
-                    ManualReviewRequired.N,
-                    BypassAgeValidation.N,
-                    DeDuplicationRequired.N,
-                    PostDataAPIRequired.N,
-                    null,
-                    null,
-                    SendInputImagesInPost.Y,
-                    SendProcessedImagesInPost.Y,
-                    NeedImmediateResponse.N,
-                    DeduplicationSynchronous.N,
-                    VerifyDataWithHost.N,
-                    IdBackImageRequired.Y
-            );
-            IdentityProofingSDK.INSTANCE.idValidation(CallPluginActivity.this);
+            try {
+                IdentityProofingSDK.idValidation(this, CaptureBack.AUTO);
+            } catch (Exception e) {
+                result = "SDK is not initialized. Please ensure initialization is completed before use.";
+                FlutterPluginIdentitySdkPlugin.sendResponse();
+                finish();
+            }
         }else if(serviceID==10){
-            int clientTraceId = getIntent().getIntExtra("clientTraceId",0);
-            AdditionalCustomerFlagData acfd = new AdditionalCustomerFlagData(clientTraceId+"");
-            IDCaptureCustomizationOptions icc = new IDCaptureCustomizationOptions(false);
-            SDKCustomizationOptions sco = new SDKCustomizationOptions(
-                    LANGUAGE.EN,
-                    false,
-                    false,
-                    false,
-                    CameraFacing.FRONT,
-                    CameraFacing.BACK,
-                    CameraOrientation.PORTRAIT,
-                    true,
-                    new SelfieCaptureCustomizationOptions(),
-                    icc
-            );
-
-            IdentityProofingSDK.INSTANCE.idValidationAndMatchFace(CallPluginActivity.this);
+            try {
+                IdentityProofingSDK.idValidationAndMatchFace(this, CaptureBack.AUTO);
+            } catch (Exception e) {
+                result = "SDK is not initialized. Please ensure initialization is completed before use.";
+                FlutterPluginIdentitySdkPlugin.sendResponse();
+                finish();
+            }
         }else if(serviceID==185){
-            IdentityProofingSDK.INSTANCE.identifyCustomer(CallPluginActivity.this);
+            try {
+                IdentityProofingSDK.identifyCustomer(this);
+            } catch (Exception e) {
+                result = "SDK is not initialized. Please ensure initialization is completed before use.";
+                FlutterPluginIdentitySdkPlugin.sendResponse();
+                finish();
+            }
         }else if(serviceID==660){
-            IdentityProofingSDK.INSTANCE.liveFaceCheck(CallPluginActivity.this);
+            try {
+                IdentityProofingSDK.liveFaceCheck(this);
+            } catch (Exception e) {
+                result = "SDK is not initialized. Please ensure initialization is completed before use.";
+                FlutterPluginIdentitySdkPlugin.sendResponse();
+                finish();
+            }
         }else if(serviceID==50){
             int uniqueCustomerNumber = getIntent().getIntExtra("uniqueCustomerNumber",0);
-            IdentityProofingSDK.INSTANCE.idValidationAndcustomerEnroll(CallPluginActivity.this, uniqueCustomerNumber+"");
+                try {
+                    if(uniqueCustomerNumber>0){
+                        IdentityProofingSDK.idValidationAndcustomerEnroll(CallPluginActivity.this, uniqueCustomerNumber+"");
+                    }else{
+                        result = "Unique customer number is required.";
+                        FlutterPluginIdentitySdkPlugin.sendResponse();
+                        finish();
+                    }
+                } catch (Exception e) {
+                    result = "SDK is not initialized. Please ensure initialization is completed before use.";
+                    FlutterPluginIdentitySdkPlugin.sendResponse();
+                    finish();
+                }
         }else if(serviceID==175){
             int uniqueCustomerNumber = getIntent().getIntExtra("uniqueCustomerNumber",0);
-            IdentityProofingSDK.INSTANCE.customerEnrollBiometrics(CallPluginActivity.this, uniqueCustomerNumber+"");
+                try {
+                    if(uniqueCustomerNumber>0){
+                        IdentityProofingSDK.customerEnrollBiometrics(CallPluginActivity.this, uniqueCustomerNumber+"");
+                    }else{
+                        result = "Unique customer number is required.";
+                        FlutterPluginIdentitySdkPlugin.sendResponse();
+                        finish();
+                    }
+                } catch (Exception e) {
+                    result = "SDK is not initialized. Please ensure initialization is completed before use.";
+                    FlutterPluginIdentitySdkPlugin.sendResponse();
+                    finish();
+                }
         }else if(serviceID==105){
             int uniqueCustomerNumber = getIntent().getIntExtra("uniqueCustomerNumber",0);
-            IdentityProofingSDK.INSTANCE.customerVerification(CallPluginActivity.this, uniqueCustomerNumber+"");
+                    try {
+                        if(uniqueCustomerNumber>0){
+                            IdentityProofingSDK.customerVerification(CallPluginActivity.this, uniqueCustomerNumber+"");
+                        }else{
+                            result = "Unique customer number is required.";
+                            FlutterPluginIdentitySdkPlugin.sendResponse();
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        result = "SDK is not initialized. Please ensure initialization is completed before use.";
+                        FlutterPluginIdentitySdkPlugin.sendResponse();
+                        finish();
+                    }
         }
 
     }
 
-    CaptureBack getCaptureBackValue(String s){
-        if(s.contains("y")){
-            return CaptureBack.YES;
-        }else if(s.contains("n")){
-            return CaptureBack.NO;
-        }else{
-            return CaptureBack.AUTO;
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        FlutterPluginIdentitySdkPlugin.sendResponse();
+        finish();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
-            System.out.println("onActivityResult");
             if (requestCode == IdMissionCaptureLauncher.CAPTURE_REQUEST_CODE) {
                 try{
                     Parcelable[] processedCaptures = data.getExtras().getParcelableArray(IdMissionCaptureLauncher.EXTRA_PROCESSED_CAPTURES);
@@ -172,7 +135,7 @@ public class CallPluginActivity extends Activity {
                                 realDocumentData.put("detectedRect",rd.getDetectedRect());
                                 realDocumentData.put("faceMatch",rd.getFaceMatch());
                                 realDocumentData.put("faceOnId",rd.getFaceOnId());
-                                realDocumentData.put("file",getStringFile(rd.getFile()));
+                                realDocumentData.put("file",rd.getFile());
                                 realDocumentData.put("mrzString",rd.getMrzString());
                                 realDocumentData.put("ocrString",rd.getOcrString());
                                 realDocumentData.put("operation",rd.getOperation());
@@ -218,7 +181,7 @@ public class CallPluginActivity extends Activity {
                                 realFaceData.put("timeStartedAt",rf.getTimeStartedAt());
                                 realFaceData.put("timeWithinBoundsAt",rf.getTimeWithinBoundsAt());
                                 realFaceData.put("faceMatch",rf.getFaceMatch());
-                                realFaceData.put("file",getStringFile(rf.getFile()));
+                                realFaceData.put("file",rf.getFile());
                                 realFaceData.put("livenessScore",rf.getLivenessScore());
 
                                 jo.put("realFace",realFaceData);
@@ -246,37 +209,18 @@ public class CallPluginActivity extends Activity {
                 }catch(Exception e){
                     e.printStackTrace();
                 }
+            }else{
+                    result = "Error";
+                    FlutterPluginIdentitySdkPlugin.sendResponse();
             }
+        }else if(resultCode == RESULT_CANCELED) {
+            result = "The operation was cancelled by the user.";
+            FlutterPluginIdentitySdkPlugin.sendResponse();
+        }else{
+            result = "Error";
+            FlutterPluginIdentitySdkPlugin.sendResponse();
         }
         onBackPressed();
-    }
-
-    // Converting File to Base64.encode String type using Method
-    public String getStringFile(File f) {
-        InputStream inputStream = null;
-        String encodedFile= "", lastVal;
-        try {
-            inputStream = new FileInputStream(f.getAbsolutePath());
-
-            byte[] buffer = new byte[10240];//specify the size to allow
-            int bytesRead;
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            Base64OutputStream output64 = new Base64OutputStream(output, Base64.DEFAULT);
-
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                output64.write(buffer, 0, bytesRead);
-            }
-            output64.close();
-            encodedFile =  output.toString();
-        }
-        catch (FileNotFoundException e1 ) {
-            e1.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        lastVal = encodedFile;
-        return lastVal;
     }
 
 }

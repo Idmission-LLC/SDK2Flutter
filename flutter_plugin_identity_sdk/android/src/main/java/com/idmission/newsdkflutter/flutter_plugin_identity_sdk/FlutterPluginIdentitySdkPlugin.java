@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.idmission.sdk2.capture.IdMissionCaptureLauncher;
 import com.idmission.sdk2.capture.presentation.camera.helpers.ProcessedCapture;
 import com.idmission.sdk2.client.model.AdditionalCustomerLiveCheckResponseData;
@@ -16,19 +14,9 @@ import com.idmission.sdk2.client.model.CameraFacing;
 import com.idmission.sdk2.client.model.CameraOrientation;
 import com.idmission.sdk2.client.model.CommonApiResponse;
 import com.idmission.sdk2.client.model.CriminalRecordResponse;
-import com.idmission.sdk2.client.model.DocumentCaptureCustomizationOptions;
 import com.idmission.sdk2.client.model.ExtractedIdData;
 import com.idmission.sdk2.client.model.ExtractedPersonalData;
 import com.idmission.sdk2.client.model.HostDataResponse;
-import com.idmission.sdk2.client.model.IDCaptureCustomizationOptions;
-import com.idmission.sdk2.client.model.IDCaptureOptions;
-import com.idmission.sdk2.client.model.IDColorOptions;
-import com.idmission.sdk2.client.model.IDFontOptions;
-import com.idmission.sdk2.client.model.IDImageOptions;
-import com.idmission.sdk2.client.model.IDLayoutOptions;
-import com.idmission.sdk2.client.model.IDStringOptions;
-import com.idmission.sdk2.client.model.InitializationStage;
-import com.idmission.sdk2.client.model.InitializationState;
 import com.idmission.sdk2.client.model.InitializeResponse;
 import com.idmission.sdk2.client.model.NmResultResponse;
 import com.idmission.sdk2.client.model.OffensesResponse;
@@ -38,25 +26,29 @@ import com.idmission.sdk2.client.model.Response;
 import com.idmission.sdk2.client.model.ResponseCustomerData;
 import com.idmission.sdk2.client.model.ResultData;
 import com.idmission.sdk2.client.model.SDKCustomizationOptions;
-import com.idmission.sdk2.client.model.SelfieCaptureCustomizationOptions;
 import com.idmission.sdk2.client.model.SexOffendersResponse;
-import com.idmission.sdk2.client.model.SignatureCaptureCustomizationOptions;
 import com.idmission.sdk2.client.model.Status;
 import com.idmission.sdk2.client.model.TextMatchResultResponse;
-import com.idmission.sdk2.client.model.UpdateInitialization;
-import com.idmission.sdk2.client.model.VideoIdCaptureCustomizationOptions;
 import com.idmission.sdk2.client.model.WlsResultResponse;
+import com.idmission.sdk2.client.model.CardData;
+import com.idmission.sdk2.client.model.CustomerDataMatchResult;
+import com.idmission.sdk2.client.model.DeduplicationDataResponse;
+import com.idmission.sdk2.client.model.DocumentTamper;
+import com.idmission.sdk2.client.model.ExtractedPOAData;
+import com.idmission.sdk2.client.model.IneQRResponse;
+import com.idmission.sdk2.client.model.IneResponse;
+import com.idmission.sdk2.client.model.ParsedAddress;
+import com.idmission.sdk2.client.model.RenapoResponse;
+import com.idmission.sdk2.client.model.VideoIDData;
 import com.idmission.sdk2.identityproofing.IdentityProofingSDK;
 import com.idmission.sdk2.utils.LANGUAGE;
-
+import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -109,30 +101,20 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
       String debug = (String) map.get("debug");
       if(null!=debug && debug.contains("y")){
         isDebug=true;
+      }else{
+        isDebug=false;
       }
 
       accessToken = (String) map.get("accessToken");
-      
       new BackgroundTask(result).execute();
     } else if (call.method.equals("idm_sdk_serviceID20")) {
-      HashMap<String, Object> map = (HashMap<String, Object>) call.arguments;
-      int clientTraceId = (int) map.get("clientTraceId");
-      //String captureBack = (String) map.get("captureBack");
-
       Intent i = new Intent(activity, CallPluginActivity.class);
-      i.putExtra("clientTraceId", clientTraceId);
-      //i.putExtra("captureBack", captureBack);
       i.putExtra("serviceID", 20);
       activity.startActivityForResult(i, 1);
       resultCallback = result;
     } else if (call.method.equals("idm_sdk_serviceID10")) {
-      HashMap<String, Object> map = (HashMap<String, Object>) call.arguments;
-      int clientTraceId = (int) map.get("clientTraceId");
-      //String captureBack = (String) map.get("captureBack");
       Intent i = new Intent(activity, CallPluginActivity.class);
       i.putExtra("serviceID", 10);
-      i.putExtra("clientTraceId", clientTraceId);
-      //i.putExtra("captureBack", captureBack);
       activity.startActivityForResult(i, 1);
       resultCallback = result;
     } else if (call.method.equals("idm_sdk_serviceID185")) {
@@ -194,7 +176,9 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
     protected void onPostExecute(Response<InitializeResponse> initializeResponseResponse) {
       super.onPostExecute(initializeResponseResponse);
       try {
-        result.success(initializeResponseResponse.getResult().toString());
+        //result.success(initializeResponseResponse.getResult().toString());
+        if(!initializeResponseResponse.getResult().toString().isEmpty())
+          result.success("SDK Successfully Initialized");
       }catch(Exception e){
         result.success("Error");
       }
@@ -202,13 +186,23 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
 
     @Override
     protected Response<InitializeResponse> doInBackground(Void... voids) {
-      /* Response<InitializeResponse> response =IdentityProofingSDK.INSTANCE.initialize(activity, apiBaseUrl,accessToken);*/
+      SDKCustomizationOptions sco = new SDKCustomizationOptions(
+              LANGUAGE.EN,
+              false,
+              false,
+              false,
+              CameraFacing.FRONT,
+              CameraFacing.BACK,
+              CameraOrientation.PORTRAIT,
+              isDebug
+      );
+
       Response<InitializeResponse> response =
-              IdentityProofingSDK.INSTANCE.initialize(activity,
+              IdentityProofingSDK.initialize(activity,
                       apiBaseUrl,
                       isDebug,
                       true,
-                      new SDKCustomizationOptions(),
+                      sco,
                       true,
                       accessToken);
       return response;
@@ -253,6 +247,8 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
 
   private String parseResponse(Response<CommonApiResponse> response){
     JSONObject jo = new JSONObject();
+
+    // === Status ===
     try {
       JSONObject statusData = new JSONObject();
 
@@ -261,10 +257,14 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
       statusData.put("requestId",status.getRequestId());
       statusData.put("errorData",status.getErrorData());
       statusData.put("statusMessage",status.getStatusMessage());
+      statusData.put("idToken",status.getIdToken());
+      statusData.put("traceId",status.getTraceId());
+      statusData.put("ipAddress",status.getIpAddress());
 
       jo.put("status", statusData);
     }catch(Exception e){}
 
+    // === ResultData ===
     try {
       JSONObject resultData = new JSONObject();
 
@@ -273,557 +273,651 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
       resultData.put("verificationResultCode",rd.getVerificationResultCode());
       resultData.put("verificationResultId",rd.getVerificationResultId());
       resultData.put("verificationResult",rd.getVerificationResult());
+      resultData.put("verificationResultDetails",rd.getVerificationResultDetails() != null ? rd.getVerificationResultDetails().toString() : null);
+      resultData.put("faceVerificationResult",rd.getFaceVerificationResult());
+      resultData.put("faceVerificationScore",rd.getFaceVerificationScore());
+      resultData.put("faceMask",rd.getFaceMask());
+      resultData.put("faceMaskScore",rd.getFaceMaskScore());
+      resultData.put("liveFace",rd.getLiveFace());
+      resultData.put("realScore",rd.getRealScore());
+      resultData.put("headCovering",rd.getHeadCovering());
+      resultData.put("headCoveringScore",rd.getHeadCoveringScore());
+      resultData.put("eyeCovering",rd.getEyeCovering());
+      resultData.put("eyeCoveringScore",rd.getEyeCoveringScore());
+      resultData.put("cellPhone",rd.getCellPhone());
+      resultData.put("cellPhoneScore",rd.getCellPhoneScore());
+      resultData.put("estimatedAge",rd.getEstimatedAge());
+      resultData.put("predicatedGender",rd.getPredicatedGender());
+      resultData.put("closedEyes",rd.getClosedEyes());
+
+      // VideoIDData
+      try {
+        VideoIDData vid = rd.getVideoIDData();
+        if (vid != null) {
+          JSONObject videoIDData = new JSONObject();
+          videoIDData.put("selfieVideoPhotoMatchScore",vid.getSelfieVideoPhotoMatchScore());
+          videoIDData.put("idPhotoVideoPhotoMatchScore",vid.getIdPhotoVideoPhotoMatchScore());
+          videoIDData.put("idFrontTextMatchingScore",vid.getIdFrontTextMatchingScore());
+          videoIDData.put("idBackTextMatchingScore",vid.getIdBackTextMatchingScore());
+          videoIDData.put("audioTextMatchingScore",vid.getAudioTextMatchingScore());
+          videoIDData.put("extractedAudioText",vid.getExtractedAudioText());
+          videoIDData.put("extractedAudio",vid.getExtractedAudio());
+          resultData.put("videoIDData",videoIDData);
+        }
+      }catch(Exception e){}
 
       jo.put("resultData", resultData);
     }catch(Exception e){}
 
+    // === ResponseCustomerData ===
     try {
-      JSONObject responseCustomerData = new JSONObject();
-      JSONObject extractedIdData = new JSONObject();
-      JSONObject extractedPersonalData = new JSONObject();
-      JSONObject hostDataResponseData = new JSONObject();
-      JSONObject criminalRecordResponseData = new JSONObject();
-      JSONObject aliasesResponseData = new JSONObject();
-      JSONObject offensesResponseData = new JSONObject();
-      JSONObject profilesResponseData = new JSONObject();
-      JSONObject nmResultResponseResponseData = new JSONObject();
-      JSONObject pepResultResponseData = new JSONObject();
-      JSONObject textMatchResultResponseData = new JSONObject();
-      JSONObject sexOffendersResponseData = new JSONObject();
-      JSONObject profilesResponse2Data = new JSONObject();
-      JSONObject wlsResultResponseData = new JSONObject();
-
-      ResponseCustomerData rcd = response.getResult().getResponseCustomerData();
-
-      try {
-        ExtractedIdData eid = rcd.getExtractedIdData();
-        extractedIdData.put("ageOver18",eid.getAgeOver18());
-        extractedIdData.put("barcodeDataParsed",eid.getBarcodeDataParsed());
-        extractedIdData.put("idCountry",eid.getIdCountry());
-        extractedIdData.put("idDateOfBirth",eid.getIdDateOfBirth());
-        extractedIdData.put("idDateOfBirthFormatted",eid.getIdDateOfBirthFormatted());
-        extractedIdData.put("idDateOfBirthNonEng",eid.getIdDateOfBirthNonEng());
-        extractedIdData.put("idExpirationDate",eid.getIdExpirationDate());
-        extractedIdData.put("idExpirationDateFormatted",eid.getIdExpirationDateFormatted());
-        extractedIdData.put("idExpirationDateNonEng",eid.getIdExpirationDateNonEng());
-        extractedIdData.put("idIssueCountry",eid.getIdIssueCountry());
-        extractedIdData.put("idIssueDate",eid.getIdIssueDate());
-        extractedIdData.put("idIssueDateNonEng",eid.getIdIssueDateNonEng());
-        extractedIdData.put("idNotExpired",eid.getIdNotExpired());
-        extractedIdData.put("idNumber",eid.getIdNumber());
-        extractedIdData.put("idNumberNonEng",eid.getIdNumberNonEng());
-        extractedIdData.put("idNumber1",eid.getIdNumber1());
-        extractedIdData.put("idNumber2",eid.getIdNumber2());
-        extractedIdData.put("idNumber2NonEng",eid.getIdNumber2NonEng());
-        extractedIdData.put("idNumber3",eid.getIdNumber3());
-        extractedIdData.put("idState",eid.getIdState());
-        extractedIdData.put("idType",eid.getIdType());
-        extractedIdData.put("mrzData",eid.getMrzData());
-        extractedIdData.put("mrzErrorMessage",eid.getMrzErrorMessage());
-        extractedIdData.put("nationality",eid.getNationality());
-        extractedIdData.put("negativeDBMatchFound",eid.getNegativeDBMatchFound());
-        extractedIdData.put("validIdNumber",eid.getValidIdNumber());
-        extractedIdData.put("idProcessImageFront",eid.getIdProcessImageFront());
-        extractedIdData.put("idProcessImageBack",eid.getIdProcessImageBack());
-        extractedIdData.put("profession",eid.getProfession());
-        extractedIdData.put("professionNonEng",eid.getProfessionNonEng());
-        extractedIdData.put("photoOnId",eid.getPhotoOnId());
-        responseCustomerData.put("extractedIdData",extractedIdData);
-      }catch(Exception e){}
-
-      try {
-        ExtractedPersonalData epd = rcd.getExtractedPersonalData();
-        extractedPersonalData.put("addressLine1",epd.getAddressLine1());
-        extractedPersonalData.put("addressLine1NonEng",epd.getAddressLine1NonEng());
-        extractedPersonalData.put("addressLine2",epd.getAddressLine2());
-        extractedPersonalData.put("addressLine2NonEng",epd.getAddressLine2NonEng());
-        extractedPersonalData.put("city",epd.getCity());
-        extractedPersonalData.put("addressNonEng",epd.getAddressNonEng());
-        extractedPersonalData.put("country",epd.getCountry());
-        extractedPersonalData.put("state",epd.getState());
-        extractedPersonalData.put("district",epd.getDistrict());
-        extractedPersonalData.put("postalCode",epd.getPostalCode());
-        extractedPersonalData.put("dob",epd.getDob());
-        extractedPersonalData.put("email",epd.getEmail());
-        extractedPersonalData.put("enrolledDate",epd.getEnrolledDate());
-        extractedPersonalData.put("firstName",epd.getFirstName());
-        extractedPersonalData.put("firstNameNonEng",epd.getFirstNameNonEng());
-        extractedPersonalData.put("gender",epd.getGender());
-        extractedPersonalData.put("lastName",epd.getLastName());
-        extractedPersonalData.put("lastName2",epd.getLastName2());
-        extractedPersonalData.put("lastNameNonEng",epd.getLastNameNonEng());
-        extractedPersonalData.put("name",epd.getName());
-        extractedPersonalData.put("phone",epd.getPhone());
-        extractedPersonalData.put("uniqueNumber",epd.getUniqueNumber());
-        extractedPersonalData.put("middleName",epd.getMiddleName());
-        extractedPersonalData.put("middleNameNonEng",epd.getMiddleNameNonEng());
-        extractedPersonalData.put("middleNameNonEng",epd.getMiddleNameNonEng());
-        responseCustomerData.put("extractedPersonalData",extractedPersonalData);
-      }catch(Exception e){}
-
-      try {
-        HostDataResponse hdr = rcd.getHostData();
-
-        try {
-          CriminalRecordResponse crr = hdr.getCriminalRecord();
-
-          try {
-            AliasesResponse ar = crr.getAliasesResponse();
-            aliasesResponseData.put("firstName",ar.getFirstName());
-            aliasesResponseData.put("middleName",ar.getMiddleName());
-            aliasesResponseData.put("lastName",ar.getLastName());
-            aliasesResponseData.put("fullName",ar.getFullName());
-            criminalRecordResponseData.put("aliases",aliasesResponseData);
-          }catch(Exception e){}
-
-          try {
-            OffensesResponse or = crr.getOffensesResponse();
-            offensesResponseData.put("addmissionDate",or.getAddmissionDate());
-            offensesResponseData.put("ageOfVictim",or.getAgeOfVictim());
-            offensesResponseData.put("arrestingAgency",or.getArrestingAgency());
-            offensesResponseData.put("caseNumber",or.getCaseNumber());
-            offensesResponseData.put("category",or.getCategory());
-            offensesResponseData.put("chargeFillingDate",or.getChargeFillingDate());
-            offensesResponseData.put("closedDate",or.getClosedDate());
-            offensesResponseData.put("code",or.getCode());
-            offensesResponseData.put("counts",or.getCounts());
-            offensesResponseData.put("courts",or.getCourts());
-            offensesResponseData.put("dateConvicted",or.getDateConvicted());
-            offensesResponseData.put("dateOfCrime",or.getDateOfCrime());
-            offensesResponseData.put("dateOfWarrant",or.getDateOfWarrant());
-            offensesResponseData.put("description",or.getDescription());
-            offensesResponseData.put("dispositionDate",or.getDispositionDate());
-            offensesResponseData.put("dispostion",or.getDispostion());
-            offensesResponseData.put("facility",or.getFacility());
-            offensesResponseData.put("jurisdication",or.getJurisdication());
-            offensesResponseData.put("prisonerNumber",or.getPrisonerNumber());
-            offensesResponseData.put("relationshipToVictim",or.getRelationshipToVictim());
-            offensesResponseData.put("releaseDate",or.getReleaseDate());
-            offensesResponseData.put("section",or.getSection());
-            offensesResponseData.put("sentence",or.getSentence());
-            offensesResponseData.put("sentenceDate",or.getSentenceDate());
-            offensesResponseData.put("subsection",or.getSubsection());
-            offensesResponseData.put("title",or.getTitle());
-            offensesResponseData.put("warrantDate",or.getWarrantDate());
-            offensesResponseData.put("warrantNumber",or.getWarrantNumber());
-            offensesResponseData.put("weaponsUsed",or.getWeaponsUsed());
-            criminalRecordResponseData.put("offenses",offensesResponseData);
-          }catch(Exception e){}
-
-          try {
-            ProfilesResponse pr = crr.getProfiles();
-            profilesResponseData.put("city",pr.getCity());
-            profilesResponseData.put("country",pr.getCountry());
-            profilesResponseData.put("fullName",pr.getFullName());
-            profilesResponseData.put("firstName",pr.getFirstName());
-            profilesResponseData.put("middleName",pr.getMiddleName());
-            profilesResponseData.put("address",pr.getAddress());
-            profilesResponseData.put("convictionType",pr.getConvictionType());
-            profilesResponseData.put("countryCode",pr.getCountryCode());
-            profilesResponseData.put("countryName",pr.getCountryName());
-            profilesResponseData.put("dobOfBirth",pr.getDobOfBirth());
-            profilesResponseData.put("drivingLicenseVerificationResult",pr.getDrivingLicenseVerificationResult());
-            profilesResponseData.put("internalId",pr.getInternalId());
-            profilesResponseData.put("internalIdCriminalRecords",pr.getInternalIdCriminalRecords());
-            profilesResponseData.put("lastName",pr.getLastName());
-            profilesResponseData.put("photoUrl",pr.getPhotoUrl());
-            profilesResponseData.put("postalCode",pr.getPostalCode());
-            profilesResponseData.put("sex",pr.getSex());
-            profilesResponseData.put("source",pr.getSource());
-            profilesResponseData.put("state",pr.getState());
-            profilesResponseData.put("street1",pr.getStreet1());
-            profilesResponseData.put("street2",pr.getStreet2());
-            profilesResponseData.put("verificationResult",pr.getVerificationResult());
-            criminalRecordResponseData.put("profiles",profilesResponseData);
-          }catch(Exception e){}
-
-          hostDataResponseData.put("criminalRecord",criminalRecordResponseData);
-
-        }catch(Exception e){}
-
-        try {
-          NmResultResponse nrr = hdr.getNmresult();
-          nmResultResponseResponseData.put("createdOnNM",nrr.getCreatedOnNM());
-          nmResultResponseResponseData.put("orderIdNM",nrr.getOrderIdNM());
-          nmResultResponseResponseData.put("resultCountNM",nrr.getResultCountNM());
-          nmResultResponseResponseData.put("orderStatusNM",nrr.getOrderStatusNM());
-          nmResultResponseResponseData.put("orderUrlNM",nrr.getOrderUrlNM());
-          nmResultResponseResponseData.put("productIdNM",nrr.getProductIdNM());
-          nmResultResponseResponseData.put("vital4APIHostTried",nrr.getVital4APIHostTried());
-          hostDataResponseData.put("nmResult",nmResultResponseResponseData);
-        }catch(Exception e){}
-
-        try {
-          PepResultResponse prr = hdr.getPepresult();
-          pepResultResponseData.put("createdOnPEP",prr.getCreatedOnPEP());
-          pepResultResponseData.put("orderIdPEP",prr.getOrderIdPEP());
-          pepResultResponseData.put("resultCountPEP",prr.getResultCountPEP());
-          pepResultResponseData.put("productId_PEP",prr.getProductId_PEP());
-          pepResultResponseData.put("orderUrlPEP",prr.getOrderUrlPEP());
-          pepResultResponseData.put("orderStatus_PEP",prr.getOrderStatus_PEP());
-          hostDataResponseData.put("pepresult",pepResultResponseData);
-        }catch(Exception e){}
-
-        try {
-          TextMatchResultResponse tmrr = hdr.getTextMatchResult();
-          textMatchResultResponseData.put("address",tmrr.getAddress());
-          textMatchResultResponseData.put("addressCityMatch",tmrr.getAddressCityMatch());
-          textMatchResultResponseData.put("addressLine1Match",tmrr.getAddressLine1Match());
-          textMatchResultResponseData.put("addressLine2Match",tmrr.getAddressLine2Match());
-          textMatchResultResponseData.put("addressZIP4Match",tmrr.getAddressZIP4Match());
-          textMatchResultResponseData.put("addressStateCodeMatch",tmrr.getAddressStateCodeMatch());
-          textMatchResultResponseData.put("addressZIP5Match",tmrr.getAddressZIP5Match());
-          textMatchResultResponseData.put("documentCategoryMatch",tmrr.getDocumentCategoryMatch());
-          textMatchResultResponseData.put("driverLicenseExpirationDateMatch",tmrr.getDriverLicenseExpirationDateMatch());
-          textMatchResultResponseData.put("driverLicenseIssueDateMatch",tmrr.getDriverLicenseIssueDateMatch());
-          textMatchResultResponseData.put("driverLicenseNumberMatch",tmrr.getDriverLicenseNumberMatch());
-          textMatchResultResponseData.put("hostTried",tmrr.getHostTried());
-          textMatchResultResponseData.put("identiFraudHostTried",tmrr.getIdentiFraudHostTried());
-          textMatchResultResponseData.put("personBirthDateMatch",tmrr.getPersonBirthDateMatch());
-          textMatchResultResponseData.put("personFirstNameExactMatch",tmrr.getPersonFirstNameExactMatch());
-          textMatchResultResponseData.put("personFirstNameFuzzyAlternateMatch",tmrr.getPersonFirstNameFuzzyAlternateMatch());
-          textMatchResultResponseData.put("personFirstNameFuzzyPrimaryMatch",tmrr.getPersonFirstNameFuzzyPrimaryMatch());
-          textMatchResultResponseData.put("personLastNameExactMatch",tmrr.getPersonLastNameExactMatch());
-          textMatchResultResponseData.put("personLastNameFuzzyAlternateMatch",tmrr.getPersonLastNameFuzzyAlternateMatch());
-          textMatchResultResponseData.put("personLastNameFuzzyPrimaryMatch",tmrr.getPersonLastNameFuzzyPrimaryMatch());
-          textMatchResultResponseData.put("personMiddleInitialMatch",tmrr.getPersonMiddleInitialMatch());
-          textMatchResultResponseData.put("personMiddleNameExactMatch",tmrr.getPersonMiddleNameExactMatch());
-          textMatchResultResponseData.put("personMiddleNameFuzzyAlternateMatch",tmrr.getPersonMiddleNameFuzzyAlternateMatch());
-          textMatchResultResponseData.put("personMiddleNameFuzzyPrimaryMatch",tmrr.getPersonMiddleNameFuzzyPrimaryMatch());
-          textMatchResultResponseData.put("personSexCodeMatch",tmrr.getPersonSexCodeMatch());
-          textMatchResultResponseData.put("servicePresent",tmrr.getServicePresent());
-          textMatchResultResponseData.put("thirdPartyVerificationResultDescription",tmrr.getThirdPartyVerificationResultDescription());
-          textMatchResultResponseData.put("verificationResult",tmrr.getVerificationResult());
-          hostDataResponseData.put("textMatchResult",textMatchResultResponseData);
-        }catch(Exception e){}
-
-        try {
-          SexOffendersResponse sor = hdr.getSexOffenders();
-
-          try {
-            ProfilesResponse pr2 = sor.getProfiles();
-            profilesResponse2Data.put("city",pr2.getCity());
-            profilesResponse2Data.put("country",pr2.getCountry());
-            profilesResponse2Data.put("fullName",pr2.getFullName());
-            profilesResponse2Data.put("firstName",pr2.getFirstName());
-            profilesResponse2Data.put("middleName",pr2.getMiddleName());
-            profilesResponse2Data.put("address",pr2.getAddress());
-            profilesResponse2Data.put("convictionType",pr2.getConvictionType());
-            profilesResponse2Data.put("countryCode",pr2.getCountryCode());
-            profilesResponse2Data.put("countryName",pr2.getCountryName());
-            profilesResponse2Data.put("dobOfBirth",pr2.getDobOfBirth());
-            profilesResponse2Data.put("drivingLicenseVerificationResult",pr2.getDrivingLicenseVerificationResult());
-            profilesResponse2Data.put("internalId",pr2.getInternalId());
-            profilesResponse2Data.put("internalIdCriminalRecords",pr2.getInternalIdCriminalRecords());
-            profilesResponse2Data.put("lastName",pr2.getLastName());
-            profilesResponse2Data.put("photoUrl",pr2.getPhotoUrl());
-            profilesResponse2Data.put("postalCode",pr2.getPostalCode());
-            profilesResponse2Data.put("sex",pr2.getSex());
-            profilesResponse2Data.put("source",pr2.getSource());
-            profilesResponse2Data.put("state",pr2.getState());
-            profilesResponse2Data.put("street1",pr2.getStreet1());
-            profilesResponse2Data.put("street2",pr2.getStreet2());
-            profilesResponse2Data.put("verificationResult",pr2.getVerificationResult());
-            sexOffendersResponseData.put("profiles",profilesResponse2Data);
-          }catch(Exception e){}
-
-          hostDataResponseData.put("sexOffenders",sexOffendersResponseData);
-        }catch(Exception e){}
-
-        try {
-          WlsResultResponse wrr = hdr.getWlsresult();
-          wlsResultResponseData.put("createdOnWLS",wrr.getCreatedOnWLS());
-          wlsResultResponseData.put("orderIdWLS",wrr.getOrderIdWLS());
-          wlsResultResponseData.put("resultCountWLS",wrr.getResultCountWLS());
-          wlsResultResponseData.put("productIdWLS",wrr.getProductIdWLS());
-          wlsResultResponseData.put("orderStatusWLS",wrr.getOrderStatusWLS());
-          wlsResultResponseData.put("orderUrlWLS",wrr.getOrderUrlWLS());
-          hostDataResponseData.put("wlsresult",wlsResultResponseData);
-        }catch(Exception e){}
-
-        responseCustomerData.put("hostDataResponse",hostDataResponseData);
-      }catch(Exception e){}
-
-      jo.put("responseCustomerData", responseCustomerData);
+      jo.put("responseCustomerData", buildResponseCustomerDataJson(response.getResult().getResponseCustomerData()));
     }catch(Exception e){}
 
+    // === ResponseCustomerVerifyData ===
     try {
-      JSONObject responseCustomerVerifyData = new JSONObject();
-      JSONObject extractedIdData = new JSONObject();
-      JSONObject extractedPersonalData = new JSONObject();
-      JSONObject hostDataResponseData = new JSONObject();
-      JSONObject criminalRecordResponseData = new JSONObject();
-      JSONObject aliasesResponseData = new JSONObject();
-      JSONObject offensesResponseData = new JSONObject();
-      JSONObject profilesResponseData = new JSONObject();
-      JSONObject nmResultResponseResponseData = new JSONObject();
-      JSONObject pepResultResponseData = new JSONObject();
-      JSONObject textMatchResultResponseData = new JSONObject();
-      JSONObject sexOffendersResponseData = new JSONObject();
-      JSONObject profilesResponse2Data = new JSONObject();
-      JSONObject wlsResultResponseData = new JSONObject();
-
-      ResponseCustomerData rcvd = response.getResult().getResponseCustomerVerifyData();
-
-      try {
-        ExtractedIdData eid = rcvd.getExtractedIdData();
-        extractedIdData.put("ageOver18",eid.getAgeOver18());
-        extractedIdData.put("barcodeDataParsed",eid.getBarcodeDataParsed());
-        extractedIdData.put("idCountry",eid.getIdCountry());
-        extractedIdData.put("idDateOfBirth",eid.getIdDateOfBirth());
-        extractedIdData.put("idDateOfBirthFormatted",eid.getIdDateOfBirthFormatted());
-        extractedIdData.put("idDateOfBirthNonEng",eid.getIdDateOfBirthNonEng());
-        extractedIdData.put("idExpirationDate",eid.getIdExpirationDate());
-        extractedIdData.put("idExpirationDateFormatted",eid.getIdExpirationDateFormatted());
-        extractedIdData.put("idExpirationDateNonEng",eid.getIdExpirationDateNonEng());
-        extractedIdData.put("idIssueCountry",eid.getIdIssueCountry());
-        extractedIdData.put("idIssueDate",eid.getIdIssueDate());
-        extractedIdData.put("idIssueDateNonEng",eid.getIdIssueDateNonEng());
-        extractedIdData.put("idNotExpired",eid.getIdNotExpired());
-        extractedIdData.put("idNumber",eid.getIdNumber());
-        extractedIdData.put("idNumberNonEng",eid.getIdNumberNonEng());
-        extractedIdData.put("idNumber1",eid.getIdNumber1());
-        extractedIdData.put("idNumber2",eid.getIdNumber2());
-        extractedIdData.put("idNumber2NonEng",eid.getIdNumber2NonEng());
-        extractedIdData.put("idNumber3",eid.getIdNumber3());
-        extractedIdData.put("idState",eid.getIdState());
-        extractedIdData.put("idType",eid.getIdType());
-        extractedIdData.put("mrzData",eid.getMrzData());
-        extractedIdData.put("mrzErrorMessage",eid.getMrzErrorMessage());
-        extractedIdData.put("nationality",eid.getNationality());
-        extractedIdData.put("negativeDBMatchFound",eid.getNegativeDBMatchFound());
-        extractedIdData.put("validIdNumber",eid.getValidIdNumber());
-        extractedIdData.put("idProcessImageFront",eid.getIdProcessImageFront());
-        extractedIdData.put("idProcessImageBack",eid.getIdProcessImageBack());
-        extractedIdData.put("profession",eid.getProfession());
-        extractedIdData.put("professionNonEng",eid.getProfessionNonEng());
-        extractedIdData.put("photoOnId",eid.getPhotoOnId());
-        responseCustomerVerifyData.put("extractedIdData",extractedIdData);
-      }catch(Exception e){}
-
-      try {
-        ExtractedPersonalData epd = rcvd.getExtractedPersonalData();
-        extractedPersonalData.put("addressLine1",epd.getAddressLine1());
-        extractedPersonalData.put("addressLine1NonEng",epd.getAddressLine1NonEng());
-        extractedPersonalData.put("addressLine2",epd.getAddressLine2());
-        extractedPersonalData.put("addressLine2NonEng",epd.getAddressLine2NonEng());
-        extractedPersonalData.put("city",epd.getCity());
-        extractedPersonalData.put("addressNonEng",epd.getAddressNonEng());
-        extractedPersonalData.put("country",epd.getCountry());
-        extractedPersonalData.put("state",epd.getState());
-        extractedPersonalData.put("district",epd.getDistrict());
-        extractedPersonalData.put("postalCode",epd.getPostalCode());
-        extractedPersonalData.put("dob",epd.getDob());
-        extractedPersonalData.put("email",epd.getEmail());
-        extractedPersonalData.put("enrolledDate",epd.getEnrolledDate());
-        extractedPersonalData.put("firstName",epd.getFirstName());
-        extractedPersonalData.put("firstNameNonEng",epd.getFirstNameNonEng());
-        extractedPersonalData.put("gender",epd.getGender());
-        extractedPersonalData.put("lastName",epd.getLastName());
-        extractedPersonalData.put("lastName2",epd.getLastName2());
-        extractedPersonalData.put("lastNameNonEng",epd.getLastNameNonEng());
-        extractedPersonalData.put("name",epd.getName());
-        extractedPersonalData.put("phone",epd.getPhone());
-        extractedPersonalData.put("uniqueNumber",epd.getUniqueNumber());
-        extractedPersonalData.put("middleName",epd.getMiddleName());
-        extractedPersonalData.put("middleNameNonEng",epd.getMiddleNameNonEng());
-        responseCustomerVerifyData.put("extractedPersonalData",extractedPersonalData);
-      }catch(Exception e){}
-
-      try {
-        HostDataResponse hdr = rcvd.getHostData();
-
-        try {
-          CriminalRecordResponse crr = hdr.getCriminalRecord();
-
-          try {
-            AliasesResponse ar = crr.getAliasesResponse();
-            aliasesResponseData.put("firstName",ar.getFirstName());
-            aliasesResponseData.put("middleName",ar.getMiddleName());
-            aliasesResponseData.put("lastName",ar.getLastName());
-            aliasesResponseData.put("fullName",ar.getFullName());
-            criminalRecordResponseData.put("aliases",aliasesResponseData);
-          }catch(Exception e){}
-
-          try {
-            OffensesResponse or = crr.getOffensesResponse();
-            offensesResponseData.put("addmissionDate",or.getAddmissionDate());
-            offensesResponseData.put("ageOfVictim",or.getAgeOfVictim());
-            offensesResponseData.put("arrestingAgency",or.getArrestingAgency());
-            offensesResponseData.put("caseNumber",or.getCaseNumber());
-            offensesResponseData.put("category",or.getCategory());
-            offensesResponseData.put("chargeFillingDate",or.getChargeFillingDate());
-            offensesResponseData.put("closedDate",or.getClosedDate());
-            offensesResponseData.put("code",or.getCode());
-            offensesResponseData.put("counts",or.getCounts());
-            offensesResponseData.put("courts",or.getCourts());
-            offensesResponseData.put("dateConvicted",or.getDateConvicted());
-            offensesResponseData.put("dateOfCrime",or.getDateOfCrime());
-            offensesResponseData.put("dateOfWarrant",or.getDateOfWarrant());
-            offensesResponseData.put("description",or.getDescription());
-            offensesResponseData.put("dispositionDate",or.getDispositionDate());
-            offensesResponseData.put("dispostion",or.getDispostion());
-            offensesResponseData.put("facility",or.getFacility());
-            offensesResponseData.put("jurisdication",or.getJurisdication());
-            offensesResponseData.put("prisonerNumber",or.getPrisonerNumber());
-            offensesResponseData.put("relationshipToVictim",or.getRelationshipToVictim());
-            offensesResponseData.put("releaseDate",or.getReleaseDate());
-            offensesResponseData.put("section",or.getSection());
-            offensesResponseData.put("sentence",or.getSentence());
-            offensesResponseData.put("sentenceDate",or.getSentenceDate());
-            offensesResponseData.put("subsection",or.getSubsection());
-            offensesResponseData.put("title",or.getTitle());
-            offensesResponseData.put("warrantDate",or.getWarrantDate());
-            offensesResponseData.put("warrantNumber",or.getWarrantNumber());
-            offensesResponseData.put("weaponsUsed",or.getWeaponsUsed());
-            criminalRecordResponseData.put("offenses",offensesResponseData);
-          }catch(Exception e){}
-
-          try {
-            ProfilesResponse pr = crr.getProfiles();
-            profilesResponseData.put("city",pr.getCity());
-            profilesResponseData.put("country",pr.getCountry());
-            profilesResponseData.put("fullName",pr.getFullName());
-            profilesResponseData.put("firstName",pr.getFirstName());
-            profilesResponseData.put("middleName",pr.getMiddleName());
-            profilesResponseData.put("address",pr.getAddress());
-            profilesResponseData.put("convictionType",pr.getConvictionType());
-            profilesResponseData.put("countryCode",pr.getCountryCode());
-            profilesResponseData.put("countryName",pr.getCountryName());
-            profilesResponseData.put("dobOfBirth",pr.getDobOfBirth());
-            profilesResponseData.put("drivingLicenseVerificationResult",pr.getDrivingLicenseVerificationResult());
-            profilesResponseData.put("internalId",pr.getInternalId());
-            profilesResponseData.put("internalIdCriminalRecords",pr.getInternalIdCriminalRecords());
-            profilesResponseData.put("lastName",pr.getLastName());
-            profilesResponseData.put("photoUrl",pr.getPhotoUrl());
-            profilesResponseData.put("postalCode",pr.getPostalCode());
-            profilesResponseData.put("sex",pr.getSex());
-            profilesResponseData.put("source",pr.getSource());
-            profilesResponseData.put("state",pr.getState());
-            profilesResponseData.put("street1",pr.getStreet1());
-            profilesResponseData.put("street2",pr.getStreet2());
-            profilesResponseData.put("verificationResult",pr.getVerificationResult());
-            criminalRecordResponseData.put("profiles",profilesResponseData);
-          }catch(Exception e){}
-
-          hostDataResponseData.put("criminalRecord",criminalRecordResponseData);
-        }catch(Exception e){}
-
-        try {
-          NmResultResponse nrr = hdr.getNmresult();
-          nmResultResponseResponseData.put("createdOnNM",nrr.getCreatedOnNM());
-          nmResultResponseResponseData.put("orderIdNM",nrr.getOrderIdNM());
-          nmResultResponseResponseData.put("resultCountNM",nrr.getResultCountNM());
-          nmResultResponseResponseData.put("orderStatusNM",nrr.getOrderStatusNM());
-          nmResultResponseResponseData.put("orderUrlNM",nrr.getOrderUrlNM());
-          nmResultResponseResponseData.put("productIdNM",nrr.getProductIdNM());
-          nmResultResponseResponseData.put("vital4APIHostTried",nrr.getVital4APIHostTried());
-          hostDataResponseData.put("nmResult",nmResultResponseResponseData);
-        }catch(Exception e){}
-
-        try {
-          PepResultResponse prr = hdr.getPepresult();
-          pepResultResponseData.put("createdOnPEP",prr.getCreatedOnPEP());
-          pepResultResponseData.put("orderIdPEP",prr.getOrderIdPEP());
-          pepResultResponseData.put("resultCountPEP",prr.getResultCountPEP());
-          pepResultResponseData.put("productId_PEP",prr.getProductId_PEP());
-          pepResultResponseData.put("orderUrlPEP",prr.getOrderUrlPEP());
-          pepResultResponseData.put("orderStatus_PEP",prr.getOrderStatus_PEP());
-          hostDataResponseData.put("pepresult",pepResultResponseData);
-        }catch(Exception e){}
-
-        try {
-          TextMatchResultResponse tmrr = hdr.getTextMatchResult();
-          textMatchResultResponseData.put("address",tmrr.getAddress());
-          textMatchResultResponseData.put("addressCityMatch",tmrr.getAddressCityMatch());
-          textMatchResultResponseData.put("addressLine1Match",tmrr.getAddressLine1Match());
-          textMatchResultResponseData.put("addressLine2Match",tmrr.getAddressLine2Match());
-          textMatchResultResponseData.put("addressZIP4Match",tmrr.getAddressZIP4Match());
-          textMatchResultResponseData.put("addressStateCodeMatch",tmrr.getAddressStateCodeMatch());
-          textMatchResultResponseData.put("addressZIP5Match",tmrr.getAddressZIP5Match());
-          textMatchResultResponseData.put("documentCategoryMatch",tmrr.getDocumentCategoryMatch());
-          textMatchResultResponseData.put("driverLicenseExpirationDateMatch",tmrr.getDriverLicenseExpirationDateMatch());
-          textMatchResultResponseData.put("driverLicenseIssueDateMatch",tmrr.getDriverLicenseIssueDateMatch());
-          textMatchResultResponseData.put("driverLicenseNumberMatch",tmrr.getDriverLicenseNumberMatch());
-          textMatchResultResponseData.put("hostTried",tmrr.getHostTried());
-          textMatchResultResponseData.put("identiFraudHostTried",tmrr.getIdentiFraudHostTried());
-          textMatchResultResponseData.put("personBirthDateMatch",tmrr.getPersonBirthDateMatch());
-          textMatchResultResponseData.put("personFirstNameExactMatch",tmrr.getPersonFirstNameExactMatch());
-          textMatchResultResponseData.put("personFirstNameFuzzyAlternateMatch",tmrr.getPersonFirstNameFuzzyAlternateMatch());
-          textMatchResultResponseData.put("personFirstNameFuzzyPrimaryMatch",tmrr.getPersonFirstNameFuzzyPrimaryMatch());
-          textMatchResultResponseData.put("personLastNameExactMatch",tmrr.getPersonLastNameExactMatch());
-          textMatchResultResponseData.put("personLastNameFuzzyAlternateMatch",tmrr.getPersonLastNameFuzzyAlternateMatch());
-          textMatchResultResponseData.put("personLastNameFuzzyPrimaryMatch",tmrr.getPersonLastNameFuzzyPrimaryMatch());
-          textMatchResultResponseData.put("personMiddleInitialMatch",tmrr.getPersonMiddleInitialMatch());
-          textMatchResultResponseData.put("personMiddleNameExactMatch",tmrr.getPersonMiddleNameExactMatch());
-          textMatchResultResponseData.put("personMiddleNameFuzzyAlternateMatch",tmrr.getPersonMiddleNameFuzzyAlternateMatch());
-          textMatchResultResponseData.put("personMiddleNameFuzzyPrimaryMatch",tmrr.getPersonMiddleNameFuzzyPrimaryMatch());
-          textMatchResultResponseData.put("personSexCodeMatch",tmrr.getPersonSexCodeMatch());
-          textMatchResultResponseData.put("servicePresent",tmrr.getServicePresent());
-          textMatchResultResponseData.put("thirdPartyVerificationResultDescription",tmrr.getThirdPartyVerificationResultDescription());
-          textMatchResultResponseData.put("verificationResult",tmrr.getVerificationResult());
-          hostDataResponseData.put("textMatchResult",textMatchResultResponseData);
-        }catch(Exception e){}
-
-        try {
-          SexOffendersResponse sor = hdr.getSexOffenders();
-
-          try {
-            ProfilesResponse pr2 = sor.getProfiles();
-            profilesResponse2Data.put("city",pr2.getCity());
-            profilesResponse2Data.put("country",pr2.getCountry());
-            profilesResponse2Data.put("fullName",pr2.getFullName());
-            profilesResponse2Data.put("firstName",pr2.getFirstName());
-            profilesResponse2Data.put("middleName",pr2.getMiddleName());
-            profilesResponse2Data.put("address",pr2.getAddress());
-            profilesResponse2Data.put("convictionType",pr2.getConvictionType());
-            profilesResponse2Data.put("countryCode",pr2.getCountryCode());
-            profilesResponse2Data.put("countryName",pr2.getCountryName());
-            profilesResponse2Data.put("dobOfBirth",pr2.getDobOfBirth());
-            profilesResponse2Data.put("drivingLicenseVerificationResult",pr2.getDrivingLicenseVerificationResult());
-            profilesResponse2Data.put("internalId",pr2.getInternalId());
-            profilesResponse2Data.put("internalIdCriminalRecords",pr2.getInternalIdCriminalRecords());
-            profilesResponse2Data.put("lastName",pr2.getLastName());
-            profilesResponse2Data.put("photoUrl",pr2.getPhotoUrl());
-            profilesResponse2Data.put("postalCode",pr2.getPostalCode());
-            profilesResponse2Data.put("sex",pr2.getSex());
-            profilesResponse2Data.put("source",pr2.getSource());
-            profilesResponse2Data.put("state",pr2.getState());
-            profilesResponse2Data.put("street1",pr2.getStreet1());
-            profilesResponse2Data.put("street2",pr2.getStreet2());
-            profilesResponse2Data.put("verificationResult",pr2.getVerificationResult());
-            sexOffendersResponseData.put("profiles",profilesResponse2Data);
-          }catch(Exception e){}
-
-          hostDataResponseData.put("sexOffenders",sexOffendersResponseData);
-        }catch(Exception e){}
-
-        try {
-          WlsResultResponse wrr = hdr.getWlsresult();
-          wlsResultResponseData.put("createdOnWLS",wrr.getCreatedOnWLS());
-          wlsResultResponseData.put("orderIdWLS",wrr.getOrderIdWLS());
-          wlsResultResponseData.put("resultCountWLS",wrr.getResultCountWLS());
-          wlsResultResponseData.put("productIdWLS",wrr.getProductIdWLS());
-          wlsResultResponseData.put("orderStatusWLS",wrr.getOrderStatusWLS());
-          wlsResultResponseData.put("orderUrlWLS",wrr.getOrderUrlWLS());
-          hostDataResponseData.put("wlsresult",wlsResultResponseData);
-        }catch(Exception e){}
-        responseCustomerVerifyData.put("hostDataResponse",hostDataResponseData);
-      }catch(Exception e){}
-
-      jo.put("responseCustomerVerifyData", responseCustomerVerifyData);
+      jo.put("responseCustomerVerifyData", buildResponseCustomerDataJson(response.getResult().getResponseCustomerVerifyData()));
     }catch(Exception e){}
 
+    // === DeDuplicationData ===
+    try {
+      java.util.List<DeduplicationDataResponse> deDupList = response.getResult().getDeDuplicationData();
+      if (deDupList != null && !deDupList.isEmpty()) {
+        JSONArray deDupArray = new JSONArray();
+        for (DeduplicationDataResponse ddr : deDupList) {
+          JSONObject deDupItem = new JSONObject();
+          deDupItem.put("clientCustomerNumber",ddr.getClientCustomerNumber());
+          deDupItem.put("customerCode",ddr.getCustomerCode());
+          deDupItem.put("customerName",ddr.getCustomerName());
+          deDupItem.put("duplicateBackImage",ddr.getDuplicateBackImage());
+          deDupItem.put("duplicateFrontImage",ddr.getDuplicateFrontImage());
+          deDupItem.put("duplicatePersonId",ddr.getDuplicatePersonId());
+          deDupItem.put("duplicateVoiceMatchScore",ddr.getDuplicateVoiceMatchScore());
+          deDupItem.put("duplicationStatus",ddr.getDuplicationStatus());
+          deDupItem.put("enrolledDate",ddr.getEnrolledDate());
+          deDupItem.put("faceImage",ddr.getFaceImage());
+          deDupItem.put("faceMatchingScore",ddr.getFaceMatchingScore());
+          deDupItem.put("fingerPrintData",ddr.getFingerPrintData());
+          deDupItem.put("fpMatchingScore",ddr.getFpMatchingScore());
+          deDupItem.put("isDuplicate",ddr.isDuplicate());
+          deDupItem.put("recordType",ddr.getRecordType());
+          deDupArray.put(deDupItem);
+        }
+        jo.put("deDuplicationData", deDupArray);
+      }
+    }catch(Exception e){}
+
+    // === AdditionalCustomerLiveCheckResponseData ===
     try {
       JSONObject additionalCustomerLiveCheckResponseData = new JSONObject();
 
       AdditionalCustomerLiveCheckResponseData aclcrd = response.getResult().getAdditionalData();
       additionalCustomerLiveCheckResponseData.put("liveFaceDetectionFlag",aclcrd.getLiveFaceDetectionFlag());
+      additionalCustomerLiveCheckResponseData.put("verifyDataWithHost",aclcrd.getVerifyDataWithHost());
+      additionalCustomerLiveCheckResponseData.put("autofillServiceStatus",aclcrd.getAutofillServiceStatus());
 
       jo.put("additionalCustomerLiveCheckResponseData", additionalCustomerLiveCheckResponseData);
     }catch(Exception e){}
 
+    // === ParsedAddress (top-level) ===
+    try {
+      ParsedAddress pa = response.getResult().getParsedAddress();
+      if (pa != null) {
+        jo.put("parsedAddress", buildParsedAddressJson(pa));
+      }
+    }catch(Exception e){}
+
     return jo.toString();
+  }
+
+  private JSONObject buildParsedAddressJson(ParsedAddress pa) throws Exception {
+    JSONObject parsedAddressData = new JSONObject();
+    parsedAddressData.put("streetNumber",pa.getStreetNumber());
+    parsedAddressData.put("streetName",pa.getStreetName());
+    parsedAddressData.put("unit",pa.getUnit());
+    parsedAddressData.put("municipality",pa.getMunicipality());
+    parsedAddressData.put("province",pa.getProvince());
+    parsedAddressData.put("postalCode",pa.getPostalCode());
+    parsedAddressData.put("orientation",pa.getOrientation());
+    return parsedAddressData;
+  }
+
+  private JSONObject buildResponseCustomerDataJson(ResponseCustomerData rcd) throws Exception {
+    JSONObject responseCustomerData = new JSONObject();
+
+    // === ExtractedIdData ===
+    try {
+      ExtractedIdData eid = rcd.getExtractedIdData();
+      if (eid != null) {
+        JSONObject extractedIdData = new JSONObject();
+        extractedIdData.put("ageOver18",eid.getAgeOver18());
+        extractedIdData.put("barcodeDataParsed",eid.getBarcodeDataParsed());
+        extractedIdData.put("idCountry",eid.getIdCountry());
+        extractedIdData.put("idDateOfBirth",eid.getIdDateOfBirth());
+        extractedIdData.put("idDateOfBirthFormatted",eid.getIdDateOfBirthFormatted());
+        extractedIdData.put("idDateOfBirthNonEng",eid.getIdDateOfBirthNonEng());
+        extractedIdData.put("idExpirationDate",eid.getIdExpirationDate());
+        extractedIdData.put("idExpirationDateFormatted",eid.getIdExpirationDateFormatted());
+        extractedIdData.put("idExpirationDateNonEng",eid.getIdExpirationDateNonEng());
+        extractedIdData.put("idIssueCountry",eid.getIdIssueCountry());
+        extractedIdData.put("idIssueDate",eid.getIdIssueDate());
+        extractedIdData.put("idIssueDateNonEng",eid.getIdIssueDateNonEng());
+        extractedIdData.put("idNotExpired",eid.getIdNotExpired());
+        extractedIdData.put("idNumber",eid.getIdNumber());
+        extractedIdData.put("idNumberNonEng",eid.getIdNumberNonEng());
+        extractedIdData.put("idNumber1",eid.getIdNumber1());
+        extractedIdData.put("idNumber2",eid.getIdNumber2());
+        extractedIdData.put("idNumber2NonEng",eid.getIdNumber2NonEng());
+        extractedIdData.put("idNumber3",eid.getIdNumber3());
+        extractedIdData.put("idNumber4",eid.getIdNumber4());
+        extractedIdData.put("idState",eid.getIdState());
+        extractedIdData.put("idType",eid.getIdType());
+        extractedIdData.put("mrzData",eid.getMrzData());
+        extractedIdData.put("mrzErrorMessage",eid.getMrzErrorMessage());
+        extractedIdData.put("nationality",eid.getNationality());
+        extractedIdData.put("negativeDBMatchFound",eid.getNegativeDBMatchFound());
+        extractedIdData.put("validIdNumber",eid.getValidIdNumber());
+        extractedIdData.put("idImageFront",eid.getIdImageFront());
+        extractedIdData.put("idImageBack",eid.getIdImageBack());
+        extractedIdData.put("idProcessImageFront",eid.getIdProcessImageFront());
+        extractedIdData.put("idProcessImageBack",eid.getIdProcessImageBack());
+        extractedIdData.put("idNumberDoc",eid.getIdNumberDoc());
+        extractedIdData.put("issueDateDoc",eid.getIssueDateDoc());
+        extractedIdData.put("expiryDateDoc",eid.getExpiryDateDoc());
+        extractedIdData.put("profession",eid.getProfession());
+        extractedIdData.put("professionNonEng",eid.getProfessionNonEng());
+        extractedIdData.put("photoOnId",eid.getPhotoOnId());
+        extractedIdData.put("placeOfIssue",eid.getPlaceOfIssue());
+        extractedIdData.put("documentType",eid.getDocumentType());
+        extractedIdData.put("idNumber_doc",eid.getIdNumber_doc());
+        extractedIdData.put("idNumber1_doc",eid.getIdNumber1_doc());
+        extractedIdData.put("idNumber2_doc",eid.getIdNumber2_doc());
+        extractedIdData.put("idNumber3_doc",eid.getIdNumber3_doc());
+        extractedIdData.put("idNumber4_doc",eid.getIdNumber4_doc());
+        extractedIdData.put("idExpirationDate_doc",eid.getIdExpirationDate_doc());
+        extractedIdData.put("idIssueDate_doc",eid.getIdIssueDate_doc());
+        extractedIdData.put("employer",eid.getEmployer());
+        extractedIdData.put("vehicleClass",eid.getVehicleClass());
+        extractedIdData.put("endorsement",eid.getEndorsement());
+        extractedIdData.put("licenseType",eid.getLicenseType());
+        extractedIdData.put("restriction",eid.getRestriction());
+        extractedIdData.put("registrationDate",eid.getRegistrationDate());
+        extractedIdData.put("replacementDate",eid.getReplacementDate());
+        extractedIdData.put("maritalStatus",eid.getMaritalStatus());
+        extractedIdData.put("placeOfBirth",eid.getPlaceOfBirth());
+        extractedIdData.put("signatureFromId",eid.getSignatureFromId());
+        responseCustomerData.put("extractedIdData",extractedIdData);
+      }
+    }catch(Exception e){}
+
+    // === ExtractedPersonalData ===
+    try {
+      ExtractedPersonalData epd = rcd.getExtractedPersonalData();
+      if (epd != null) {
+        JSONObject extractedPersonalData = new JSONObject();
+        extractedPersonalData.put("uniqueNumber",epd.getUniqueNumber());
+        extractedPersonalData.put("name",epd.getName());
+        extractedPersonalData.put("email",epd.getEmail());
+        extractedPersonalData.put("dob",epd.getDob());
+        extractedPersonalData.put("gender",epd.getGender());
+        extractedPersonalData.put("address",epd.getAddress());
+        extractedPersonalData.put("addressLine1",epd.getAddressLine1());
+        extractedPersonalData.put("addressLine1NonEng",epd.getAddressLine1NonEng());
+        extractedPersonalData.put("addressLine2",epd.getAddressLine2());
+        extractedPersonalData.put("addressLine2NonEng",epd.getAddressLine2NonEng());
+        extractedPersonalData.put("addressLine3",epd.getAddressLine3());
+        extractedPersonalData.put("city",epd.getCity());
+        extractedPersonalData.put("addressNonEng",epd.getAddressNonEng());
+        extractedPersonalData.put("country",epd.getCountry());
+        extractedPersonalData.put("state",epd.getState());
+        extractedPersonalData.put("district",epd.getDistrict());
+        extractedPersonalData.put("postalCode",epd.getPostalCode());
+        extractedPersonalData.put("enrolledDate",epd.getEnrolledDate());
+        extractedPersonalData.put("firstName",epd.getFirstName());
+        extractedPersonalData.put("firstNameNonEng",epd.getFirstNameNonEng());
+        extractedPersonalData.put("lastName",epd.getLastName());
+        extractedPersonalData.put("lastName2",epd.getLastName2());
+        extractedPersonalData.put("lastNameNonEng",epd.getLastNameNonEng());
+        extractedPersonalData.put("middleName",epd.getMiddleName());
+        extractedPersonalData.put("middleNameNonEng",epd.getMiddleNameNonEng());
+        extractedPersonalData.put("phone",epd.getPhone());
+        extractedPersonalData.put("eyeColor",epd.getEyeColor());
+        extractedPersonalData.put("hairColor",epd.getHairColor());
+        extractedPersonalData.put("height",epd.getHeight());
+        extractedPersonalData.put("weight",epd.getWeight());
+        extractedPersonalData.put("parish",epd.getParish());
+        extractedPersonalData.put("lastName2_doc",epd.getLastName2_doc());
+        extractedPersonalData.put("firstName_doc",epd.getFirstName_doc());
+        extractedPersonalData.put("middleName_doc",epd.getMiddleName_doc());
+        extractedPersonalData.put("lastName_doc",epd.getLastName_doc());
+        extractedPersonalData.put("name_doc",epd.getName_doc());
+        extractedPersonalData.put("dob_doc",epd.getDob_doc());
+        extractedPersonalData.put("additionalNames",epd.getAdditionalNames());
+        extractedPersonalData.put("additionalNamesNonEng",epd.getAdditionalNamesNonEng());
+        extractedPersonalData.put("fingerprintUsedForVerification",epd.getFingerprintUsedForVerification());
+        extractedPersonalData.put("enrolledFaceImage",epd.getEnrolledFaceImage());
+        extractedPersonalData.put("customerCode",epd.getCustomerCode());
+        extractedPersonalData.put("selfieImage",epd.getSelfieImage());
+        extractedPersonalData.put("nameDoc",epd.getNameDoc());
+        extractedPersonalData.put("firstNameDoc",epd.getFirstNameDoc());
+        extractedPersonalData.put("middleNameDoc",epd.getMiddleNameDoc());
+        extractedPersonalData.put("lastNameDoc",epd.getLastNameDoc());
+        extractedPersonalData.put("lastName2Doc",epd.getLastName2Doc());
+        extractedPersonalData.put("addressLine1Doc",epd.getAddressLine1Doc());
+        extractedPersonalData.put("addressLine2Doc",epd.getAddressLine2Doc());
+        extractedPersonalData.put("dateOfBirthDoc",epd.getDateOfBirthDoc());
+        responseCustomerData.put("extractedPersonalData",extractedPersonalData);
+      }
+    }catch(Exception e){}
+
+    // === ExtractedPOAData ===
+    try {
+      java.util.List<ExtractedPOAData> poaList = rcd.getExtractedPOAData();
+      if (poaList != null && !poaList.isEmpty()) {
+        JSONArray poaArray = new JSONArray();
+        for (ExtractedPOAData poa : poaList) {
+          JSONObject poaItem = new JSONObject();
+          poaItem.put("issuerName",poa.getIssuerName());
+          poaItem.put("issuerAddress",poa.getIssuerAddress());
+          poaItem.put("invoiceDate",poa.getInvoiceDate());
+          poaItem.put("dueDate",poa.getDueDate());
+          poaItem.put("customerName",poa.getCustomerName());
+          poaItem.put("customerAddress",poa.getCustomerAddress());
+          poaItem.put("amount",poa.getAmount());
+          poaItem.put("addressMatch",poa.getAddressMatch());
+          poaItem.put("postalCodeMatch",poa.getPostalCodeMatch());
+          poaItem.put("addressWithInputMatch",poa.getAddressWithInputMatch());
+          poaItem.put("postalCodeWithInputMatch",poa.getPostalCodeWithInputMatch());
+          poaItem.put("addressMatchScore",poa.getAddressMatchScore());
+          poaItem.put("postalCodeMatchScore",poa.getPostalCodeMatchScore());
+          poaItem.put("addressWithInputMatchScore",poa.getAddressWithInputMatchScore());
+          poaItem.put("postalCodeWithInputMatchScore",poa.getPostalCodeWithInputMatchScore());
+          poaItem.put("fistNameMatchScore",poa.getFistNameMatchScore());
+          poaItem.put("lastNameMatchScore",poa.getLastNameMatchScore());
+          poaItem.put("fistNameMatchScoreWithInputData",poa.getFistNameMatchScoreWithInputData());
+          poaItem.put("lastNameMatchScoreWithInputData",poa.getLastNameMatchScoreWithInputData());
+          poaItem.put("poaDocumentType",poa.getPoaDocumentType());
+          poaItem.put("exifData",poa.getExifData() != null ? poa.getExifData().toString() : null);
+          poaArray.put(poaItem);
+        }
+        responseCustomerData.put("extractedPOAData",poaArray);
+      }
+    }catch(Exception e){}
+
+    // === HostDataResponse ===
+    try {
+      HostDataResponse hdr = rcd.getHostData();
+      if (hdr != null) {
+        JSONObject hostDataResponseData = new JSONObject();
+
+        // CriminalRecord
+        try {
+          CriminalRecordResponse crr = hdr.getCriminalRecord();
+          if (crr != null) {
+            JSONObject criminalRecordResponseData = new JSONObject();
+
+            // Aliases (List)
+            try {
+              java.util.List<AliasesResponse> aliasesList = crr.getAliases();
+              if (aliasesList != null && !aliasesList.isEmpty()) {
+                JSONArray aliasesArray = new JSONArray();
+                for (AliasesResponse ar : aliasesList) {
+                  JSONObject aliasItem = new JSONObject();
+                  aliasItem.put("firstName",ar.getFirstName());
+                  aliasItem.put("middleName",ar.getMiddleName());
+                  aliasItem.put("lastName",ar.getLastName());
+                  aliasItem.put("fullName",ar.getFullName());
+                  aliasesArray.put(aliasItem);
+                }
+                criminalRecordResponseData.put("aliases",aliasesArray);
+              }
+            }catch(Exception e){}
+
+            // Offenses (List)
+            try {
+              java.util.List<OffensesResponse> offensesList = crr.getOffenses();
+              if (offensesList != null && !offensesList.isEmpty()) {
+                JSONArray offensesArray = new JSONArray();
+                for (OffensesResponse or : offensesList) {
+                  JSONObject offenseItem = new JSONObject();
+                  offenseItem.put("addmissionDate",or.getAddmissionDate());
+                  offenseItem.put("ageOfVictim",or.getAgeOfVictim());
+                  offenseItem.put("arrestingAgency",or.getArrestingAgency());
+                  offenseItem.put("caseNumber",or.getCaseNumber());
+                  offenseItem.put("category",or.getCategory());
+                  offenseItem.put("chargeFillingDate",or.getChargeFillingDate());
+                  offenseItem.put("closedDate",or.getClosedDate());
+                  offenseItem.put("code",or.getCode());
+                  offenseItem.put("counts",or.getCounts());
+                  offenseItem.put("courts",or.getCourts());
+                  offenseItem.put("dateConvicted",or.getDateConvicted());
+                  offenseItem.put("dateOfCrime",or.getDateOfCrime());
+                  offenseItem.put("dateOfWarrant",or.getDateOfWarrant());
+                  offenseItem.put("description",or.getDescription());
+                  offenseItem.put("dispositionDate",or.getDispositionDate());
+                  offenseItem.put("dispostion",or.getDispostion());
+                  offenseItem.put("facility",or.getFacility());
+                  offenseItem.put("jurisdication",or.getJurisdication());
+                  offenseItem.put("prisonerNumber",or.getPrisonerNumber());
+                  offenseItem.put("relationshipToVictim",or.getRelationshipToVictim());
+                  offenseItem.put("releaseDate",or.getReleaseDate());
+                  offenseItem.put("section",or.getSection());
+                  offenseItem.put("sentence",or.getSentence());
+                  offenseItem.put("sentenceDate",or.getSentenceDate());
+                  offenseItem.put("subsection",or.getSubsection());
+                  offenseItem.put("title",or.getTitle());
+                  offenseItem.put("warrantDate",or.getWarrantDate());
+                  offenseItem.put("warrantNumber",or.getWarrantNumber());
+                  offenseItem.put("weaponsUsed",or.getWeaponsUsed());
+                  offensesArray.put(offenseItem);
+                }
+                criminalRecordResponseData.put("offenses",offensesArray);
+              }
+            }catch(Exception e){}
+
+            // Profiles (List)
+            try {
+              java.util.List<ProfilesResponse> profilesList = crr.getProfiles();
+              if (profilesList != null && !profilesList.isEmpty()) {
+                criminalRecordResponseData.put("profiles",buildProfilesArray(profilesList));
+              }
+            }catch(Exception e){}
+
+            hostDataResponseData.put("criminalRecord",criminalRecordResponseData);
+          }
+        }catch(Exception e){}
+
+        // NmResult
+        try {
+          NmResultResponse nrr = hdr.getNmresult();
+          if (nrr != null) {
+            JSONObject nmData = new JSONObject();
+            nmData.put("createdOnNM",nrr.getCreatedOnNM());
+            nmData.put("orderIdNM",nrr.getOrderIdNM());
+            nmData.put("resultCountNM",nrr.getResultCountNM());
+            nmData.put("orderStatusNM",nrr.getOrderStatusNM());
+            nmData.put("orderUrlNM",nrr.getOrderUrlNM());
+            nmData.put("productIdNM",nrr.getProductIdNM());
+            nmData.put("vital4APIHostTried",nrr.getVital4APIHostTried());
+            hostDataResponseData.put("nmResult",nmData);
+          }
+        }catch(Exception e){}
+
+        // PepResult
+        try {
+          PepResultResponse prr = hdr.getPepresult();
+          if (prr != null) {
+            JSONObject pepData = new JSONObject();
+            pepData.put("createdOnPEP",prr.getCreatedOnPEP());
+            pepData.put("orderIdPEP",prr.getOrderIdPEP());
+            pepData.put("resultCountPEP",prr.getResultCountPEP());
+            pepData.put("productId_PEP",prr.getProductId_PEP());
+            pepData.put("orderUrlPEP",prr.getOrderUrlPEP());
+            pepData.put("orderStatus_PEP",prr.getOrderStatus_PEP());
+            hostDataResponseData.put("pepresult",pepData);
+          }
+        }catch(Exception e){}
+
+        // TextMatchResult
+        try {
+          TextMatchResultResponse tmrr = hdr.getTextMatchResult();
+          if (tmrr != null) {
+            JSONObject tmData = new JSONObject();
+            tmData.put("address",tmrr.getAddress());
+            tmData.put("addressCityMatch",tmrr.getAddressCityMatch());
+            tmData.put("addressLine1Match",tmrr.getAddressLine1Match());
+            tmData.put("addressLine2Match",tmrr.getAddressLine2Match());
+            tmData.put("addressZIP4Match",tmrr.getAddressZIP4Match());
+            tmData.put("addressStateCodeMatch",tmrr.getAddressStateCodeMatch());
+            tmData.put("addressZIP5Match",tmrr.getAddressZIP5Match());
+            tmData.put("documentCategoryMatch",tmrr.getDocumentCategoryMatch());
+            tmData.put("driverLicenseExpirationDateMatch",tmrr.getDriverLicenseExpirationDateMatch());
+            tmData.put("driverLicenseIssueDateMatch",tmrr.getDriverLicenseIssueDateMatch());
+            tmData.put("driverLicenseNumberMatch",tmrr.getDriverLicenseNumberMatch());
+            tmData.put("hostTried",tmrr.getHostTried());
+            tmData.put("identiFraudHostTried",tmrr.getIdentiFraudHostTried());
+            tmData.put("personBirthDateMatch",tmrr.getPersonBirthDateMatch());
+            tmData.put("personFirstNameExactMatch",tmrr.getPersonFirstNameExactMatch());
+            tmData.put("personFirstNameFuzzyAlternateMatch",tmrr.getPersonFirstNameFuzzyAlternateMatch());
+            tmData.put("personFirstNameFuzzyPrimaryMatch",tmrr.getPersonFirstNameFuzzyPrimaryMatch());
+            tmData.put("personLastNameExactMatch",tmrr.getPersonLastNameExactMatch());
+            tmData.put("personLastNameFuzzyAlternateMatch",tmrr.getPersonLastNameFuzzyAlternateMatch());
+            tmData.put("personLastNameFuzzyPrimaryMatch",tmrr.getPersonLastNameFuzzyPrimaryMatch());
+            tmData.put("personMiddleInitialMatch",tmrr.getPersonMiddleInitialMatch());
+            tmData.put("personMiddleNameExactMatch",tmrr.getPersonMiddleNameExactMatch());
+            tmData.put("personMiddleNameFuzzyAlternateMatch",tmrr.getPersonMiddleNameFuzzyAlternateMatch());
+            tmData.put("personMiddleNameFuzzyPrimaryMatch",tmrr.getPersonMiddleNameFuzzyPrimaryMatch());
+            tmData.put("personSexCodeMatch",tmrr.getPersonSexCodeMatch());
+            tmData.put("servicePresent",tmrr.getServicePresent());
+            tmData.put("thirdPartyVerificationResultDescription",tmrr.getThirdPartyVerificationResultDescription());
+            tmData.put("verificationResult",tmrr.getVerificationResult());
+            hostDataResponseData.put("textMatchResult",tmData);
+          }
+        }catch(Exception e){}
+
+        // SexOffenders
+        try {
+          SexOffendersResponse sor = hdr.getSexOffenders();
+          if (sor != null) {
+            JSONObject sexOffendersData = new JSONObject();
+            try {
+              java.util.List<ProfilesResponse> profilesList = sor.getProfiles();
+              if (profilesList != null && !profilesList.isEmpty()) {
+                sexOffendersData.put("profiles",buildProfilesArray(profilesList));
+              }
+            }catch(Exception e){}
+            hostDataResponseData.put("sexOffenders",sexOffendersData);
+          }
+        }catch(Exception e){}
+
+        // WlsResult
+        try {
+          WlsResultResponse wrr = hdr.getWlsresult();
+          if (wrr != null) {
+            JSONObject wlsData = new JSONObject();
+            wlsData.put("createdOnWLS",wrr.getCreatedOnWLS());
+            wlsData.put("orderIdWLS",wrr.getOrderIdWLS());
+            wlsData.put("resultCountWLS",wrr.getResultCountWLS());
+            wlsData.put("productIdWLS",wrr.getProductIdWLS());
+            wlsData.put("orderStatusWLS",wrr.getOrderStatusWLS());
+            wlsData.put("orderUrlWLS",wrr.getOrderUrlWLS());
+            hostDataResponseData.put("wlsresult",wlsData);
+          }
+        }catch(Exception e){}
+
+        // IneResponse
+        try {
+          IneResponse ineResp = hdr.getIneResponse();
+          if (ineResp != null) {
+            JSONObject ineData = new JSONObject();
+            ineData.put("claveElector",ineResp.getClaveElector());
+            ineData.put("anioRegistro",ineResp.getAnioRegistro());
+            ineData.put("vigencia",ineResp.getVigencia());
+            ineData.put("ineCodigoValidacion",ineResp.getIneCodigoValidacion());
+            ineData.put("ineEstatus",ineResp.getIneEstatus());
+            ineData.put("numeroEmision",ineResp.getNumeroEmision());
+            ineData.put("anioEmision",ineResp.getAnioEmision());
+            ineData.put("claveMensaje",ineResp.getClaveMensaje());
+            ineData.put("mensaje",ineResp.getMensaje());
+            ineData.put("ocr",ineResp.getOcr());
+            ineData.put("error",ineResp.getError());
+            hostDataResponseData.put("ineResponse",ineData);
+          }
+        }catch(Exception e){}
+
+        // RenapoResponse
+        try {
+          RenapoResponse renapoResp = hdr.getRenapoResponse();
+          if (renapoResp != null) {
+            JSONObject renapoData = new JSONObject();
+            renapoData.put("renapoEstatus",renapoResp.getRenapoEstatus());
+            renapoData.put("renapoCodigoValidacion",renapoResp.getRenapoCodigoValidacion());
+            renapoData.put("fechaNacimiento",renapoResp.getFechaNacimiento());
+            renapoData.put("estadoNacimiento",renapoResp.getEstadoNacimiento());
+            renapoData.put("nombre",renapoResp.getNombre());
+            renapoData.put("apellidoMaterno",renapoResp.getApellidoMaterno());
+            renapoData.put("apellidoPaterno",renapoResp.getApellidoPaterno());
+            renapoData.put("paisNacimiento",renapoResp.getPaisNacimiento());
+            renapoData.put("sexo",renapoResp.getSexo());
+            renapoData.put("estatusCurp",renapoResp.getEstatusCurp());
+            renapoData.put("error",renapoResp.getError());
+            hostDataResponseData.put("renapoResponse",renapoData);
+          }
+        }catch(Exception e){}
+
+        // IneQRResponse
+        try {
+          IneQRResponse ineQR = hdr.getIne_QR();
+          if (ineQR != null) {
+            JSONObject ineQRData = new JSONObject();
+            ineQRData.put("hostStatus",ineQR.getHostStatus());
+            ineQRData.put("hostTried",ineQR.getHostTried());
+            ineQRData.put("status",ineQR.getStatus());
+            ineQRData.put("message",ineQR.getMessage());
+            ineQRData.put("validationCode",ineQR.getValidationCode());
+            ineQRData.put("messageCode",ineQR.getMessageCode());
+            ineQRData.put("faceComparison_match",ineQR.getFaceComparison_match());
+            ineQRData.put("qrExtract_face",ineQR.getQrExtract_face());
+            ineQRData.put("qrExtractData_vigencia",ineQR.getQrExtractData_vigencia());
+            ineQRData.put("qrExtractData_apellidoMaterno",ineQR.getQrExtractData_apellidoMaterno());
+            ineQRData.put("qrExtractData_apellidoPaterno",ineQR.getQrExtractData_apellidoPaterno());
+            ineQRData.put("qrExtractData_nombre",ineQR.getQrExtractData_nombre());
+            ineQRData.put("qrExtractData_fechaElaboracion",ineQR.getQrExtractData_fechaElaboracion());
+            ineQRData.put("qrExtractData_genero",ineQR.getQrExtractData_genero());
+            ineQRData.put("qrExtractData_curp",ineQR.getQrExtractData_curp());
+            ineQRData.put("qrExtractData_seccion",ineQR.getQrExtractData_seccion());
+            ineQRData.put("qrExtractData_tipo",ineQR.getQrExtractData_tipo());
+            ineQRData.put("qrExtractData_cic",ineQR.getQrExtractData_cic());
+            ineQRData.put("qrExtractData_ocr",ineQR.getQrExtractData_ocr());
+            ineQRData.put("qrValidation_vigencia",ineQR.getQrValidation_vigencia());
+            ineQRData.put("qrValidation_apellidoPaterno",ineQR.getQrValidation_apellidoPaterno());
+            ineQRData.put("qrValidation_nombre",ineQR.getQrValidation_nombre());
+            ineQRData.put("qrValidation_apellidoMaterno",ineQR.getQrValidation_apellidoMaterno());
+            ineQRData.put("qrValidation_emision",ineQR.getQrValidation_emision());
+            ineQRData.put("qrValidation_genero",ineQR.getQrValidation_genero());
+            ineQRData.put("qrValidation_cic",ineQR.getQrValidation_cic());
+            ineQRData.put("qrValidation_curp",ineQR.getQrValidation_curp());
+            ineQRData.put("qrValidation_ocr",ineQR.getQrValidation_ocr());
+            ineQRData.put("error",ineQR.getError());
+            hostDataResponseData.put("ine_QR",ineQRData);
+          }
+        }catch(Exception e){}
+
+        // DocumentTamper
+        try {
+          DocumentTamper dt = hdr.getDocumentTamper();
+          if (dt != null) {
+            JSONObject dtData = new JSONObject();
+            dtData.put("riskLevel",dt.getRiskLevel());
+            hostDataResponseData.put("documentTamper",dtData);
+          }
+        }catch(Exception e){}
+
+        // IdTamper
+        try {
+          DocumentTamper idt = hdr.getIdTamper();
+          if (idt != null) {
+            JSONObject idtData = new JSONObject();
+            idtData.put("riskLevel",idt.getRiskLevel());
+            hostDataResponseData.put("idTamper",idtData);
+          }
+        }catch(Exception e){}
+
+        // AdvanceLivenessResult
+        try {
+          Object alr = hdr.getAdvanceLivenessResult();
+          if (alr != null) {
+            hostDataResponseData.put("advanceLivenessResult",alr.toString());
+          }
+        }catch(Exception e){}
+
+        responseCustomerData.put("hostDataResponse",hostDataResponseData);
+      }
+    }catch(Exception e){}
+
+    // === ParsedAddress (within ResponseCustomerData) ===
+    try {
+      ParsedAddress pa = rcd.getParsedAddress();
+      if (pa != null) {
+        responseCustomerData.put("parsedAddress", buildParsedAddressJson(pa));
+      }
+    }catch(Exception e){}
+
+    // === CustomerDataMatchResult ===
+    try {
+      CustomerDataMatchResult cdmr = rcd.getCustomerDataMatchResult();
+      if (cdmr != null) {
+        JSONObject matchData = new JSONObject();
+        matchData.put("idNumberMatch",cdmr.getIdNumberMatch());
+        matchData.put("idNumber2Match",cdmr.getIdNumber2Match());
+        matchData.put("dateOfBirthMatch",cdmr.getDateOfBirthMatch());
+        matchData.put("expiryDateMatch",cdmr.getExpiryDateMatch());
+        matchData.put("nameMatch",cdmr.getNameMatch());
+        matchData.put("firstNameMatch",cdmr.getFirstNameMatch());
+        matchData.put("middleNameMatch",cdmr.getMiddleNameMatch());
+        matchData.put("lastNameMatch",cdmr.getLastNameMatch());
+        matchData.put("addressMatch",cdmr.getAddressMatch());
+        matchData.put("postalCodeMatch",cdmr.getPostalCodeMatch());
+        matchData.put("idNumberMatchScore",cdmr.getIdNumberMatchScore());
+        matchData.put("idNumber2MatchScore",cdmr.getIdNumber2MatchScore());
+        matchData.put("dateOfBirthMatchScore",cdmr.getDateOfBirthMatchScore());
+        matchData.put("expiryDateMatchScore",cdmr.getExpiryDateMatchScore());
+        matchData.put("nameMatchScore",cdmr.getNameMatchScore());
+        matchData.put("firstNameMatchScore",cdmr.getFirstNameMatchScore());
+        matchData.put("middleNameMatchScore",cdmr.getMiddleNameMatchScore());
+        matchData.put("lastNameMatchScore",cdmr.getLastNameMatchScore());
+        matchData.put("addressMatchScore",cdmr.getAddressMatchScore());
+        matchData.put("postalCodeMatchScore",cdmr.getPostalCodeMatchScore());
+        responseCustomerData.put("customerDataMatchResult",matchData);
+      }
+    }catch(Exception e){}
+
+    // === CardData ===
+    try {
+      CardData cd = rcd.getCardData();
+      if (cd != null) {
+        JSONObject cardData = new JSONObject();
+        cardData.put("cardToken",cd.getCardToken());
+        cardData.put("cardLast4",cd.getCardLast4());
+        cardData.put("cardExpDate",cd.getCardExpDate());
+        cardData.put("nameOnCard",cd.getNameOnCard());
+        cardData.put("postalCode",cd.getPostalCode());
+        responseCustomerData.put("cardData",cardData);
+      }
+    }catch(Exception e){}
+
+    return responseCustomerData;
+  }
+
+  private JSONArray buildProfilesArray(java.util.List<ProfilesResponse> profilesList) throws Exception {
+    JSONArray profilesArray = new JSONArray();
+    for (ProfilesResponse pr : profilesList) {
+      JSONObject profileItem = new JSONObject();
+      profileItem.put("city",pr.getCity());
+      profileItem.put("country",pr.getCountry());
+      profileItem.put("fullName",pr.getFullName());
+      profileItem.put("firstName",pr.getFirstName());
+      profileItem.put("middleName",pr.getMiddleName());
+      profileItem.put("address",pr.getAddress());
+      profileItem.put("convictionType",pr.getConvictionType());
+      profileItem.put("countryCode",pr.getCountryCode());
+      profileItem.put("countryName",pr.getCountryName());
+      profileItem.put("dobOfBirth",pr.getDobOfBirth());
+      profileItem.put("drivingLicenseVerificationResult",pr.getDrivingLicenseVerificationResult());
+      profileItem.put("internalId",pr.getInternalId());
+      profileItem.put("internalIdCriminalRecords",pr.getInternalIdCriminalRecords());
+      profileItem.put("lastName",pr.getLastName());
+      profileItem.put("photoUrl",pr.getPhotoUrl());
+      profileItem.put("postalCode",pr.getPostalCode());
+      profileItem.put("sex",pr.getSex());
+      profileItem.put("source",pr.getSource());
+      profileItem.put("state",pr.getState());
+      profileItem.put("street1",pr.getStreet1());
+      profileItem.put("street2",pr.getStreet2());
+      profileItem.put("verificationResult",pr.getVerificationResult());
+      profilesArray.put(profileItem);
+    }
+    return profilesArray;
   }
 
   @Override

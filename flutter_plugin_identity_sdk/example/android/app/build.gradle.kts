@@ -36,11 +36,11 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
             ndk.abiFilters.clear()
-            ndk.abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a"))
+            ndk.abiFilters.addAll(listOf("arm64-v8a"))
         }
         debug {
             ndk.abiFilters.clear()
-            ndk.abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a"))
+            ndk.abiFilters.addAll(listOf("arm64-v8a"))
         }
     }
 }
