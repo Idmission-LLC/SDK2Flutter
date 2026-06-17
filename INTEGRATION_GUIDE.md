@@ -46,8 +46,6 @@ Then run:
 flutter pub get
 ```
 
-> **Note on `ref`:** Always pin to a release tag (e.g. `v11.1.07.2.23`) rather than a branch name. Tags are immutable, so your build is reproducible. Using `main` or a branch means your app could silently pick up breaking changes on the next `flutter pub get`.
-
 ---
 
 ## Step 2 — Android setup
@@ -174,9 +172,7 @@ Or extend it in your custom Application class:
 class MyApp : MultiDexApplication() { ... }
 ```
 
-### 2d. No manual manifest edits needed
-
-The plugin's `AndroidManifest.xml` declares `CallPluginActivity` — Android's manifest merger automatically includes it in your app. You do **not** need to add any activity declarations or theme entries to your own manifest.
+> **Physical device required:** The IDentity SDK requires a physical Android device — the Android Emulator does not support camera capture and will not run the SDK flows.
 
 ---
 
@@ -238,14 +234,8 @@ target 'Runner' do
 
   pod 'IDentityMediumSDK2.0'
   pod 'IDentityMediumModels'
-  pod 'TensorFlowLiteSwift',             '~> 2.7.0',  :build_type => :static_framework
-  pod 'GoogleMLKit/TextRecognition',                  :build_type => :dynamic_framework
-  pod 'GoogleMLKit/FaceDetection',                    :build_type => :dynamic_framework
-  pod 'GoogleMLKit/ImageLabeling',                    :build_type => :dynamic_framework
-  pod 'GZIP',                                         :build_type => :dynamic_framework
-  pod 'OpenSSL-Universal',
-      :git => 'https://github.com/krzyzanowskim/OpenSSL.git',
-      :tag => '1.1.2301'
+  pod 'GoogleMLKit/TextRecognition',  :build_type => :dynamic_framework
+  pod 'GZIP',                         :build_type => :dynamic_framework
 
   target 'RunnerTests' do
     inherit! :search_paths
@@ -480,9 +470,6 @@ Ensure `use_modular_headers!` is set in your Podfile and that `use_frameworks!` 
 
 ### Camera / crash on first launch (iOS)
 All three `NSCameraUsageDescription`, `NSMicrophoneUsageDescription`, and `NSPhotoLibraryUsageDescription` keys must be present in `Info.plist`. A missing key causes an immediate crash on iOS 14+.
-
-### First Android build is very slow
-The `idmission-mediumsdk` AAR is approximately 200 MB and contains ML model files. The first Gradle build downloads it from the GitLab Maven registry. Subsequent builds use the local Gradle cache and complete in under 30 seconds.
 
 ---
 
