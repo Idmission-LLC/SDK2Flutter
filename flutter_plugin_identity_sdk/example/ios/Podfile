@@ -32,20 +32,15 @@ require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelpe
 flutter_ios_podfile_setup
 
 target 'Runner' do
-  #use_frameworks!
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
   pod 'IDentityMediumSDK2.0'
   pod 'IDentityMediumModels'
-  #pod 'SignatureCapture', :build_type => :static_framework
-  pod 'TensorFlowLiteSwift', '~> 2.7.0', :build_type => :static_framework
-  pod 'GoogleMLKit/TextRecognition', :build_type => :dynamic_framework
-  pod 'GoogleMLKit/FaceDetection', :build_type => :dynamic_framework
-  pod 'GoogleMLKit/ImageLabeling', :build_type => :dynamic_framework
   pod 'GZIP', :build_type => :dynamic_framework
-  pod 'OpenSSL-Universal', :git => 'https://github.com/krzyzanowskim/OpenSSL.git', :tag => '1.1.2301'
-  
+  pod 'GoogleMLKit/TextRecognition', :build_type => :dynamic_framework
+
   target 'RunnerTests' do
     inherit! :search_paths
   end

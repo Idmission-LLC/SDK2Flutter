@@ -40,8 +40,8 @@ PODS:
     - GoogleUtilities/Privacy
   - GTMSessionFetcher/Core (3.5.0)
   - GZIP (1.3.2)
-  - IDentityMediumModels (11.1.5.2.8)
-  - IDentityMediumSDK2.0 (11.1.5.2.8)
+  - IDentityMediumModels (11.1.7.2.4)
+  - IDentityMediumSDK2.0 (11.1.7.2.4)
   - integration_test (0.0.1):
     - Flutter
   - MLImage (1.0.0-beta8)
@@ -89,28 +89,26 @@ PODS:
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
-  - OpenSSL-Universal (1.1.2301)
+  - OpenSSL-Universal (3.6.0000)
   - PromisesObjC (2.4.0)
-  - TensorFlowLiteC (2.7.0):
-    - TensorFlowLiteC/Core (= 2.7.0)
-  - TensorFlowLiteC/Core (2.7.0)
-  - TensorFlowLiteSwift (2.7.0):
-    - TensorFlowLiteSwift/Core (= 2.7.0)
-  - TensorFlowLiteSwift/Core (2.7.0):
-    - TensorFlowLiteC (= 2.7.0)
+  - TensorFlowLiteC (2.17.0):
+    - TensorFlowLiteC/Core (= 2.17.0)
+  - TensorFlowLiteC/Core (2.17.0)
+  - TensorFlowLiteSwift (2.17.0):
+    - TensorFlowLiteSwift/Core (= 2.17.0)
+  - TensorFlowLiteSwift/Core (2.17.0):
+    - TensorFlowLiteC (= 2.17.0)
+    - TensorFlowLiteSwift/Privacy (= 2.17.0)
+  - TensorFlowLiteSwift/Privacy (2.17.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_plugin_identity_sdk (from `.symlinks/plugins/flutter_plugin_identity_sdk/ios`)
-  - GoogleMLKit/FaceDetection
-  - GoogleMLKit/ImageLabeling
   - GoogleMLKit/TextRecognition
   - GZIP
   - IDentityMediumModels
   - IDentityMediumSDK2.0
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
-  - OpenSSL-Universal (from `https://github.com/krzyzanowskim/OpenSSL.git`, tag `1.1.2301`)
-  - TensorFlowLiteSwift (~> 2.7.0)
 
 SPEC REPOS:
   trunk:
@@ -133,6 +131,7 @@ SPEC REPOS:
     - MLKitVision
     - MLKitVisionKit
     - nanopb
+    - OpenSSL-Universal
     - PromisesObjC
     - TensorFlowLiteC
     - TensorFlowLiteSwift
@@ -144,14 +143,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_plugin_identity_sdk/ios"
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
-  OpenSSL-Universal:
-    :git: https://github.com/krzyzanowskim/OpenSSL.git
-    :tag: 1.1.2301
-
-CHECKOUT OPTIONS:
-  OpenSSL-Universal:
-    :git: https://github.com/krzyzanowskim/OpenSSL.git
-    :tag: 1.1.2301
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
@@ -162,8 +153,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   GZIP: 3c0abf794bfce8c7cb34ea05a1837752416c8868
-  IDentityMediumModels: a8a1e87f3a33dcf69997a9d5a60794283e7cb694
-  IDentityMediumSDK2.0: 86c0dc8b5d1bc9fe62a57f7ce1861d1c7efb729f
+  IDentityMediumModels: 222fe4c693284771934cd7de4413ddf74d774a68
+  IDentityMediumSDK2.0: 0cf381ede6939009404a5f1a44adc22860dd3f8f
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
   MLImage: 0de5c6c2bf9e93b80ef752e2797f0836f03b58c0
   MLKitCommon: 47d47b50a031d00db62f1b0efe5a1d8b09a3b2e6
@@ -176,11 +167,11 @@ SPEC CHECKSUMS:
   MLKitVision: 39a5a812db83c4a0794445088e567f3631c11961
   MLKitVisionKit: 316cd349468797ef4e7fd785bf658ca838984de3
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
-  OpenSSL-Universal: ca89c20240633a77c776082ba76b7d90f992bf77
+  OpenSSL-Universal: 9110d21982bb7e8b22a962b6db56a8aa805afde7
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  TensorFlowLiteC: 50d75ed3640c15dcfbaf88ca4326297b445e00a1
-  TensorFlowLiteSwift: fe99748dc3d58ae08bd2ff38658e3ade7038670f
+  TensorFlowLiteC: eac6d689a8d391d1b202dc59e3d9165ba64aaf73
+  TensorFlowLiteSwift: 723fe42222815e72490c79feeff05305530de393
 
-PODFILE CHECKSUM: 341103f3bba23da475735c191cb9261ef5489e24
+PODFILE CHECKSUM: 033047bdfc19bcb5faa32b1832d952a98c360cca
 
 COCOAPODS: 1.16.2

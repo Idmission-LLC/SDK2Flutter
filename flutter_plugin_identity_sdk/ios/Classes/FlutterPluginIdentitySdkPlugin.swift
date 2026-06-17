@@ -16,6 +16,9 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
     case "getPlatformVersion":
       result("iOS " + UIDevice.current.systemVersion)
     case "idm_sdk_init":
+        
+        IDCapture.options.enableInstructionScreen = false
+        SelfieCapture.options.enableInstructionScreen = false
 
         if let args = call.arguments as? Dictionary<String, Any>,
           let apiBaseUrl = args["apiBaseUrl"] as? String,
@@ -34,6 +37,22 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
                 SelfieCapture.options.isDebugMode = false
                 DocumentCapture.options.isDebugMode = false
             }
+            
+            var authUrl = "https://auth.idmission.com/"
+
+            if apiBaseUrl.contains("lab") {
+                  authUrl = "https://labauth.idmission.com:9043/"
+            } else if apiBaseUrl.contains("demo") {
+                  authUrl = "https://demoauth.idmission.com/"
+            } else if apiBaseUrl.contains("uat") {
+                  authUrl = "https://uatauth.idmission.com/"
+            } else if apiBaseUrl.contains("kyc") {
+                  authUrl = "https://auth.idmission.com/"
+            }
+
+            //API Auth URL
+            let defaultAuthUrl = "\(authUrl)auth/realms/identity/protocol/openid-connect/token"
+            UserDefaults.standard.set(defaultAuthUrl, forKey: "authenticationURL")
         }
         
         IDentitySDKHelper().initializeSDK(result: result)
@@ -80,42 +99,74 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
     case "idm_sdk_serviceID50":
         if let args = call.arguments as? Dictionary<String, Any>,
           let uniqueCustomerNumber = args["uniqueCustomerNumber"] as? Int {
-          UserDefaults.standard.set(String(uniqueCustomerNumber), forKey: "uniqueCustomerNumber")
+            
+            print("uniqueCustomerNumber ",uniqueCustomerNumber)
+            
+            if(uniqueCustomerNumber>0){
+                UserDefaults.standard.set(String(uniqueCustomerNumber), forKey: "uniqueCustomerNumber")
+                  
+                  DispatchQueue.main.async {
+                      if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
+                          IDentitySDKHelper().startIDValidationAndCustomerEnrolls(result: result, instance: vc);
+                      }
+                  }
+            } else {
+                result("Unique custome number is required")
+            }
+            
+          
         } else {
-          UserDefaults.standard.set("0", forKey: "uniqueCustomerNumber")
+            result("Unique custome number is required")
         }
         
-        DispatchQueue.main.async {
-            if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
-                IDentitySDKHelper().startIDValidationAndCustomerEnrolls(result: result, instance: vc);
-            }
-        }
+        
     case "idm_sdk_serviceID175":
         if let args = call.arguments as? Dictionary<String, Any>,
           let uniqueCustomerNumber = args["uniqueCustomerNumber"] as? Int {
-          UserDefaults.standard.set(String(uniqueCustomerNumber), forKey: "uniqueCustomerNumber")
+            
+            print("uniqueCustomerNumber ",uniqueCustomerNumber)
+            
+            if(uniqueCustomerNumber>0){
+                UserDefaults.standard.set(String(uniqueCustomerNumber), forKey: "uniqueCustomerNumber")
+                  
+                  DispatchQueue.main.async {
+                      if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
+                          IDentitySDKHelper().startCustomerEnrollBiometricss(result: result, instance: vc);
+                      }
+                  }
+            } else {
+                result("Unique custome number is required")
+            }
+            
+          
         } else {
-          UserDefaults.standard.set("0", forKey: "uniqueCustomerNumber")
+            result("Unique custome number is required")
         }
         
-        DispatchQueue.main.async {
-            if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
-                IDentitySDKHelper().startCustomerEnrollBiometricss(result: result, instance: vc);
-            }
-        }
+        
     case "idm_sdk_serviceID105":
         if let args = call.arguments as? Dictionary<String, Any>,
-          let uniqueCustomerNumber = args["uniqueCustomerNumber"] as? Int {
-          UserDefaults.standard.set(String(uniqueCustomerNumber), forKey: "uniqueCustomerNumber")
+           let uniqueCustomerNumber = args["uniqueCustomerNumber"] as? Int {
+            
+            print("uniqueCustomerNumber ",uniqueCustomerNumber)
+            
+            if(uniqueCustomerNumber>0){
+                UserDefaults.standard.set(String(uniqueCustomerNumber), forKey: "uniqueCustomerNumber")
+                
+                DispatchQueue.main.async {
+                    if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
+                        IDentitySDKHelper().startCustomerVerifications(result: result, instance: vc);
+                    }
+                }
+            } else {
+                result("Unique custome number is required")
+            }
+            
+            
         } else {
-          UserDefaults.standard.set("0", forKey: "uniqueCustomerNumber")
+            result("Unique custome number is required")
         }
         
-        DispatchQueue.main.async {
-            if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
-                IDentitySDKHelper().startCustomerVerifications(result: result, instance: vc);
-            }
-        }
     case "idm_sdk_serviceID185":
         DispatchQueue.main.async {
             if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
@@ -130,7 +181,6 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
         }
     case "submit_result":
         DispatchQueue.main.async {
-            print("ssss")
             if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
                 IDentitySDKHelper().submitResult(result: result, instance: vc);
             }
@@ -143,5 +193,5 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
     public func sendResponseTo(result: @escaping FlutterResult, resultString: String) {
         result(resultString)
     }
-    
+        
 }

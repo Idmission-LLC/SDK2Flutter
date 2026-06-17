@@ -5,21 +5,22 @@ import IDCaptureMedium
 import Flutter
 
 class IDentitySDKHelper : NSObject{
-  
+    
     @IBAction func initializeSDK(result: @escaping FlutterResult){
-        print("initializeSDK")
         print(IDentitySDK.version)
         
-        IDentitySDK.apiBaseUrl = UserDefaults.apiBaseURL
+        IDentitySDK.apiBaseUrl = UserDefaults.standard.string(forKey: "apiBaseUrl") ?? ""
         IDentitySDK.initializeSDK(language: UserDefaults.SDKlanguage, isUpdateModelsData: UserDefaults.isUpdateModelData, accessToken: UserDefaults.accessToken) { error in
             if let error = error {
                 print("!!! initialize SDK ERROR: \(error.localizedDescription)")
+                result("Error")
             } else {
                 print("!!! initialize SDK SUCCESS")
                 result("SDK successfully initialized")
             }
         }
-  }
+         
+        }
         
   // 20 - ID Validation
   @IBAction func startIDValidations(result: @escaping FlutterResult, instance: UIViewController) {
