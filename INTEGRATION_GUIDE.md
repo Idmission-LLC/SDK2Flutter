@@ -82,7 +82,7 @@ android {
 **Kotlin DSL (`build.gradle.kts`)**
 ```kotlin
 android {
-    compileSdk = 36
+    compileSdk = 36   // replace flutter.compileSdkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
@@ -94,19 +94,21 @@ android {
     }
 
     defaultConfig {
-        minSdk = 26          // Required — plugin uses APIs introduced in API 26
-        targetSdk = 36
+        minSdk = 26          // replace flutter.minSdkVersion — required for API 26
+        targetSdk = 36       // replace flutter.targetSdkVersion
         multiDexEnabled = true
         // ...
     }
 }
 ```
 
+> **Flutter template variables:** `flutter create` generates `compileSdk = flutter.compileSdkVersion`, `minSdk = flutter.minSdkVersion`, and `targetSdk = flutter.targetSdkVersion`. Replace all three with the hardcoded values shown above — the plugin requires exact versions and the Flutter variables may not resolve to the correct values.
+
 > **Why Java 21?** The plugin's Android source (`FlutterPluginIdentitySdkPlugin.java`) is compiled with `sourceCompatibility JavaVersion.VERSION_21`. If your app targets Java 17, Gradle will emit a compatibility error during the merge step.
 
 ### 2b. Add the IDmission Maven repository
 
-The native SDK (`idmission-mediumsdk`) is published to IDmission's private GitLab Maven registry. Add the repository to your project-level `build.gradle` or `settings.gradle`:
+The native SDK (`idmission-mediumsdk`) is published to IDmission's private GitLab Maven registry. Add the repository to your project-level `build.gradle` or `build.gradle.kts`:
 
 **Project-level `build.gradle` (Groovy)**
 ```groovy
@@ -119,39 +121,42 @@ allprojects {
             name "GitLab"
             credentials(HttpHeaderCredentials) {
                 name = "Private-Token"
-                value = "<YOUR_IDMISSION_DEPLOY_TOKEN>"
+                value = "WESesyuSD9fQeqNEyig6"
             }
             authentication {
                 header(HttpHeaderAuthentication)
             }
         }
+        // Required for fingerprint capture
+        maven { url 'https://jitpack.io' }
     }
 }
 ```
 
-**`settings.gradle.kts` (Kotlin DSL, Flutter 3.16+)**
+**Project-level `build.gradle.kts` (Kotlin DSL, Flutter 3.16+)**
 ```kotlin
-// inside dependencyResolutionManagement.repositories { ... }
-maven {
-    url = uri("https://gitlab.idmission.com/api/v4/projects/220/packages/maven")
-    name = "GitLab"
-    credentials(HttpHeaderCredentials::class) {
-        name = "Private-Token"
-        value = providers.gradleProperty("idmissionMavenToken").orElse("").get()
-    }
-    authentication {
-        create<HttpHeaderAuthentication>("header")
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url = uri("https://gitlab.idmission.com/api/v4/projects/220/packages/maven")
+            name = "GitLab"
+            credentials(HttpHeaderCredentials::class) {
+                name = "Private-Token"
+                value = "WESesyuSD9fQeqNEyig6"
+            }
+            authentication {
+                create<HttpHeaderAuthentication>("header")
+            }
+        }
+        // Required for fingerprint capture
+        maven { url = uri("https://jitpack.io") }
     }
 }
 ```
 
-Store the token outside version control in `~/.gradle/gradle.properties`:
-
-```properties
-idmissionMavenToken=<YOUR_IDMISSION_DEPLOY_TOKEN>
-```
-
-> Contact IDmission support to obtain your deploy token. Do not commit it to your repository.
+> **Important — Kotlin DSL only:** Do **not** place the Maven repository inside `dependencyResolutionManagement.repositories` in `settings.gradle.kts`. Flutter's Gradle plugin uses `includeBuild`, which is incompatible with `dependencyResolutionManagement`. The `allprojects { repositories { ... } }` block in `build.gradle.kts` is the correct location for Flutter projects.
 
 ### 2c. Enable multidex (if not already)
 
@@ -185,9 +190,9 @@ The iOS native SDK requires mixed static/dynamic framework linking, which CocoaP
 sudo gem install cocoapods-user-defined-build-types
 ```
 
-### 3b. Replace your Podfile
+### 3b. Create or replace your Podfile
 
-Replace the entire contents of `ios/Podfile` with the following:
+Create `ios/Podfile` if it does not exist (a freshly generated Flutter project does not include one), or replace its entire contents with the following:
 
 ```ruby
 plugin 'cocoapods-user-defined-build-types'
@@ -260,11 +265,13 @@ end
 
 ```bash
 cd ios
-pod install
+LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 pod install
 cd ..
 ```
 
 This downloads several large frameworks (TensorFlowLite, GoogleMLKit, IDentityMediumSDK). Allow several minutes on a clean install.
+
+> **UTF-8 locale:** The `LANG` and `LC_ALL` prefixes are required if your terminal locale is not already set to UTF-8. Without them, CocoaPods throws `Unicode Normalization not appropriate for ASCII-8BIT` and aborts. Add `export LANG=en_US.UTF-8` to your `~/.zshrc` or `~/.profile` to avoid needing the prefix every time.
 
 ### 3d. Add required Info.plist permissions
 
@@ -463,7 +470,7 @@ You have not updated `jvmTarget` to `21`. Apply the change in Step 2a.
 Your app's `android/app/src/main/AndroidManifest.xml` declares `android:theme` on `<application>` and conflicts with another library. Resolve by keeping the theme only on the `<activity>` tags and removing it from `<application>`.
 
 ### `FAILURE: Build failed with an exception ... Could not resolve com.idmission.sdk2:idmission-mediumsdk`
-The GitLab Maven credentials are missing or incorrect. Confirm your `Private-Token` is set in `~/.gradle/gradle.properties` and that the value matches the token provided by IDmission.
+The GitLab Maven credentials are missing or incorrect. Confirm the `Private-Token` value in your project-level `build.gradle` / `build.gradle.kts` matches the token `WESesyuSD9fQeqNEyig6`.
 
 ### `pod install` fails with `Unable to find a specification for 'IDentityMediumSDK2.0'`
 Verify CocoaPods can reach trunk: `pod repo update`. If you are behind a proxy, configure CocoaPods proxy settings. Also confirm the `cocoapods-user-defined-build-types` gem is installed (`gem list | grep cocoapods-user`).
