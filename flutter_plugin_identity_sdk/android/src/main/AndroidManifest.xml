@@ -1,9 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.idmission.newsdkflutter.flutter_plugin_identity_sdk">
-    <application
-        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
-        >
+    <application>
         <activity
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
             android:name="com.idmission.newsdkflutter.flutter_plugin_identity_sdk.CallPluginActivity"/>
