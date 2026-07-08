@@ -1,7 +1,7 @@
 # IDmission Flutter Plugin — Integration Guide
 
 **Plugin:** `flutter_plugin_identity_sdk`  
-**Native SDK version:** 11.1.07.2.23  
+**Native SDK version:** 11.1.13.2.01  
 **Minimum Flutter:** 3.3.0  
 **Minimum Dart:** 3.9.2
 
@@ -36,7 +36,7 @@ dependencies:
   flutter_plugin_identity_sdk:
     git:
       url: https://github.com/Idmission-LLC/SDK2Flutter.git
-      ref: v11.1.07.2.23        # use the release tag — do not track main
+      ref: v11.1.13        # use the release tag — do not track main
       path: flutter_plugin_identity_sdk
 ```
 
@@ -46,7 +46,7 @@ Then run:
 flutter pub get
 ```
 
-> **Note on `ref`:** Always pin to a release tag (e.g. `v11.1.07.2.23`) rather than a branch name. Tags are immutable, so your build is reproducible. Using `main` or a branch means your app could silently pick up breaking changes on the next `flutter pub get`.
+> **Note on `ref`:** Always pin to a release tag (e.g. `v11.1.13`) rather than a branch name. Tags are immutable, so your build is reproducible. Using `main` or a branch means your app could silently pick up breaking changes on the next `flutter pub get`.
 
 ---
 
