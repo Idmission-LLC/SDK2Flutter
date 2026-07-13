@@ -40,8 +40,8 @@ PODS:
     - GoogleUtilities/Privacy
   - GTMSessionFetcher/Core (3.5.0)
   - GZIP (1.3.2)
-  - IDentityMediumModels (11.1.13.2.1)
-  - IDentityMediumSDK2.0 (11.1.13.2.1)
+  - IDentityMediumModels (11.1.13.2.3)
+  - IDentityMediumSDK2.0 (11.1.13.2.3)
   - integration_test (0.0.1):
     - Flutter
   - MLImage (1.0.0-beta8)
@@ -106,8 +106,8 @@ DEPENDENCIES:
   - flutter_plugin_identity_sdk (from `.symlinks/plugins/flutter_plugin_identity_sdk/ios`)
   - GoogleMLKit/TextRecognition
   - GZIP
-  - IDentityMediumModels (from `https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git`, tag `11.1.13.2.1`)
-  - IDentityMediumSDK2.0 (from `https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git`, tag `11.1.13.2.1`)
+  - IDentityMediumModels (from `https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git`, tag `11.1.13.2.3`)
+  - IDentityMediumSDK2.0 (from `https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git`, tag `11.1.13.2.3`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
 
 SPEC REPOS:
@@ -141,20 +141,20 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_plugin_identity_sdk/ios"
   IDentityMediumModels:
     :git: https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git
-    :tag: 11.1.13.2.1
+    :tag: 11.1.13.2.3
   IDentityMediumSDK2.0:
     :git: https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git
-    :tag: 11.1.13.2.1
+    :tag: 11.1.13.2.3
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
 
 CHECKOUT OPTIONS:
   IDentityMediumModels:
     :git: https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git
-    :tag: 11.1.13.2.1
+    :tag: 11.1.13.2.3
   IDentityMediumSDK2.0:
     :git: https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git
-    :tag: 11.1.13.2.1
+    :tag: 11.1.13.2.3
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
@@ -165,8 +165,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   GZIP: 3c0abf794bfce8c7cb34ea05a1837752416c8868
-  IDentityMediumModels: 64f0572fb5b6c7c905be506246ba3b19e916bb84
-  IDentityMediumSDK2.0: 33965fbad7cad5aeaffc1899f86d7dd9a7a0dffd
+  IDentityMediumModels: a5af1c1500d2332600f202ac54a6ec3b08a1acea
+  IDentityMediumSDK2.0: 47a98aa8e9fc383920309ad8e83dd7b38c68aa52
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
   MLImage: 0de5c6c2bf9e93b80ef752e2797f0836f03b58c0
   MLKitCommon: 47d47b50a031d00db62f1b0efe5a1d8b09a3b2e6
@@ -184,6 +184,6 @@ SPEC CHECKSUMS:
   TensorFlowLiteC: eac6d689a8d391d1b202dc59e3d9165ba64aaf73
   TensorFlowLiteSwift: 723fe42222815e72490c79feeff05305530de393
 
-PODFILE CHECKSUM: cdf36f5e5edb9ced04a665a036a65a823fb22afd
+PODFILE CHECKSUM: d6231aeda7a6059a55c54eef65bc33ce4308aee1
 
 COCOAPODS: 1.16.2
