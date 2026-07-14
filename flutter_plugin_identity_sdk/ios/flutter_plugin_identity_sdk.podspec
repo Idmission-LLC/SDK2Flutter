@@ -4,14 +4,15 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_plugin_identity_sdk'
-  s.version          = '0.0.1'
-  s.summary          = 'A new Flutter plugin project.'
+  s.version          = '11.1.7'
+  s.summary          = 'IDmission Identity Flutter Plugin for iOS.'
   s.description      = <<-DESC
-A new Flutter plugin project.
+Flutter plugin wrapping the IDmission Identity SDK (IDentityMediumSDK2.0 11.1.7.2.4).
+Provides identity verification, document capture, face match, and biometric enrollment.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/Idmission-LLC/SDK2Flutter'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'IDmission' => 'support@idmission.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'

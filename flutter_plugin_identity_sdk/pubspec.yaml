@@ -1,7 +1,7 @@
 name: flutter_plugin_identity_sdk
-description: "Identity Flutter Plugin."
-version: 0.0.1
-homepage:
+description: "IDmission Identity Flutter Plugin — wraps the IDmission Identity SDK for Android and iOS."
+version: 11.1.7
+homepage: https://github.com/Idmission-LLC/SDK2Flutter
 
 environment:
   sdk: ^3.9.2
