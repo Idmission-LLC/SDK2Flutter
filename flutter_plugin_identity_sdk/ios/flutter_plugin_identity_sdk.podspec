@@ -20,10 +20,6 @@ Provides identity verification, document capture, face match, and biometric enro
   s.dependency 'IDentityMediumModels'
   s.dependency 'TensorFlowLiteSwift'
   s.dependency 'GoogleMLKit/TextRecognition'
-  s.dependency 'GoogleMLKit/FaceDetection'
-  s.dependency 'GoogleMLKit/ImageLabeling'
-  s.dependency 'OpenSSL-Universal'
-  s.dependency 'GZIP'
   s.platform = :ios, '13.0'
   
   # Flutter.framework does not contain a i386 slice.
