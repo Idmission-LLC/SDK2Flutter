@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_plugin_identity_sdk/flutter_plugin_identity_sdk.dart';
@@ -22,6 +24,11 @@ class _MyAppState extends State<MyApp> {
   String _access_token = '';
   String _capture_back = '';
   String _debug = '';
+  String _login_id = '';
+  String _password = '';
+  String _client_id = '';
+  String _client_secret = '';
+  String _token_error = '';
   int _unique_customer_number = 0;
   int _client_trace_id = 0;
   late TextEditingController _api_base_url_controller;
@@ -30,6 +37,10 @@ class _MyAppState extends State<MyApp> {
   late TextEditingController _debug_controller;
   late TextEditingController _unique_customer_number_controller;
   late TextEditingController _client_trace_id_controller;
+  late TextEditingController _login_id_controller;
+  late TextEditingController _password_controller;
+  late TextEditingController _client_id_controller;
+  late TextEditingController _client_secret_controller;
 
   @override
   void initState() {
@@ -40,6 +51,10 @@ class _MyAppState extends State<MyApp> {
     _debug_controller = TextEditingController();
     _unique_customer_number_controller = TextEditingController();
     _client_trace_id_controller = TextEditingController();
+    _login_id_controller = TextEditingController();
+    _password_controller = TextEditingController();
+    _client_id_controller = TextEditingController();
+    _client_secret_controller = TextEditingController();
   }
 
   @override
@@ -50,6 +65,10 @@ class _MyAppState extends State<MyApp> {
     _debug_controller.dispose();
     _unique_customer_number_controller.dispose();
     _client_trace_id_controller.dispose();
+    _login_id_controller.dispose();
+    _password_controller.dispose();
+    _client_id_controller.dispose();
+    _client_secret_controller.dispose();
     super.dispose();
   }
 
@@ -71,6 +90,94 @@ class _MyAppState extends State<MyApp> {
             _result = 'Error: $error';
           });
         });
+  }
+
+  // Derive the auth/token endpoint from the captured API Base URL.
+  // Mirrors the native sample's URL convention:
+  //   https://api.idmission.com/      -> https://auth.idmission.com/auth/realms/identity/protocol/openid-connect/token
+  //   https://apidemo.idmission.com/  -> https://demoauth.idmission.com/auth/realms/identity/protocol/openid-connect/token
+  // Rule: strip the leading "api" from the first host label; the remaining
+  // environment segment ("" or "demo") prefixes "auth".
+  String? _deriveTokenUrl(String apiBaseUrl) {
+    final match = RegExp(
+      r'^(https?:\/\/)([^/]+)(\/.*)?$',
+      caseSensitive: false,
+    ).firstMatch(apiBaseUrl.trim());
+    if (match == null) return null;
+    final scheme = match.group(1)!;
+    final labels = match.group(2)!.split('.');
+    final first = labels[0].toLowerCase();
+    final env = first.startsWith('api') ? first.substring(3) : first;
+    labels[0] = '${env}auth';
+    return '$scheme${labels.join('.')}/auth/realms/identity/protocol/openid-connect/token';
+  }
+
+  Future<void> generateToken() async {
+    setState(() {
+      _isLoading = true;
+      _token_error = '';
+    });
+    try {
+      final tokenUrl = _deriveTokenUrl(_api_base_url);
+      if (tokenUrl == null) {
+        throw 'Enter a valid API Base URL before generating a token.';
+      }
+
+      final form = {
+        'grant_type': 'password',
+        'client_id': _client_id,
+        'client_secret': _client_secret,
+        'username': _login_id,
+        'password': _password,
+        'scope': 'api_access',
+      };
+      final body = form.entries
+          .map(
+            (e) =>
+                '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value)}',
+          )
+          .join('&');
+
+      final client = HttpClient();
+      final request = await client.postUrl(Uri.parse(tokenUrl));
+      request.headers.set(
+        HttpHeaders.contentTypeHeader,
+        'application/x-www-form-urlencoded',
+      );
+      request.add(utf8.encode(body));
+      final response = await request.close();
+      final responseBody = await response.transform(utf8.decoder).join();
+      client.close();
+
+      Map<String, dynamic> json;
+      try {
+        json = jsonDecode(responseBody) as Map<String, dynamic>;
+      } catch (_) {
+        json = {};
+      }
+
+      final accessToken = json['access_token'];
+      if (response.statusCode < 200 ||
+          response.statusCode >= 300 ||
+          accessToken == null) {
+        final message =
+            json['error_description'] ??
+            json['error'] ??
+            'Token request failed (HTTP ${response.statusCode})';
+        throw message.toString();
+      }
+
+      setState(() {
+        _access_token = accessToken as String;
+        _access_token_controller.text = _access_token;
+        _isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        _isLoading = false;
+        _token_error = error.toString();
+      });
+    }
   }
 
   void initialize() {
@@ -243,12 +350,14 @@ class _MyAppState extends State<MyApp> {
     required Function(String) onChanged,
     TextInputType keyboardType = TextInputType.text,
     TextInputAction textInputAction = TextInputAction.next,
+    bool obscureText = false,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: TextField(
         controller: controller,
         onChanged: onChanged,
+        obscureText: obscureText,
         keyboardType: keyboardType,
         textInputAction: textInputAction,
         onSubmitted: (_) => FocusScope.of(context).unfocus(),
@@ -337,8 +446,50 @@ class _MyAppState extends State<MyApp> {
                       onChanged: (val) => _api_base_url = val,
                     ),
                     _buildTextField(
+                      label: 'Login ID',
+                      hint: 'Login ID (username)',
+                      icon: Icons.person,
+                      controller: _login_id_controller,
+                      onChanged: (val) => _login_id = val,
+                    ),
+                    _buildTextField(
+                      label: 'Password',
+                      hint: 'Password',
+                      icon: Icons.lock_outline,
+                      controller: _password_controller,
+                      onChanged: (val) => _password = val,
+                      obscureText: true,
+                    ),
+                    _buildTextField(
+                      label: 'Client ID',
+                      hint: 'Client ID',
+                      icon: Icons.badge_outlined,
+                      controller: _client_id_controller,
+                      onChanged: (val) => _client_id = val,
+                    ),
+                    _buildTextField(
+                      label: 'Client Secret',
+                      hint: 'Client Secret',
+                      icon: Icons.key_outlined,
+                      controller: _client_secret_controller,
+                      onChanged: (val) => _client_secret = val,
+                      obscureText: true,
+                    ),
+                    _buildActionButton('Generate Token', generateToken),
+                    if (_token_error.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                        child: Text(
+                          _token_error,
+                          style: const TextStyle(
+                            color: Color(0xFFEF4444), // Red 500
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    _buildTextField(
                       label: 'Access Token',
-                      hint: 'Enter your Access token',
+                      hint: 'Generate above, or paste manually',
                       icon: Icons.vpn_key,
                       controller: _access_token_controller,
                       onChanged: (val) => _access_token = val,
