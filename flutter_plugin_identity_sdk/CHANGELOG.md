@@ -1,3 +1,15 @@
+## 11.1.13
+
+**Android native SDK: 11.1.13.2.08**
+**iOS native SDK: 11.1.13.2.3**
+
+### Android
+* Bumped Identity SDK2 native library to 11.1.13.2.08
+
+### iOS
+* Bumped IDentityMediumSDK2.0 pods to tag 11.1.13.2.3
+* Removed unused pods: FaceDetection, ImageLabeling, OpenSSL-Universal, GZIP
+
 ## 11.1.7
 
 **Android native SDK: 11.1.07.2.23 — Released 28 April 2026**

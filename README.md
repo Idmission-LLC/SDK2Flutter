@@ -13,7 +13,7 @@ dependencies:
   flutter_plugin_identity_sdk:
     git:
       url: https://github.com/Idmission-LLC/SDK2Flutter.git
-      ref: v11.1.7
+      ref: v11.1.13
       path: flutter_plugin_identity_sdk
 ```
 
@@ -47,5 +47,5 @@ For full Android and iOS setup, SDK initialisation, service usage, and troublesh
 
 ## Native SDK versions
 
-- Android: `idmission-mediumsdk 11.1.07.2.23`
-- iOS: `IDentityMediumSDK2.0 11.1.7.2.4`
+- Android: `idmission-mediumsdk 11.1.13.2.08`
+- iOS: `IDentityMediumSDK2.0 11.1.13.2.3`
