@@ -9,6 +9,8 @@
 ### iOS
 * Bumped IDentityMediumSDK2.0 pods to tag 11.1.13.2.3
 * Removed unused pods: FaceDetection, ImageLabeling, OpenSSL-Universal, GZIP
+* Removed the `IDentityMediumModels` pod — the SDK downloads its on-device `.tflite` models at runtime, so bundling them was redundant. Cuts ~21 MB from the app.
+* Example app build number bumped to 4 (version stays 1.0.2).
 
 ## 11.1.7
 
