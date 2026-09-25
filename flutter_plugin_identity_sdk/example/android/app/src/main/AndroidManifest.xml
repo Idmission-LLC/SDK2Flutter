@@ -6,6 +6,7 @@
     <application
         android:label="IdentityFlutter"
         android:name="${applicationName}"
+        android:allowBackup="false"
         tools:replace="android:label"
         android:icon="@mipmap/ic_launcher">
         <activity
