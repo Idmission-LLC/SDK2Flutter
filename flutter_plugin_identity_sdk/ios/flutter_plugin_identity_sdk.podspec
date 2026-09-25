@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_plugin_identity_sdk'
-  s.version          = '11.1.13'
+  s.version          = '11.1.19'
   s.summary          = 'IDmission Identity Flutter Plugin for iOS.'
   s.description      = <<-DESC
 Flutter plugin wrapping the IDmission Identity SDK (IDentityMediumSDK2.0 11.1.13.2.3).
