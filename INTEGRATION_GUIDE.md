@@ -36,7 +36,7 @@ dependencies:
   flutter_plugin_identity_sdk:
     git:
       url: https://github.com/Idmission-LLC/SDK2Flutter.git
-      ref: v11.1.13        # use the release tag — do not track main
+      ref: v11.1.19        # use the release tag — do not track main
       path: flutter_plugin_identity_sdk
 ```
 
@@ -46,7 +46,7 @@ Then run:
 flutter pub get
 ```
 
-> **Note on `ref`:** Always pin to a release tag (e.g. `v11.1.13`) rather than a branch name. Tags are immutable, so your build is reproducible. Using `main` or a branch means your app could silently pick up breaking changes on the next `flutter pub get`.
+> **Note on `ref`:** Always pin to a release tag (e.g. `v11.1.19`) rather than a branch name. Tags are immutable, so your build is reproducible. Using `main` or a branch means your app could silently pick up breaking changes on the next `flutter pub get`.
 
 ---
 

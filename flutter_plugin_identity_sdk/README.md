@@ -11,7 +11,7 @@ dependencies:
   flutter_plugin_identity_sdk:
     git:
       url: https://github.com/Idmission-LLC/SDK2Flutter.git
-      ref: v11.1.13
+      ref: v11.1.19
       path: flutter_plugin_identity_sdk
 ```
 
