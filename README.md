@@ -47,5 +47,5 @@ For full Android and iOS setup, SDK initialisation, service usage, and troublesh
 
 ## Native SDK versions
 
-- Android: `idmission-mediumsdk 11.1.13.2.18`
+- Android: `idmission-mediumsdk 11.1.19.2.05`
 - iOS: `IDentityMediumSDK2.0 11.1.13.2.3`
