@@ -2,6 +2,9 @@
 import 'flutter_plugin_identity_sdk_platform_interface.dart';
 
 class FlutterPluginIdentitySdk {
+  /// Returns the host OS version. This comes from the Flutter plugin template
+  /// and is not part of the IDmission API.
+  @Deprecated('Not part of the IDmission API; will be removed in a future release.')
   Future<String?> getPlatformVersion() {
     return FlutterPluginIdentitySdkPlatform.instance.getPlatformVersion();
   }

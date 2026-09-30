@@ -67,7 +67,6 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
   private MethodChannel channel;
   Activity activity;
   Context context;
-  String initializeApiBaseUrl = "https://kyc.idmission.com/";
   String apiBaseUrl = "https://api.idmission.com/";
   String accessToken = "";
   boolean isDebug = false;
@@ -78,9 +77,7 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
   boolean isUpdateModelsData = true;
   LANGUAGE language = LANGUAGE.EN;
 
-  private List<ProcessedCapture> processedCaptures = new ArrayList<>();
   private String response;
-  private IdMissionCaptureLauncher launcher = new IdMissionCaptureLauncher();
   private static Result resultCallback;
 
   @Override
@@ -286,17 +283,6 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
       Response<CommonApiResponse> response =
               IdentityProofingSDK.INSTANCE.finalSubmit(activity);
       return response;
-    }
-  }
-
-  private void writeToFile(String data, Context context) {
-    try {
-      OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("result.txt", Context.MODE_PRIVATE));
-      outputStreamWriter.write(data);
-      outputStreamWriter.close();
-    }
-    catch (IOException e) {
-      Log.e("Exception", "File write failed: " + e.toString());
     }
   }
 

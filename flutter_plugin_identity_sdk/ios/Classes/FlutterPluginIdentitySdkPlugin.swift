@@ -91,7 +91,6 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
         if let args = call.arguments as? Dictionary<String, Any>,
           let uniqueCustomerNumber = args["uniqueCustomerNumber"] as? Int {
             
-            print("uniqueCustomerNumber ",uniqueCustomerNumber)
             
             if(uniqueCustomerNumber>0){
                 UserDefaults.standard.set(String(uniqueCustomerNumber), forKey: "uniqueCustomerNumber")
@@ -117,7 +116,6 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
         if let args = call.arguments as? Dictionary<String, Any>,
           let uniqueCustomerNumber = args["uniqueCustomerNumber"] as? Int {
             
-            print("uniqueCustomerNumber ",uniqueCustomerNumber)
             
             if(uniqueCustomerNumber>0){
                 UserDefaults.standard.set(String(uniqueCustomerNumber), forKey: "uniqueCustomerNumber")
@@ -143,7 +141,6 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
         if let args = call.arguments as? Dictionary<String, Any>,
            let uniqueCustomerNumber = args["uniqueCustomerNumber"] as? Int {
             
-            print("uniqueCustomerNumber ",uniqueCustomerNumber)
             
             if(uniqueCustomerNumber>0){
                 UserDefaults.standard.set(String(uniqueCustomerNumber), forKey: "uniqueCustomerNumber")
@@ -205,8 +202,4 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
         return root as? FlutterViewController
     }
 
-    public func sendResponseTo(result: @escaping FlutterResult, resultString: String) {
-        result(resultString)
-    }
-        
 }

@@ -17,7 +17,6 @@ class SuccessViewController: UIViewController {
     var backDetectedData: DetectedData?
 
     var texts: String!
-    var textObfuscated: String!
     var result: FlutterResult!
     
     override func viewDidLoad() {
@@ -48,8 +47,6 @@ class SuccessViewController: UIViewController {
     }
   
     private func sendData() {
-        let dict2:NSMutableDictionary? = ["data" : self.texts ?? ["data" : "error"]]
-        print("sendData local", self.texts)
         result(self.texts ?? "error")
     }
     
