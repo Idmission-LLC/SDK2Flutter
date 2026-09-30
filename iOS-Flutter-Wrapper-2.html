@@ -75,16 +75,7 @@
                 <li class="sub-step"><span class="sub-bullet"></span><div><strong>Flutter</strong> 3.3.0 or later — <a href="https://docs.flutter.dev/get-started/install" target="_blank">Flutter installation guide →</a></div></li>
                 <li class="sub-step"><span class="sub-bullet"></span><div><strong>Xcode</strong> with iOS 15.6 deployment target</div></li>
                 <li class="sub-step"><span class="sub-bullet"></span><div><strong>CocoaPods</strong> — <code>sudo gem install cocoapods</code></div></li>
-                <li class="sub-step"><span class="sub-bullet"></span>
-                    <div>
-                        <strong>cocoapods-user-defined-build-types</strong> gem — required for mixed static/dynamic framework linking
-                        <div class="code-block" style="margin-top: 8px;">
-                            <div class="code-block-header"><span class="code-lang">Shell</span><button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
-                            <pre><code>sudo gem install cocoapods-user-defined-build-types</code></pre>
-                        </div>
-                        <p style="margin-top: 4px; font-size: 14px; color: var(--text-muted);">Do not use the macOS system Ruby. Use a version manager such as <a href="https://github.com/rbenv/rbenv" target="_blank">rbenv</a> or <a href="https://rvm.io" target="_blank">rvm</a>.</p>
-                    </div>
-                </li>
+                <li class="sub-step"><span class="sub-bullet"></span><div style="font-size: 14px; color: var(--text-muted);">Do not use the macOS system Ruby. Use a version manager such as <a href="https://github.com/rbenv/rbenv" target="_blank">rbenv</a> or <a href="https://rvm.io" target="_blank">rvm</a>.</div></li>
             </ul>
 
             <h2>Setup</h2>
@@ -117,14 +108,10 @@
                     <div class="step-num">2</div>
                     <div class="step-body">
                         <p>Replace the entire contents of <code>ios/Podfile</code> with the following.</p>
-                        <div class="callout"><strong>Why <code>use_modular_headers!</code> instead of <code>use_frameworks!</code>?</strong> The IDentity SDK is a pre-compiled <code>.xcframework</code> that requires per-pod <code>:build_type</code> overrides. Using <code>use_frameworks!</code> globally causes linker conflicts.</div>
+                        <div class="callout"><strong>Why <code>use_modular_headers!</code> instead of <code>use_frameworks!</code>?</strong> The IDentity SDK is a pre-compiled <code>.xcframework</code> Using <code>use_frameworks!</code> globally causes linker conflicts.</div>
                         <div class="code-block scrollable">
                             <div class="code-block-header"><span class="code-lang">Ruby — ios/Podfile</span><button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
-                            <pre><code>plugin 'cocoapods-user-defined-build-types'
-
-enable_user_defined_build_types!
-
-platform :ios, '15.6'
+                            <pre><code>platform :ios, '15.6'
 
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
@@ -162,7 +149,6 @@ target 'Runner' do
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
   pod 'IDentityMediumSDK2.0'
-  pod 'GoogleMLKit/TextRecognition',  :build_type => :dynamic_framework
 
   target 'RunnerTests' do
     inherit! :search_paths
@@ -249,6 +235,12 @@ await FlutterPluginIdentitySdk.submit_result();</code></pre>
   String apiBaseUrl,   // API base URL — provided by IDmission
   String debug,        // 'y' enables verbose logging, 'n' disables it
   String accessToken,  // your IDmission access token
+  // Optional named parameters — these are the defaults:
+  String language = 'en',               // 'en' or 'es' (Android also 'my' and 'ar')
+  bool enableGPS = true,                // capture GPS location with submissions
+  bool geolocationRequired = false,     // block the flow if location access is denied
+  bool isUpdateModelsData = true,       // download the latest SDK models after credential verification
+  bool enableScreenRecording = false,   // allow screen recording / screenshots during capture
 );</code></pre></div></div>
                 </div>
 

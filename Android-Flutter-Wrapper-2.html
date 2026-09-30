@@ -297,6 +297,12 @@ await FlutterPluginIdentitySdk.submit_result();</code></pre>
   String apiBaseUrl,   // API base URL — provided by IDmission
   String debug,        // 'y' enables verbose logging, 'n' disables it
   String accessToken,  // your IDmission access token
+  // Optional named parameters — these are the defaults:
+  String language = 'en',               // 'en' or 'es' (Android also 'my' and 'ar')
+  bool enableGPS = true,                // capture GPS location with submissions
+  bool geolocationRequired = false,     // block the flow if location access is denied
+  bool isUpdateModelsData = true,       // download the latest SDK models after credential verification
+  bool enableScreenRecording = false,   // allow screen recording / screenshots during capture
 );</code></pre>
                         </div>
                     </div>

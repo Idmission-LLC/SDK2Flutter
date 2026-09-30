@@ -1,7 +1,3 @@
-plugin 'cocoapods-user-defined-build-types'
-
-enable_user_defined_build_types!
-
 # Uncomment this line to define a global platform for your project
  platform :ios, '15.6'
 
@@ -36,8 +32,7 @@ target 'Runner' do
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
-  pod 'IDentityMediumSDK2.0', :git => 'https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git', :tag => '11.1.13.2.3'
-  pod 'GoogleMLKit/TextRecognition', :build_type => :dynamic_framework
+  pod 'IDentityMediumSDK2.0', :git => 'https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git', :tag => '11.1.19.2.2'
 
   target 'RunnerTests' do
     inherit! :search_paths

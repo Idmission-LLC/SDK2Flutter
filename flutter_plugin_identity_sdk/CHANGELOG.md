@@ -1,9 +1,23 @@
 ## 11.1.19
 
 **Android native SDK: 11.1.19.2.05**
+**iOS native SDK: 11.1.19.2.2**
 
 ### Android
 * Bumped Identity SDK2 native library to 11.1.19.2.05
+
+### iOS
+* Bumped IDentityMediumSDK2.0 to 11.1.19.2.2
+* Removed the `GoogleMLKit/TextRecognition`, `TensorFlowLiteSwift` and `GZIP` dependencies — the iOS SDK no longer needs them
+* The `cocoapods-user-defined-build-types` plugin is no longer required
+* Fixed service calls (ID Validation, Face Match, etc.) never starting the capture screen, leaving the caller waiting forever, on apps using the UIScene lifecycle
+
+### Flutter wrapper
+* iOS: the plugin no longer depends on the sample app's `UserDefaults` helper (removed along with the unused `authenticationURL` value); the API base URL and access token are passed directly to the SDK
+* `idm_sdk_init` accepts optional named parameters that map to the native SDK's initializer (iOS and Android): `language` (default `'en'`; `'es'`, and on Android `'my'`/`'ar'`), `enableGPS` (true), `geolocationRequired` (false), `isUpdateModelsData` (true) and `enableScreenRecording` (false). Existing calls are unchanged
+* iOS: capture services now return the result object exactly as the SDK returns it (e.g. `ValidateIdResult`) as JSON, generated from the object's own properties — nothing is renamed, filtered or masked. `UIImage` values are written as base64 JPEG strings. The plugin no longer returns the full API request
+* Added `getSDKInfo()`, returning the native SDK version and the ML model names in use
+* Example app: paired credential fields, new option switches, SDK version and model list, and settings persisted after a successful initialization, pretty-printed results with base64 masked for display, and thumbnails of the captured images with a full-screen viewer
 
 ## 11.1.13
 

@@ -28,7 +28,7 @@ flutter pub get
 | Platform | Minimum |
 |----------|---------|
 | Android | API 26 (Android 8.0), Java 21, AGP 8.9.1+ |
-| iOS | iOS 15.6, CocoaPods + `cocoapods-user-defined-build-types` |
+| iOS | iOS 15.6, CocoaPods |
 | Flutter | 3.3.0 / Dart 3.9.2 |
 
 ## Available services
@@ -48,4 +48,4 @@ For full Android and iOS setup, SDK initialisation, service usage, and troublesh
 ## Native SDK versions
 
 - Android: `idmission-mediumsdk 11.1.19.2.05`
-- iOS: `IDentityMediumSDK2.0 11.1.13.2.3`
+- iOS: `IDentityMediumSDK2.0 11.1.19.2.2`

@@ -5,12 +5,44 @@ import IDCaptureMedium
 import Flutter
 
 class IDentitySDKHelper : NSObject{
-    
-    @IBAction func initializeSDK(result: @escaping FlutterResult){
+
+    // SDK version plus the ML model file names in use. Model names are empty
+    // until the SDK has been initialized (models are downloaded on init).
+    static func sdkInfo() -> [String: Any] {
+        let models: [(String, String)] = [
+            ("Face Detector", IDentitySDK.faceDetectorModelName),
+            ("Face Landmarks", IDentitySDK.faceLandmarkModelName),
+            ("Face BlendedShapes", IDentitySDK.faceBlendedShapesModelName),
+            ("Liveness", IDentitySDK.livenessModelName),
+            ("Focus Face", IDentitySDK.focusFaceModelName),
+            ("Face Mask", IDentitySDK.faceMaskModelName),
+            ("Focus", IDentitySDK.focusModelName),
+            ("Doc Realness", IDentitySDK.docRealnessModelName),
+            ("Doc Detection", IDentitySDK.docDetectionModelName),
+            ("PaddleOCR Detection", IDentitySDK.paddleOCRDetectionModelName),
+            ("PaddleOCR Recognition", IDentitySDK.paddleOCRRecognitionModelName),
+        ]
+        return [
+            "version": IDentitySDK.version,
+            "models": models
+                .filter { !$0.1.isEmpty }
+                .map { ["name": $0.0, "value": $0.1] },
+        ]
+    }
+
+    func initializeSDK(result: @escaping FlutterResult,
+                       apiBaseUrl: String,
+                       accessToken: String,
+                       language: Language = .en,
+                       isGPSEnabled: Bool = true,
+                       geolocationRequired: Bool = false,
+                       isUpdateModelsData: Bool = true,
+                       isScreenRecordingEnabled: Bool = false) {
         print(IDentitySDK.version)
-        
-        IDentitySDK.apiBaseUrl = UserDefaults.standard.string(forKey: "apiBaseUrl") ?? ""
-        IDentitySDK.initializeSDK(language: UserDefaults.SDKlanguage, isUpdateModelsData: UserDefaults.isUpdateModelData, accessToken: UserDefaults.accessToken) { error in
+
+        IDentitySDK.apiBaseUrl = apiBaseUrl
+        IDentitySDK.isScreenRecordingEnabled(isScreenRecordingEnabled)
+        IDentitySDK.initializeSDK(language: language, isGPSEnabled: isGPSEnabled, geolocationRequired: geolocationRequired, isUpdateModelsData: isUpdateModelsData, accessToken: accessToken) { error in
             if let error = error {
                 print("!!! initialize SDK ERROR: \(error.localizedDescription)")
                 result("Error")

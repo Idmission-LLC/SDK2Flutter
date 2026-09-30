@@ -4,12 +4,14 @@ class AnimatedElevatedButton extends StatefulWidget {
   final VoidCallback onPressed;
   final String text;
   final bool secondary;
+  final double height;
 
   const AnimatedElevatedButton({
     Key? key,
     required this.onPressed,
     required this.text,
     this.secondary = false,
+    this.height = 54,
   }) : super(key: key);
 
   @override
@@ -47,7 +49,7 @@ class _AnimatedElevatedButtonState extends State<AnimatedElevatedButton>
         scale: _scaleAnimation,
         child: SizedBox(
           width: double.infinity,
-          height: 54,
+          height: widget.height,
           child: widget.secondary
               ? OutlinedButton(
                   style: OutlinedButton.styleFrom(
