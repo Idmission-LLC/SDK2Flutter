@@ -127,12 +127,7 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
 
       apiBaseUrl = (String) map.get("apiBaseUrl");
 
-      String debug = (String) map.get("debug");
-      if(null!=debug && debug.contains("y")){
-        isDebug=true;
-      }else{
-        isDebug=false;
-      }
+      isDebug = map.get("enableDebugMode") instanceof Boolean && (Boolean) map.get("enableDebugMode");
 
       accessToken = (String) map.get("accessToken");
 

@@ -27,7 +27,7 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
             result("Error")
             return
         }
-        let debug = (args["debug"] as? String ?? "").contains("y")
+        let debug = args["enableDebugMode"] as? Bool ?? false
         IDCapture.options.isDebugMode = debug
         SelfieCapture.options.isDebugMode = debug
         DocumentCapture.options.isDebugMode = debug

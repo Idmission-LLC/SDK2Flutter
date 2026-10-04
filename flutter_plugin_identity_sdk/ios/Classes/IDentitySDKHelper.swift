@@ -48,7 +48,7 @@ class IDentitySDKHelper : NSObject{
                 result("Error")
             } else {
                 print("!!! initialize SDK SUCCESS")
-                result("SDK successfully initialized")
+                result("SDK Successfully Initialized")
             }
         }
          

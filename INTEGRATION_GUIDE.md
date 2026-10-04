@@ -278,7 +278,6 @@ import 'package:flutter_plugin_identity_sdk/flutter_plugin_identity_sdk.dart';
 
 await FlutterPluginIdentitySdk.idm_sdk_init(
   'https://kyc.idmission.com/',   // API base URL — provided by IDmission
-  'n',                             // debug: 'y' enables verbose logging, 'n' disables it
   'YOUR_ACCESS_TOKEN',             // access token — provided by IDmission
   // Optional — these are the defaults:
   language: 'en',                  // 'en' or 'es' (Android also 'my' and 'ar')
@@ -286,21 +285,24 @@ await FlutterPluginIdentitySdk.idm_sdk_init(
   geolocationRequired: false,      // block the flow if location access is denied
   isUpdateModelsData: true,        // download the latest SDK models after credential verification
   enableScreenRecording: false,    // allow screen recording / screenshots during capture
+  enableDebugMode: false,          // verbose SDK logging; keep false in production
 );
 ```
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `apiBaseUrl` | `String` | Base URL for IDmission API calls. Provided by IDmission for your environment. |
-| `debug` | `String` | `'y'` enables verbose SDK logging. Use `'n'` in production. |
 | `accessToken` | `String` | Your IDmission API access token. |
 | `language` | `String` (named, optional) | SDK user-interface language: `'en'` or `'es'` (Android also `'my'` and `'ar'`). Unknown values fall back to `'en'`. Default `'en'`. |
 | `enableGPS` | `bool` (named, optional) | Capture the GPS location with submissions. Default `true`. |
 | `geolocationRequired` | `bool` (named, optional) | Block the flow if the user denies location access. Default `false`. |
 | `isUpdateModelsData` | `bool` (named, optional) | Download the latest SDK models after credential verification. Default `true`. |
 | `enableScreenRecording` | `bool` (named, optional) | Allow screen recording / screenshots during capture. Default `false`. |
+| `enableDebugMode` | `bool` (named, optional) | Enable verbose SDK logging and debug overlays. Use `false` in production. Default `false`. |
 
-**Return value:** `Future<String?>` — returns a JSON string containing the initialization response, or `null` on failure.
+> **Upgrading from earlier versions:** `idm_sdk_init` no longer takes the `debug` string (`'y'` / `'n'`) as its second argument. Remove it and pass `enableDebugMode: true` if you used `'y'`.
+
+**Return value:** `Future<String?>` — `"SDK Successfully Initialized"` on success (the same text on iOS and Android), or `"Error"` / an error message on failure.
 
 ### Getting an access token
 

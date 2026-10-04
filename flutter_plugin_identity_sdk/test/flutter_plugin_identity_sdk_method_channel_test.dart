@@ -27,35 +27,37 @@ void main() {
 
   group('idm_sdk_init', () {
     test('sends the required arguments and the default options', () async {
-      reply = 'SDK successfully initialized';
-      final result = await platform.idm_sdk_init('https://api.idmission.com/', 'n', 'TOKEN');
+      reply = 'SDK Successfully Initialized';
+      final result = await platform.idm_sdk_init('https://api.idmission.com/', 'TOKEN');
 
-      expect(result, 'SDK successfully initialized');
+      expect(result, 'SDK Successfully Initialized');
       expect(calls.single.method, 'idm_sdk_init');
       expect(calls.single.arguments, {
         'apiBaseUrl': 'https://api.idmission.com/',
-        'debug': 'n',
         'accessToken': 'TOKEN',
         'language': 'en',
         'enableGPS': true,
         'geolocationRequired': false,
         'isUpdateModelsData': true,
         'enableScreenRecording': false,
+        'enableDebugMode': false,
       });
     });
 
     test('sends the options it is given', () async {
       await platform.idm_sdk_init(
-        'https://apidemo.idmission.com/', 'y', 'TOKEN',
+        'https://apidemo.idmission.com/', 'TOKEN',
         language: 'es',
         enableGPS: false,
         geolocationRequired: true,
         isUpdateModelsData: false,
         enableScreenRecording: true,
+        enableDebugMode: true,
       );
 
       final args = calls.single.arguments as Map;
-      expect(args['debug'], 'y');
+      expect(args.containsKey('debug'), isFalse);
+      expect(args['enableDebugMode'], true);
       expect(args['language'], 'es');
       expect(args['enableGPS'], false);
       expect(args['geolocationRequired'], true);

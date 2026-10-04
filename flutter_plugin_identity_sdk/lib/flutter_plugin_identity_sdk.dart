@@ -12,6 +12,8 @@ class FlutterPluginIdentitySdk {
   /// Initializes the SDK. Call once before any service.
   ///
   /// Optional named parameters (defaults in brackets):
+  /// - [enableDebugMode] enable verbose SDK logging and debug overlays; use
+  ///   `false` in production [false]
   /// - [language] SDK user-interface language, `'en'` or `'es'` (Android also
   ///   `'my'` and `'ar'`) ['en']
   /// - [enableGPS] capture the GPS location with submissions [true]
@@ -21,18 +23,20 @@ class FlutterPluginIdentitySdk {
   /// - [enableScreenRecording] allow screen recording / screenshots during
   ///   capture [false]
   static Future<String?> idm_sdk_init(
-      String apiBaseUrl, String debug, String accessToken,
+      String apiBaseUrl, String accessToken,
       {String language = 'en',
       bool enableGPS = true,
       bool geolocationRequired = false,
       bool isUpdateModelsData = true,
-      bool enableScreenRecording = false}) async {
-      return FlutterPluginIdentitySdkPlatform.instance.idm_sdk_init(apiBaseUrl, debug, accessToken,
+      bool enableScreenRecording = false,
+      bool enableDebugMode = false}) async {
+      return FlutterPluginIdentitySdkPlatform.instance.idm_sdk_init(apiBaseUrl, accessToken,
           language: language,
           enableGPS: enableGPS,
           geolocationRequired: geolocationRequired,
           isUpdateModelsData: isUpdateModelsData,
-          enableScreenRecording: enableScreenRecording);
+          enableScreenRecording: enableScreenRecording,
+          enableDebugMode: enableDebugMode);
   }
 
   static Future<String?> idm_sdk_serviceID20(

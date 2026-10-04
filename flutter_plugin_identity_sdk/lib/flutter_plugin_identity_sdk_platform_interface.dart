@@ -27,12 +27,13 @@ abstract class FlutterPluginIdentitySdkPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<String?> idm_sdk_init(String apiBaseUrl, String debug, String accessToken,
+  Future<String?> idm_sdk_init(String apiBaseUrl, String accessToken,
       {String language = 'en',
       bool enableGPS = true,
       bool geolocationRequired = false,
       bool isUpdateModelsData = true,
-      bool enableScreenRecording = false}) async {
+      bool enableScreenRecording = false,
+      bool enableDebugMode = false}) async {
 throw UnimplementedError('platformVersion() has not been implemented.');
   }
 

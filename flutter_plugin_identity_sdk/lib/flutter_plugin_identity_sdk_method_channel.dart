@@ -16,21 +16,22 @@ class MethodChannelFlutterPluginIdentitySdk extends FlutterPluginIdentitySdkPlat
   }
 
   @override
-  Future<String?> idm_sdk_init(String apiBaseUrl, String debug, String accessToken,
+  Future<String?> idm_sdk_init(String apiBaseUrl, String accessToken,
       {String language = 'en',
       bool enableGPS = true,
       bool geolocationRequired = false,
       bool isUpdateModelsData = true,
-      bool enableScreenRecording = false}) async {
+      bool enableScreenRecording = false,
+      bool enableDebugMode = false}) async {
     final String? resultData = await methodChannel.invokeMethod('idm_sdk_init', {
       "apiBaseUrl": apiBaseUrl,
-      "debug": debug,
       "accessToken": accessToken,
       "language": language,
       "enableGPS": enableGPS,
       "geolocationRequired": geolocationRequired,
       "isUpdateModelsData": isUpdateModelsData,
       "enableScreenRecording": enableScreenRecording,
+      "enableDebugMode": enableDebugMode,
     });
     return resultData;
   }

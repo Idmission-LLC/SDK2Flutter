@@ -10,23 +10,24 @@ class FakePlatform extends FlutterPluginIdentitySdkPlatform with MockPlatformInt
   Map<String, Object?>? initArgs;
 
   @override
-  Future<String?> idm_sdk_init(String apiBaseUrl, String debug, String accessToken,
+  Future<String?> idm_sdk_init(String apiBaseUrl, String accessToken,
       {String language = 'en',
       bool enableGPS = true,
       bool geolocationRequired = false,
       bool isUpdateModelsData = true,
-      bool enableScreenRecording = false}) async {
+      bool enableScreenRecording = false,
+      bool enableDebugMode = false}) async {
     initArgs = {
       'apiBaseUrl': apiBaseUrl,
-      'debug': debug,
       'accessToken': accessToken,
       'language': language,
       'enableGPS': enableGPS,
       'geolocationRequired': geolocationRequired,
       'isUpdateModelsData': isUpdateModelsData,
       'enableScreenRecording': enableScreenRecording,
+      'enableDebugMode': enableDebugMode,
     };
-    return 'SDK successfully initialized';
+    return 'SDK Successfully Initialized';
   }
 
   @override
@@ -51,30 +52,31 @@ void main() {
     tearDown(() => FlutterPluginIdentitySdkPlatform.instance = initialPlatform);
 
     test('idm_sdk_init applies the documented option defaults', () async {
-      final result = await FlutterPluginIdentitySdk.idm_sdk_init('https://api.idmission.com/', 'n', 'TOKEN');
+      final result = await FlutterPluginIdentitySdk.idm_sdk_init('https://api.idmission.com/', 'TOKEN');
 
-      expect(result, 'SDK successfully initialized');
+      expect(result, 'SDK Successfully Initialized');
       expect(fake.initArgs, {
         'apiBaseUrl': 'https://api.idmission.com/',
-        'debug': 'n',
         'accessToken': 'TOKEN',
         'language': 'en',
         'enableGPS': true,
         'geolocationRequired': false,
         'isUpdateModelsData': true,
         'enableScreenRecording': false,
+        'enableDebugMode': false,
       });
     });
 
     test('idm_sdk_init passes the options through', () async {
-      await FlutterPluginIdentitySdk.idm_sdk_init('u', 'y', 't',
-          language: 'ar', enableGPS: false, geolocationRequired: true, isUpdateModelsData: false, enableScreenRecording: true);
+      await FlutterPluginIdentitySdk.idm_sdk_init('u', 't',
+          language: 'ar', enableGPS: false, geolocationRequired: true, isUpdateModelsData: false, enableScreenRecording: true, enableDebugMode: true);
 
       expect(fake.initArgs!['language'], 'ar');
       expect(fake.initArgs!['enableGPS'], false);
       expect(fake.initArgs!['geolocationRequired'], true);
       expect(fake.initArgs!['isUpdateModelsData'], false);
       expect(fake.initArgs!['enableScreenRecording'], true);
+      expect(fake.initArgs!['enableDebugMode'], true);
     });
 
     test('getSDKInfo is forwarded to the platform', () async {

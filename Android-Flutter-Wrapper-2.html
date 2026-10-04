@@ -276,7 +276,7 @@
                 <pre><code>import 'package:flutter_plugin_identity_sdk/flutter_plugin_identity_sdk.dart';
 
 // 1. Initialise once before calling any service
-await FlutterPluginIdentitySdk.idm_sdk_init(apiBaseUrl, 'n', accessToken);
+await FlutterPluginIdentitySdk.idm_sdk_init(apiBaseUrl, accessToken);
 
 // 2. Call a service
 final result = await FlutterPluginIdentitySdk.idm_sdk_serviceID10('y', 12345);
@@ -290,12 +290,11 @@ await FlutterPluginIdentitySdk.submit_result();</code></pre>
                 <div class="api-fn">
                     <div class="api-fn-header"><span class="api-badge">Init</span><span class="api-fn-name">idm_sdk_init</span></div>
                     <div class="api-fn-body">
-                        <p>Initializes the SDK. Must be called before any other function.</p>
+                        <p>Initializes the SDK. Must be called before any other function. Returns &ldquo;SDK Successfully Initialized&rdquo; on success (the same text on iOS and Android), or &ldquo;Error&rdquo; / an error message on failure.</p>
                         <div class="code-block">
                             <div class="code-block-header"><span class="code-lang">Dart</span><button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
                             <pre><code>await FlutterPluginIdentitySdk.idm_sdk_init(
   String apiBaseUrl,   // API base URL — provided by IDmission
-  String debug,        // 'y' enables verbose logging, 'n' disables it
   String accessToken,  // your IDmission access token
   // Optional named parameters — these are the defaults:
   String language = 'en',               // 'en' or 'es' (Android also 'my' and 'ar')
@@ -303,6 +302,7 @@ await FlutterPluginIdentitySdk.submit_result();</code></pre>
   bool geolocationRequired = false,     // block the flow if location access is denied
   bool isUpdateModelsData = true,       // download the latest SDK models after credential verification
   bool enableScreenRecording = false,   // allow screen recording / screenshots during capture
+  bool enableDebugMode = false,         // verbose SDK logging; keep false in production
 );</code></pre>
                         </div>
                     </div>
