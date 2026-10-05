@@ -16,8 +16,23 @@ class MethodChannelFlutterPluginIdentitySdk extends FlutterPluginIdentitySdkPlat
   }
 
   @override
-  Future<String?> idm_sdk_init(String apiBaseUrl, String debug, String accessToken) async {
-    final String? resultData = await methodChannel.invokeMethod('idm_sdk_init', {"apiBaseUrl": apiBaseUrl, "debug": debug, "accessToken": accessToken});
+  Future<String?> idm_sdk_init(String apiBaseUrl, String accessToken,
+      {String language = 'en',
+      bool enableGPS = true,
+      bool geolocationRequired = false,
+      bool isUpdateModelsData = true,
+      bool enableScreenRecording = false,
+      bool enableDebugMode = false}) async {
+    final String? resultData = await methodChannel.invokeMethod('idm_sdk_init', {
+      "apiBaseUrl": apiBaseUrl,
+      "accessToken": accessToken,
+      "language": language,
+      "enableGPS": enableGPS,
+      "geolocationRequired": geolocationRequired,
+      "isUpdateModelsData": isUpdateModelsData,
+      "enableScreenRecording": enableScreenRecording,
+      "enableDebugMode": enableDebugMode,
+    });
     return resultData;
   }
 
@@ -68,4 +83,12 @@ class MethodChannelFlutterPluginIdentitySdk extends FlutterPluginIdentitySdkPlat
     final String? resultData = await methodChannel.invokeMethod('submit_result');
     return resultData;
   } 
+
+
+  @override
+  Future<Map<String, dynamic>> getSDKInfo() async {
+    final Map<dynamic, dynamic>? info = await methodChannel.invokeMapMethod<dynamic, dynamic>('getSDKInfo');
+    return Map<String, dynamic>.from(info ?? const {});
+  }
+
 }

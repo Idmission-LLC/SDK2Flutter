@@ -1,7 +1,8 @@
 # IDmission Flutter Plugin — Integration Guide
 
 **Plugin:** `flutter_plugin_identity_sdk`  
-**Native SDK version:** 11.1.19.2.05  
+**Android native SDK:** 11.1.19.2.05  
+**iOS native SDK:** 11.1.19.2.2  
 **Minimum Flutter:** 3.3.0  
 **Minimum Dart:** 3.9.2
 
@@ -20,7 +21,6 @@
 | Android Gradle Plugin | 8.9.1+ | |
 | iOS deployment target | 15.6 | |
 | CocoaPods | latest | Run `sudo gem install cocoapods` |
-| cocoapods-user-defined-build-types | latest | Run `sudo gem install cocoapods-user-defined-build-types` |
 
 ---
 
@@ -180,23 +180,11 @@ class MyApp : MultiDexApplication() { ... }
 
 ## Step 3 — iOS setup
 
-### 3a. Install the CocoaPods plugin
-
-The iOS native SDK requires mixed static/dynamic framework linking, which CocoaPods does not support natively. You need the `cocoapods-user-defined-build-types` gem:
-
-```bash
-sudo gem install cocoapods-user-defined-build-types
-```
-
-### 3b. Create or replace your Podfile
+### 3a. Create or replace your Podfile
 
 Create `ios/Podfile` if it does not exist (a freshly generated Flutter project does not include one), or replace its entire contents with the following:
 
 ```ruby
-plugin 'cocoapods-user-defined-build-types'
-
-enable_user_defined_build_types!
-
 platform :ios, '15.6'
 
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -235,8 +223,6 @@ target 'Runner' do
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
   pod 'IDentityMediumSDK2.0'
-  pod 'GoogleMLKit/TextRecognition',  :build_type => :dynamic_framework
-  pod 'GZIP',                         :build_type => :dynamic_framework
 
   target 'RunnerTests' do
     inherit! :search_paths
@@ -250,9 +236,11 @@ post_install do |installer|
 end
 ```
 
-> **Why `use_modular_headers!` instead of `use_frameworks!`?** The IDentity SDK ships as a pre-compiled `.xcframework`. Mixing dynamic and static frameworks in CocoaPods requires per-pod `:build_type` overrides, which the `cocoapods-user-defined-build-types` plugin enables. Using `use_frameworks!` globally causes linker conflicts.
+> **Why `use_modular_headers!` instead of `use_frameworks!`?** The IDentity SDK ships as a pre-compiled `.xcframework`. Using `use_frameworks!` globally causes linker conflicts.
 
-### 3c. Run pod install
+> **Upgrading from 11.1.13 or earlier?** The iOS SDK no longer depends on Google ML Kit, TensorFlow Lite or GZIP. Remove `pod 'GoogleMLKit/TextRecognition'`, `pod 'GZIP'` and the `plugin 'cocoapods-user-defined-build-types'` / `enable_user_defined_build_types!` lines from your Podfile, then re-run `pod install`.
+
+### 3b. Run pod install
 
 ```bash
 cd ios
@@ -260,11 +248,11 @@ LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 pod install
 cd ..
 ```
 
-This downloads several large frameworks (TensorFlowLite, GoogleMLKit, IDentityMediumSDK). Allow several minutes on a clean install.
+This downloads the IDentityMediumSDK frameworks. Allow a few minutes on a clean install.
 
 > **UTF-8 locale:** The `LANG` and `LC_ALL` prefixes are required if your terminal locale is not already set to UTF-8. Without them, CocoaPods throws `Unicode Normalization not appropriate for ASCII-8BIT` and aborts. Add `export LANG=en_US.UTF-8` to your `~/.zshrc` or `~/.profile` to avoid needing the prefix every time.
 
-### 3d. Add required Info.plist permissions
+### 3c. Add required Info.plist permissions
 
 Open `ios/Runner/Info.plist` and add the following keys. The SDK uses the camera for document and face capture; all three strings are required or the app will crash at runtime on iOS 14+:
 
@@ -283,25 +271,105 @@ Open `ios/Runner/Info.plist` and add the following keys. The SDK uses the camera
 
 ## Step 4 — Initialize the SDK
 
-Call `idm_sdk_init` once before invoking any service. It is safe to call from `initState` or after your splash screen.
+Call `idm_sdk_init` once before invoking any service. It is safe to call from `initState` or after your splash screen. You need an access token — see [Getting an access token](#getting-an-access-token) below.
 
 ```dart
 import 'package:flutter_plugin_identity_sdk/flutter_plugin_identity_sdk.dart';
 
 await FlutterPluginIdentitySdk.idm_sdk_init(
   'https://kyc.idmission.com/',   // API base URL — provided by IDmission
-  'n',                             // debug: 'y' enables verbose logging, 'n' disables it
   'YOUR_ACCESS_TOKEN',             // access token — provided by IDmission
+  // Optional — these are the defaults:
+  language: 'en',                  // 'en' or 'es' (Android also 'my' and 'ar')
+  enableGPS: true,                 // capture GPS location with submissions
+  geolocationRequired: false,      // block the flow if location access is denied
+  isUpdateModelsData: true,        // download the latest SDK models after credential verification
+  enableScreenRecording: false,    // allow screen recording / screenshots during capture
+  enableDebugMode: false,          // verbose SDK logging; keep false in production
 );
 ```
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `apiBaseUrl` | `String` | Base URL for IDmission API calls. Provided by IDmission for your environment. |
-| `debug` | `String` | `'y'` enables verbose SDK logging. Use `'n'` in production. |
 | `accessToken` | `String` | Your IDmission API access token. |
+| `language` | `String` (named, optional) | SDK user-interface language: `'en'` or `'es'` (Android also `'my'` and `'ar'`). Unknown values fall back to `'en'`. Default `'en'`. |
+| `enableGPS` | `bool` (named, optional) | Capture the GPS location with submissions. Default `true`. |
+| `geolocationRequired` | `bool` (named, optional) | Block the flow if the user denies location access. Default `false`. |
+| `isUpdateModelsData` | `bool` (named, optional) | Download the latest SDK models after credential verification. Default `true`. |
+| `enableScreenRecording` | `bool` (named, optional) | Allow screen recording / screenshots during capture. Default `false`. |
+| `enableDebugMode` | `bool` (named, optional) | Enable verbose SDK logging and debug overlays. Use `false` in production. Default `false`. |
 
-**Return value:** `Future<String?>` — returns a JSON string containing the initialization response, or `null` on failure.
+> **Upgrading from earlier versions:** `idm_sdk_init` no longer takes the `debug` string (`'y'` / `'n'`) as its second argument. Remove it and pass `enableDebugMode: true` if you used `'y'`.
+
+**Return value:** `Future<String?>` — `"SDK Successfully Initialized"` on success (the same text on iOS and Android), or `"Error"` / an error message on failure.
+
+### Getting an access token
+
+The plugin does not create access tokens. Your app requests one from IDmission's authentication service and passes it to `idm_sdk_init`. You need the **Login ID**, **Password**, **Client ID** and **Client Secret** that IDmission issued to you.
+
+**Token URL.** Replace the leading `api` in your API base URL's host with `auth`:
+
+| API base URL | Token URL |
+|--------------|-----------|
+| `https://api.idmission.com/` | `https://auth.idmission.com/auth/realms/identity/protocol/openid-connect/token` |
+| `https://apidemo.idmission.com/` | `https://demoauth.idmission.com/auth/realms/identity/protocol/openid-connect/token` |
+| `https://apiuat.idmission.com/` | `https://uatauth.idmission.com/auth/realms/identity/protocol/openid-connect/token` |
+
+For any other environment, use the token URL provided by IDmission.
+
+**Request.** `POST` to the token URL with `Content-Type: application/x-www-form-urlencoded` and these fields:
+
+| Field | Value |
+|-------|-------|
+| `grant_type` | `password` |
+| `client_id` | Your Client ID |
+| `client_secret` | Your Client Secret |
+| `username` | Your Login ID |
+| `password` | Your Password |
+| `scope` | `api_access` |
+
+```bash
+curl -X POST 'https://auth.idmission.com/auth/realms/identity/protocol/openid-connect/token' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'grant_type=password' \
+  --data-urlencode 'client_id=YOUR_CLIENT_ID' \
+  --data-urlencode 'client_secret=YOUR_CLIENT_SECRET' \
+  --data-urlencode 'username=YOUR_LOGIN_ID' \
+  --data-urlencode 'password=YOUR_PASSWORD' \
+  --data-urlencode 'scope=api_access'
+```
+
+The JSON response contains the token in `access_token`. If the request fails, the response contains `error` and `error_description`.
+
+```dart
+import 'dart:convert';
+import 'dart:io';
+
+Future<String> fetchAccessToken(String tokenUrl, Map<String, String> credentials) async {
+  final body = {
+    'grant_type': 'password',
+    'scope': 'api_access',
+    ...credentials, // client_id, client_secret, username, password
+  }.entries
+      .map((e) => '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value)}')
+      .join('&');
+
+  final client = HttpClient();
+  final request = await client.postUrl(Uri.parse(tokenUrl));
+  request.headers.set(HttpHeaders.contentTypeHeader, 'application/x-www-form-urlencoded');
+  request.add(utf8.encode(body));
+  final response = await request.close();
+  final json = jsonDecode(await response.transform(utf8.decoder).join());
+  client.close();
+
+  final token = json['access_token'];
+  if (token == null) throw json['error_description'] ?? json['error'] ?? 'Token request failed';
+  return token as String;
+}
+```
+
+> **Security:** do not ship the Client Secret or the user's password inside a production app. Request the token from your own backend, or have the user enter or scan the credentials at run time, and pass only the resulting `access_token` to the SDK. The `example/` app fetches the token on the device for demonstration only.
 
 ---
 
@@ -464,10 +532,10 @@ Your app's `android/app/src/main/AndroidManifest.xml` declares `android:theme` o
 The GitLab Maven credentials are missing or incorrect. Confirm the `Private-Token` value in your project-level `build.gradle` / `build.gradle.kts` matches the token `WESesyuSD9fQeqNEyig6`.
 
 ### `pod install` fails with `Unable to find a specification for 'IDentityMediumSDK2.0'`
-Verify CocoaPods can reach trunk: `pod repo update`. If you are behind a proxy, configure CocoaPods proxy settings. Also confirm the `cocoapods-user-defined-build-types` gem is installed (`gem list | grep cocoapods-user`).
+Verify CocoaPods can reach trunk: `pod repo update`. If you are behind a proxy, configure CocoaPods proxy settings.
 
 ### iOS build error: `Undefined symbol` or `framework not found`
-Ensure `use_modular_headers!` is set in your Podfile and that `use_frameworks!` is **not** present (commented out). Re-run `pod install --repo-update`.
+Ensure `use_modular_headers!` is set in your Podfile and that `use_frameworks!` is **not** present (commented out). Re-run `pod install --repo-update`, then clean the build folder in Xcode (**Product → Clean Build Folder**) and rebuild.
 
 ### Camera / crash on first launch (iOS)
 All three `NSCameraUsageDescription`, `NSMicrophoneUsageDescription`, and `NSPhotoLibraryUsageDescription` keys must be present in `Info.plist`. A missing key causes an immediate crash on iOS 14+.

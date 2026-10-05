@@ -353,13 +353,10 @@ class ViewController: UIViewController {
     }
     
     private func sendData() {
-      let dict2:NSMutableDictionary? = ["data" : self.texts ?? ["data" : "error"]]
-        print("sendData", self.texts)
         result(self.texts ?? "error")
     }
     
     private func sendData(result: @escaping FlutterResult, text: String) {
-      let dict2:NSMutableDictionary? = ["data" : text ]
         result(text)
     }
     

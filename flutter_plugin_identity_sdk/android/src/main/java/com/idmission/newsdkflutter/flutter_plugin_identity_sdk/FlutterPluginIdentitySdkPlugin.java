@@ -42,6 +42,7 @@ import com.idmission.sdk2.client.model.RenapoResponse;
 import com.idmission.sdk2.client.model.VideoIDData;
 import com.idmission.sdk2.identityproofing.IdentityProofingSDK;
 import com.idmission.sdk2.utils.LANGUAGE;
+import com.idmission.sdk2.utils.TrainingModelDetailsUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -66,14 +67,17 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
   private MethodChannel channel;
   Activity activity;
   Context context;
-  String initializeApiBaseUrl = "https://kyc.idmission.com/";
-  String apiBaseUrl,authUrl = "https://api.idmission.com/";
+  String apiBaseUrl = "https://api.idmission.com/";
   String accessToken = "";
   boolean isDebug = false;
+  // Options passed to idm_sdk_init. Defaults match the native IDentity app.
+  boolean isGpsEnabled = true;
+  boolean isGeolocationRequired = false;
+  boolean isScreenRecordingEnabled = false;
+  boolean isUpdateModelsData = true;
+  LANGUAGE language = LANGUAGE.EN;
 
-  private List<ProcessedCapture> processedCaptures = new ArrayList<>();
   private String response;
-  private IdMissionCaptureLauncher launcher = new IdMissionCaptureLauncher();
   private static Result resultCallback;
 
   @Override
@@ -92,20 +96,53 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("getPlatformVersion")) {
       result.success("Android " + android.os.Build.VERSION.RELEASE);
+    } else if (call.method.equals("getSDKInfo")) {
+      // SDK version plus the ML model file names in use. Model names are empty
+      // until the SDK has been initialized (models are downloaded on init).
+      try {
+        HashMap<String, Object> info = new HashMap<>();
+        info.put("version", IdentityProofingSDK.getSDKVersion());
+        List<HashMap<String, String>> models = new ArrayList<>();
+        try {
+          TrainingModelDetailsUtils m = IdentityProofingSDK.getSDKModelsInfo(context);
+          addModel(models, "Face Detector", m.getFaceFullRangeSparseTrainingModel());
+          addModel(models, "Face Landmarks", m.getFaceLandmarksTrainingModel());
+          addModel(models, "Face BlendedShapes", m.getFaceBlendshapesTrainingModel());
+          addModel(models, "Liveness", m.getFaceLiveNessTrainingModel());
+          addModel(models, "Focus Face", m.getFocusFaceTrainingModel());
+          addModel(models, "Face Mask", m.getFaceMaskTrainingModel());
+          addModel(models, "Focus", m.getIdFocusTrainingModel());
+          addModel(models, "Doc Realness", m.getDocRealnessTrainingModel());
+          addModel(models, "Doc Detection", m.getDocDetectTrainingModel());
+        } catch (Exception e) {
+          // Model details are unavailable before the SDK has been initialized.
+        }
+        info.put("models", models);
+        result.success(info);
+      } catch (Exception e) {
+        result.error("SDK_INFO_ERROR", e.getMessage(), null);
+      }
     } else if (call.method.equals("idm_sdk_init")) {
       HashMap<String, Object> map = (HashMap<String, Object>) call.arguments;
 
       apiBaseUrl = (String) map.get("apiBaseUrl");
-      authUrl = (String) map.get("apiBaseUrl");
 
-      String debug = (String) map.get("debug");
-      if(null!=debug && debug.contains("y")){
-        isDebug=true;
-      }else{
-        isDebug=false;
-      }
+      isDebug = map.get("enableDebugMode") instanceof Boolean && (Boolean) map.get("enableDebugMode");
 
       accessToken = (String) map.get("accessToken");
+
+      isGpsEnabled = !(map.get("enableGPS") instanceof Boolean) || (Boolean) map.get("enableGPS");
+      isGeolocationRequired = map.get("geolocationRequired") instanceof Boolean && (Boolean) map.get("geolocationRequired");
+      isScreenRecordingEnabled = map.get("enableScreenRecording") instanceof Boolean && (Boolean) map.get("enableScreenRecording");
+      isUpdateModelsData = !(map.get("isUpdateModelsData") instanceof Boolean) || (Boolean) map.get("isUpdateModelsData");
+      // Supported: en, es, my, ar. Unknown or missing values fall back to English.
+      language = LANGUAGE.EN;
+      if (map.get("language") instanceof String) {
+        try {
+          language = LANGUAGE.valueOf(((String) map.get("language")).toUpperCase(java.util.Locale.ROOT));
+        } catch (IllegalArgumentException ignored) {
+        }
+      }
       new BackgroundTask(result).execute();
     } else if (call.method.equals("idm_sdk_serviceID20")) {
       Intent i = new Intent(activity, CallPluginActivity.class);
@@ -158,6 +195,14 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
     }
   }
 
+  private void addModel(List<HashMap<String, String>> models, String name, String value) {
+    if (value == null || value.isEmpty()) return;
+    HashMap<String, String> model = new HashMap<>();
+    model.put("name", name);
+    model.put("value", value);
+    models.add(model);
+  }
+
   public static void sendResponse(){
     if(null!=resultCallback){
       resultCallback.success(CallPluginActivity.result);
@@ -187,7 +232,7 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
     @Override
     protected Response<InitializeResponse> doInBackground(Void... voids) {
       SDKCustomizationOptions sco = new SDKCustomizationOptions(
-              LANGUAGE.EN,
+              language,
               false,
               false,
               false,
@@ -196,14 +241,16 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
               CameraOrientation.PORTRAIT,
               isDebug
       );
+      sco.setScreenRecordingEnabled(isScreenRecordingEnabled);
+      sco.setGeolocationRequired(isGeolocationRequired);
 
       Response<InitializeResponse> response =
               IdentityProofingSDK.initialize(activity,
                       apiBaseUrl,
                       isDebug,
-                      true,
+                      isGpsEnabled,
                       sco,
-                      true,
+                      isUpdateModelsData,
                       accessToken);
       return response;
     }
@@ -231,17 +278,6 @@ public class FlutterPluginIdentitySdkPlugin implements FlutterPlugin, MethodCall
       Response<CommonApiResponse> response =
               IdentityProofingSDK.INSTANCE.finalSubmit(activity);
       return response;
-    }
-  }
-
-  private void writeToFile(String data, Context context) {
-    try {
-      OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("result.txt", Context.MODE_PRIVATE));
-      outputStreamWriter.write(data);
-      outputStreamWriter.close();
-    }
-    catch (IOException e) {
-      Log.e("Exception", "File write failed: " + e.toString());
     }
   }
 

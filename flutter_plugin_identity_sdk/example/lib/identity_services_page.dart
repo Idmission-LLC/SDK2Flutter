@@ -1,8 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_plugin_identity_sdk/flutter_plugin_identity_sdk.dart';
 
+import 'result_formatter.dart';
 import 'widgets/animated_elevated_button.dart';
+import 'widgets/captured_images.dart';
 
 /// Page 2: shown only once initializeSDK() has succeeded on the SDK
 /// Configuration page. Hosts every identity service call plus Submit.
@@ -16,6 +20,7 @@ class IdentityServicesPage extends StatefulWidget {
 class _IdentityServicesPageState extends State<IdentityServicesPage> {
   bool _isLoading = false;
   String _result = '';
+  Map<String, Uint8List> _images = {};
   int _uniqueCustomerNumber = 0;
   late TextEditingController _uniqueCustomerNumberController;
 
@@ -31,16 +36,22 @@ class _IdentityServicesPageState extends State<IdentityServicesPage> {
     super.dispose();
   }
 
-  void _handleServiceCall(Future<String?> call) {
+  // The plugin returns the SDK result as JSON. It is pretty-printed here with
+  // base64 masked for display, and any images in it feed the thumbnails.
+  // [isCapture] is false for Submit, which keeps the last capture's images.
+  void _handleServiceCall(Future<String?> call, {bool isCapture = true}) {
     setState(() {
       _isLoading = true;
       _result = '';
+      if (isCapture) _images = {};
     });
     call
         .then((value) {
+          final formatted = formatResult(value ?? 'Null response');
           setState(() {
             _isLoading = false;
-            _result = value ?? 'Null response';
+            _result = formatted.text;
+            if (isCapture) _images = formatted.images;
           });
         })
         .catchError((error) {
@@ -86,7 +97,10 @@ class _IdentityServicesPageState extends State<IdentityServicesPage> {
   }
 
   void submitResult() {
-    _handleServiceCall(FlutterPluginIdentitySdk.submit_result());
+    _handleServiceCall(
+      FlutterPluginIdentitySdk.submit_result(),
+      isCapture: false,
+    );
   }
 
   Widget _buildResultDisplay() {
@@ -212,6 +226,11 @@ class _IdentityServicesPageState extends State<IdentityServicesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // Explicit arrow so iOS shows <- like Android (the default there is a "<" chevron).
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
         title: const Text(
           'Identity Services',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -300,6 +319,7 @@ class _IdentityServicesPageState extends State<IdentityServicesPage> {
                   _buildActionButton('Submit', submitResult),
                   const SizedBox(height: 24),
                   _buildResultDisplay(),
+                  CapturedImagesStrip(images: _images),
                   const SizedBox(height: 32),
                 ],
               ),

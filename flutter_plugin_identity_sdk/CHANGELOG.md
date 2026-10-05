@@ -1,9 +1,31 @@
 ## 11.1.19
 
 **Android native SDK: 11.1.19.2.05**
+**iOS native SDK: 11.1.19.2.2**
 
 ### Android
 * Bumped Identity SDK2 native library to 11.1.19.2.05
+* Plugin module version in `android/build.gradle` corrected to `11.1.19.2.05` (it still said `11.1.18.2.03`; the native dependency itself was already 11.1.19.2.05)
+* Build tooling upgraded: Android Gradle Plugin 8.9.1 → 8.11.1 and Kotlin 2.1.0 → 2.2.20 (plugin and example app), Gradle 8.12 → 8.14 (example app)
+* Example app: `minSdk` raised from 26 to 29. The plugin and the native SDK still support API 26 (Android 8.0)
+
+### iOS
+* Bumped IDentityMediumSDK2.0 to 11.1.19.2.2
+* Removed the `GoogleMLKit/TextRecognition`, `TensorFlowLiteSwift` and `GZIP` dependencies — the iOS SDK no longer needs them
+* The `cocoapods-user-defined-build-types` plugin is no longer required
+* Fixed service calls (ID Validation, Face Match, etc.) never starting the capture screen, leaving the caller waiting forever, on apps using the UIScene lifecycle
+
+### Flutter wrapper
+* iOS: the plugin no longer depends on the sample app's `UserDefaults` helper (removed along with the unused `authenticationURL` value); the API base URL and access token are passed directly to the SDK
+* iOS: `idm_sdk_init` now returns `"SDK Successfully Initialized"` on success (previously `"SDK successfully initialized"`), the same text as Android
+* **Breaking:** `idm_sdk_init(apiBaseUrl, accessToken, {...})` no longer takes the `debug` string (`'y'` / `'n'`) as its second argument; use the optional named parameter `enableDebugMode` (bool, default `false`) instead. Migrate `idm_sdk_init(url, 'y', token)` to `idm_sdk_init(url, token, enableDebugMode: true)`
+* `idm_sdk_init` accepts optional named parameters that map to the native SDK's initializer (iOS and Android): `language` (default `'en'`; `'es'`, and on Android `'my'`/`'ar'`), `enableGPS` (true), `geolocationRequired` (false), `isUpdateModelsData` (true) and `enableScreenRecording` (false). Existing calls are unchanged
+* iOS: capture services now return the result object exactly as the SDK returns it (e.g. `ValidateIdResult`) as JSON, generated from the object's own properties — nothing is renamed, filtered or masked. `UIImage` values are written as base64 JPEG strings. The plugin no longer returns the full API request
+* Example app: **QR-code login** — a *Scan QR* button on the configuration page reads a configuration QR code (Login ID, Password, Client ID, Client Secret, URL), fills in the credentials, selects the matching environment and generates the access token
+* Example app: the single screen is now **two pages** — *Identity Flutter* (configuration: credentials, token, SDK options, Initialize SDK) and *Identity Services* (the service buttons and results)
+* Example app: the access-token auth URL is now derived from the API base URL with the same table as the native IDentity apps. KYC-UK (`identity.london…`) now uses `https://auth.london.idmission.xyz/` and KYC-US (`identity.virginia…`) uses `https://auth.idmission.com/` (previously `identityauth.*`, which was wrong); the lab API base URL now includes port 9043, like iOS
+* Example app: the app bar title is now centered on Android as well as iOS
+* Example app: paired credential fields, new option switches, SDK version and model list, and settings persisted after a successful initialization, pretty-printed results with base64 masked for display, and thumbnails of the captured images with a full-screen viewer
 
 ## 11.1.13
 

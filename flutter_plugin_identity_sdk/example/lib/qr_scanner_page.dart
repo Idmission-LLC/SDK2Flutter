@@ -78,7 +78,15 @@ class _QrScannerPageState extends State<QrScannerPage>
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Scan Configuration QR Code'),
+        // Explicit arrow so iOS shows <- like Android (the default there is a "<" chevron).
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
+        title: const Text(
+          'Scan QR Code',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Stack(
         fit: StackFit.expand,
@@ -119,7 +127,8 @@ class _ScannerOverlayPainter extends CustomPainter {
     const strokeWidth = 4.0;
 
     final cornerPaint = Paint()
-      ..color = const Color(0xFF22C55E) // green
+      ..color =
+          const Color(0xFF22C55E) // green
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;

@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.version          = '11.1.19'
   s.summary          = 'IDmission Identity Flutter Plugin for iOS.'
   s.description      = <<-DESC
-Flutter plugin wrapping the IDmission Identity SDK (IDentityMediumSDK2.0 11.1.13.2.3).
+Flutter plugin wrapping the IDmission Identity SDK (IDentityMediumSDK2.0 11.1.19.2.2).
 Provides identity verification, document capture, face match, and biometric enrollment.
                        DESC
   s.homepage         = 'https://github.com/Idmission-LLC/SDK2Flutter'
@@ -17,9 +17,7 @@ Provides identity verification, document capture, face match, and biometric enro
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.dependency 'IDentityMediumSDK2.0'
-  s.dependency 'TensorFlowLiteSwift'
-  s.dependency 'GoogleMLKit/TextRecognition'
-  s.platform = :ios, '13.0'
+  s.platform = :ios, '15.6'
   
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

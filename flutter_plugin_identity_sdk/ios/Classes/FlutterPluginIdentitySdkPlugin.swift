@@ -13,49 +13,36 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
+    case "getSDKInfo":
+      result(IDentitySDKHelper.sdkInfo())
     case "getPlatformVersion":
       result("iOS " + UIDevice.current.systemVersion)
     case "idm_sdk_init":
-        
         IDCapture.options.enableInstructionScreen = false
         SelfieCapture.options.enableInstructionScreen = false
 
-        if let args = call.arguments as? Dictionary<String, Any>,
-          let apiBaseUrl = args["apiBaseUrl"] as? String,
-          let debug = args["debug"] as? String,
-          let accessToken = args["accessToken"] as? String {
-            
-          UserDefaults.standard.set(String(apiBaseUrl), forKey: "apiBaseUrl")
-          UserDefaults.standard.set(String(accessToken), forKey: "accessToken")
-            
-            if(debug.contains("y")){
-                IDCapture.options.isDebugMode = true
-                SelfieCapture.options.isDebugMode = true
-                DocumentCapture.options.isDebugMode = true
-            }else{
-                IDCapture.options.isDebugMode = false
-                SelfieCapture.options.isDebugMode = false
-                DocumentCapture.options.isDebugMode = false
-            }
-            
-            var authUrl = "https://auth.idmission.com/"
-
-            if apiBaseUrl.contains("lab") {
-                  authUrl = "https://labauth.idmission.com:9043/"
-            } else if apiBaseUrl.contains("demo") {
-                  authUrl = "https://demoauth.idmission.com/"
-            } else if apiBaseUrl.contains("uat") {
-                  authUrl = "https://uatauth.idmission.com/"
-            } else if apiBaseUrl.contains("kyc") {
-                  authUrl = "https://auth.idmission.com/"
-            }
-
-            //API Auth URL
-            let defaultAuthUrl = "\(authUrl)auth/realms/identity/protocol/openid-connect/token"
-            UserDefaults.standard.set(defaultAuthUrl, forKey: "authenticationURL")
+        guard let args = call.arguments as? [String: Any],
+              let apiBaseUrl = args["apiBaseUrl"] as? String,
+              let accessToken = args["accessToken"] as? String else {
+            result("Error")
+            return
         }
-        
-        IDentitySDKHelper().initializeSDK(result: result)
+        let debug = args["enableDebugMode"] as? Bool ?? false
+        IDCapture.options.isDebugMode = debug
+        SelfieCapture.options.isDebugMode = debug
+        DocumentCapture.options.isDebugMode = debug
+
+        // Unknown or missing languages fall back to English.
+        let language = Language(rawValue: (args["language"] as? String ?? "en").lowercased()) ?? .en
+        IDentitySDKHelper().initializeSDK(
+            result: result,
+            apiBaseUrl: apiBaseUrl,
+            accessToken: accessToken,
+            language: language == .none ? .en : language,
+            isGPSEnabled: args["enableGPS"] as? Bool ?? true,
+            geolocationRequired: args["geolocationRequired"] as? Bool ?? false,
+            isUpdateModelsData: args["isUpdateModelsData"] as? Bool ?? true,
+            isScreenRecordingEnabled: args["enableScreenRecording"] as? Bool ?? false)
     case "idm_sdk_serviceID20":
         if let args = call.arguments as? Dictionary<String, Any>,
           let clientTraceId = args["clientTraceId"] as? Int {
@@ -72,8 +59,10 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
         }
         
         DispatchQueue.main.async {
-            if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
+            if let vc = Self.flutterViewController() {
                 IDentitySDKHelper().startIDValidations(result: result, instance: vc);
+            } else {
+                result(FlutterError(code: "NO_VIEW_CONTROLLER", message: "Flutter root view controller not found", details: nil))
             }
         }
     case "idm_sdk_serviceID10":
@@ -92,22 +81,25 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
         }
         
         DispatchQueue.main.async {
-            if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
+            if let vc = Self.flutterViewController() {
                 IDentitySDKHelper().startIDValidationAndMatchFaces(result: result, instance: vc);
+            } else {
+                result(FlutterError(code: "NO_VIEW_CONTROLLER", message: "Flutter root view controller not found", details: nil))
             }
         }
     case "idm_sdk_serviceID50":
         if let args = call.arguments as? Dictionary<String, Any>,
           let uniqueCustomerNumber = args["uniqueCustomerNumber"] as? Int {
             
-            print("uniqueCustomerNumber ",uniqueCustomerNumber)
             
             if(uniqueCustomerNumber>0){
                 UserDefaults.standard.set(String(uniqueCustomerNumber), forKey: "uniqueCustomerNumber")
                   
                   DispatchQueue.main.async {
-                      if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
+                      if let vc = Self.flutterViewController() {
                           IDentitySDKHelper().startIDValidationAndCustomerEnrolls(result: result, instance: vc);
+                      } else {
+                          result(FlutterError(code: "NO_VIEW_CONTROLLER", message: "Flutter root view controller not found", details: nil))
                       }
                   }
             } else {
@@ -124,14 +116,15 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
         if let args = call.arguments as? Dictionary<String, Any>,
           let uniqueCustomerNumber = args["uniqueCustomerNumber"] as? Int {
             
-            print("uniqueCustomerNumber ",uniqueCustomerNumber)
             
             if(uniqueCustomerNumber>0){
                 UserDefaults.standard.set(String(uniqueCustomerNumber), forKey: "uniqueCustomerNumber")
                   
                   DispatchQueue.main.async {
-                      if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
+                      if let vc = Self.flutterViewController() {
                           IDentitySDKHelper().startCustomerEnrollBiometricss(result: result, instance: vc);
+                      } else {
+                          result(FlutterError(code: "NO_VIEW_CONTROLLER", message: "Flutter root view controller not found", details: nil))
                       }
                   }
             } else {
@@ -148,14 +141,15 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
         if let args = call.arguments as? Dictionary<String, Any>,
            let uniqueCustomerNumber = args["uniqueCustomerNumber"] as? Int {
             
-            print("uniqueCustomerNumber ",uniqueCustomerNumber)
             
             if(uniqueCustomerNumber>0){
                 UserDefaults.standard.set(String(uniqueCustomerNumber), forKey: "uniqueCustomerNumber")
                 
                 DispatchQueue.main.async {
-                    if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
+                    if let vc = Self.flutterViewController() {
                         IDentitySDKHelper().startCustomerVerifications(result: result, instance: vc);
+                    } else {
+                        result(FlutterError(code: "NO_VIEW_CONTROLLER", message: "Flutter root view controller not found", details: nil))
                     }
                 }
             } else {
@@ -169,20 +163,26 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
         
     case "idm_sdk_serviceID185":
         DispatchQueue.main.async {
-            if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
+            if let vc = Self.flutterViewController() {
                 IDentitySDKHelper().startIdentifyCustomers(result: result, instance: vc);
+            } else {
+                result(FlutterError(code: "NO_VIEW_CONTROLLER", message: "Flutter root view controller not found", details: nil))
             }
         }
     case "idm_sdk_serviceID660":
         DispatchQueue.main.async {
-            if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
+            if let vc = Self.flutterViewController() {
                 IDentitySDKHelper().startLiveFaceChecks(result: result, instance: vc);
+            } else {
+                result(FlutterError(code: "NO_VIEW_CONTROLLER", message: "Flutter root view controller not found", details: nil))
             }
         }
     case "submit_result":
         DispatchQueue.main.async {
-            if let vc = UIApplication.shared.delegate?.window??.rootViewController  as? FlutterViewController {
+            if let vc = Self.flutterViewController() {
                 IDentitySDKHelper().submitResult(result: result, instance: vc);
+            } else {
+                result(FlutterError(code: "NO_VIEW_CONTROLLER", message: "Flutter root view controller not found", details: nil))
             }
         }
     default:
@@ -190,8 +190,16 @@ public class FlutterPluginIdentitySdkPlugin: NSObject, FlutterPlugin {
     }
   }
     
-    public func sendResponseTo(result: @escaping FlutterResult, resultString: String) {
-        result(resultString)
+    // The root view controller is found through the connected window scenes:
+    // with the UIScene lifecycle, `UIApplication.delegate.window` is nil.
+    static func flutterViewController() -> FlutterViewController? {
+        let windows = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+        let root = windows.first(where: { $0.isKeyWindow })?.rootViewController
+            ?? windows.first?.rootViewController
+            ?? UIApplication.shared.delegate?.window??.rootViewController
+        return root as? FlutterViewController
     }
-        
+
 }

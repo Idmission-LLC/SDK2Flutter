@@ -27,8 +27,8 @@ import 'package:flutter_plugin_identity_sdk/flutter_plugin_identity_sdk.dart';
 // 1. Initialise once (e.g. in initState or after splash)
 await FlutterPluginIdentitySdk.idm_sdk_init(
   'https://api.idmission.com/',  // API base URL — provided by IDmission
-  'n',                            // 'y' enables debug logging
-  accessToken,
+  accessToken,                    // access token — see INTEGRATION_GUIDE.md
+  // enableDebugMode: true,       // optional — verbose logging, default false
 );
 
 // 2. Call a service
@@ -57,7 +57,7 @@ await FlutterPluginIdentitySdk.submit_result();
 |-------------|---------|-----|
 | Minimum OS | API 26 (Android 8.0) | iOS 15.6 |
 | Language | Java 21 | Swift 5.0 |
-| Build tools | AGP 8.9.1+, Kotlin 2.1.0+ | CocoaPods + `cocoapods-user-defined-build-types` |
+| Build tools | AGP 8.9.1+, Kotlin 2.1.0+ | CocoaPods |
 
 > For full setup instructions including Maven repository config, Podfile, Info.plist permissions, and troubleshooting, see the [Integration Guide](../INTEGRATION_GUIDE.md).
 
