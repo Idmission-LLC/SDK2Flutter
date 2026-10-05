@@ -26,6 +26,8 @@ class MyApp extends StatelessWidget {
           backgroundColor: Color(0xFF0F172A),
           foregroundColor: Colors.white,
           elevation: 0,
+          // Same on Android and iOS (Flutter defaults to left on Android).
+          centerTitle: true,
         ),
       ),
       home: const SdkConfigurationPage(),

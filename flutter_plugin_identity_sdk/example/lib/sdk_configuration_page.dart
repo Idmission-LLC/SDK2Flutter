@@ -83,7 +83,8 @@ class _SdkConfigurationPageState extends State<SdkConfigurationPage> {
         _clientSecret = str('clientSecret');
         _authUrl = str('authUrl');
         _accessToken = str('accessToken');
-        _authUrlEdited = _authUrl.isNotEmpty &&
+        _authUrlEdited =
+            _authUrl.isNotEmpty &&
             _authUrl != (_deriveTokenUrl(_apiBaseUrl) ?? '');
         _apiBaseUrlController.text = _apiBaseUrl;
         _loginIdController.text = _loginId;
@@ -155,12 +156,14 @@ class _SdkConfigurationPageState extends State<SdkConfigurationPage> {
     super.dispose();
   }
 
-  // Derive the auth/token endpoint from the captured API Base URL.
-  // Mirrors the native sample's URL convention:
-  //   https://api.idmission.com/      -> https://auth.idmission.com/auth/realms/identity/protocol/openid-connect/token
-  //   https://apidemo.idmission.com/  -> https://demoauth.idmission.com/auth/realms/identity/protocol/openid-connect/token
-  // Rule: strip the leading "api" from the first host label; the remaining
-  // environment segment ("" or "demo") prefixes "auth".
+  // Derive the auth/token endpoint from the captured API Base URL, using the
+  // same environment -> auth host table as the native IDentity apps:
+  //   https://api.idmission.com/                 -> https://auth.idmission.com/
+  //   https://apidemo.idmission.com/             -> https://demoauth.idmission.com/
+  //   https://apiuat.idmission.com/              -> https://uatauth.idmission.com/
+  //   https://apilab.idmission.com:9043/         -> https://labauth.idmission.com:9043/
+  //   https://identity.london.idmission.xyz/...  -> https://auth.london.idmission.xyz/
+  //   https://identity.virginia.idmission.xyz/...-> https://auth.idmission.com/
   String? _deriveTokenUrl(String apiBaseUrl) {
     final match = RegExp(
       r'^(https?:\/\/)([^/]+)(\/.*)?$',
@@ -168,11 +171,20 @@ class _SdkConfigurationPageState extends State<SdkConfigurationPage> {
     ).firstMatch(apiBaseUrl.trim());
     if (match == null) return null;
     final scheme = match.group(1)!;
-    final labels = match.group(2)!.split('.');
+    final host = match.group(2)!;
+    const tokenPath = '/auth/realms/identity/protocol/openid-connect/token';
+    final h = host.toLowerCase();
+    if (h.startsWith('identity.london.')) {
+      return '${scheme}auth.london.idmission.xyz$tokenPath';
+    }
+    if (h.startsWith('identity.virginia.')) {
+      return '${scheme}auth.idmission.com$tokenPath';
+    }
+    final labels = host.split('.');
     final first = labels[0].toLowerCase();
     final env = first.startsWith('api') ? first.substring(3) : first;
     labels[0] = '${env}auth';
-    return '$scheme${labels.join('.')}/auth/realms/identity/protocol/openid-connect/token';
+    return '$scheme${labels.join('.')}$tokenPath';
   }
 
   // Maps the "URL" field embedded in a configuration QR code to the matching
@@ -190,7 +202,7 @@ class _SdkConfigurationPageState extends State<SdkConfigurationPage> {
     }
     if (u.contains('demo')) return 'https://apidemo.idmission.com/';
     if (u.contains('uat')) return 'https://apiuat.idmission.com/';
-    if (u.contains('lab')) return 'https://apilab.idmission.com/';
+    if (u.contains('lab')) return 'https://apilab.idmission.com:9043/';
     if (u.contains('kyc')) return 'https://api.idmission.com/';
     return null;
   }
@@ -329,9 +341,9 @@ class _SdkConfigurationPageState extends State<SdkConfigurationPage> {
         await _saveSettings();
         _loadSdkInfo();
         if (!mounted) return;
-        await Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const IdentityServicesPage()),
-        );
+        await Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const IdentityServicesPage()));
       } else {
         setState(() {
           _isLoading = false;
@@ -578,10 +590,7 @@ class _SdkConfigurationPageState extends State<SdkConfigurationPage> {
           TextButton.icon(
             onPressed: _openScanner,
             icon: const Icon(Icons.qr_code_scanner, color: Colors.white),
-            label: const Text(
-              'Scan QR',
-              style: TextStyle(color: Colors.white),
-            ),
+            label: const Text('Scan QR', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -596,7 +605,8 @@ class _SdkConfigurationPageState extends State<SdkConfigurationPage> {
                 children: <Widget>[
                   _buildTextField(
                     label: 'Access Token Auth URL',
-                    hint: 'https://auth.example.com/auth/realms/identity/protocol/openid-connect/token',
+                    hint:
+                        'https://auth.example.com/auth/realms/identity/protocol/openid-connect/token',
                     icon: Icons.vpn_key_outlined,
                     controller: _authUrlController,
                     onChanged: (val) => _edit(() {

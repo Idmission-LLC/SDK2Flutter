@@ -226,6 +226,11 @@ class _IdentityServicesPageState extends State<IdentityServicesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // Explicit arrow so iOS shows <- like Android (the default there is a "<" chevron).
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
         title: const Text(
           'Identity Services',
           style: TextStyle(fontWeight: FontWeight.bold),
