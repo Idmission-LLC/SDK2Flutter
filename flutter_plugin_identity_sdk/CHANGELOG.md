@@ -8,6 +8,7 @@
 * Plugin module version in `android/build.gradle` corrected to `11.1.19.2.05` (it still said `11.1.18.2.03`; the native dependency itself was already 11.1.19.2.05)
 * Build tooling upgraded: Android Gradle Plugin 8.9.1 → 8.11.1 and Kotlin 2.1.0 → 2.2.20 (plugin and example app), Gradle 8.12 → 8.14 (example app)
 * Example app: `minSdk` is 26 (Android 8.0), the same as the plugin and the native SDK
+* Java source/target compatibility and Kotlin `jvmTarget` lowered from 21 to 17 (plugin and example app), the same as the React Native wrapper. JDK 17 or newer can build the plugin
 
 ### iOS
 * Bumped IDentityMediumSDK2.0 to 11.1.19.2.2

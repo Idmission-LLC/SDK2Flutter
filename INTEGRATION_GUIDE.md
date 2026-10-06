@@ -16,7 +16,7 @@
 | Dart | 3.9.2 | Bundled with Flutter |
 | Android minSdk | 26 (Android 8.0) | Set explicitly in your app |
 | Android compileSdk | 36 | |
-| Java | 21 | Plugin compiles with Java 21 — JDK 17 will fail |
+| Java | 17 | Plugin compiles with Java 17 — use JDK 17 or newer |
 | Kotlin | 2.1.0+ | |
 | Android Gradle Plugin | 8.9.1+ | |
 | iOS deployment target | 15.6 | |
@@ -62,12 +62,12 @@ android {
     compileSdkVersion 36
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "21"
+        jvmTarget = "17"
     }
 
     defaultConfig {
@@ -85,12 +85,12 @@ android {
     compileSdk = 36   // replace flutter.compileSdkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     defaultConfig {
@@ -104,7 +104,7 @@ android {
 
 > **Flutter template variables:** `flutter create` generates `compileSdk = flutter.compileSdkVersion`, `minSdk = flutter.minSdkVersion`, and `targetSdk = flutter.targetSdkVersion`. Replace all three with the hardcoded values shown above — the plugin requires exact versions and the Flutter variables may not resolve to the correct values.
 
-> **Why Java 21?** The plugin's Android source (`FlutterPluginIdentitySdkPlugin.java`) is compiled with `sourceCompatibility JavaVersion.VERSION_21`. If your app targets Java 17, Gradle will emit a compatibility error during the merge step.
+> **Why Java 17?** The plugin's Android source (`FlutterPluginIdentitySdkPlugin.java`) is compiled with `sourceCompatibility JavaVersion.VERSION_17`. If your app targets a Java version lower than 17, Gradle will emit a compatibility error during the build.
 
 ### 2b. Add the IDmission Maven repository
 
@@ -522,8 +522,8 @@ Update your wrapper in `android/gradle/wrapper/gradle-wrapper.properties`:
 distributionUrl=https\://services.gradle.org/distributions/gradle-8.11-all.zip
 ```
 
-### `Cannot inline bytecode built with JVM target 21 into bytecode that is being built with JVM target 17`
-You have not updated `jvmTarget` to `21`. Apply the change in Step 2a.
+### `Cannot inline bytecode built with JVM target 17 into bytecode that is being built with JVM target 1.8`
+You have not updated `jvmTarget` to `17`. Apply the change in Step 2a.
 
 ### `Manifest merger failed: Attribute application@theme`
 Your app's `android/app/src/main/AndroidManifest.xml` declares `android:theme` on `<application>` and conflicts with another library. Resolve by keeping the theme only on the `<activity>` tags and removing it from `<application>`.

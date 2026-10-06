@@ -96,7 +96,7 @@
             <h2>Prerequisites</h2>
             <ul class="sub-steps" style="margin-bottom: 20px;">
                 <li class="sub-step"><span class="sub-bullet"></span><div><strong>Flutter</strong> 3.3.0 or later — <a href="https://docs.flutter.dev/get-started/install" target="_blank">Flutter installation guide →</a></div></li>
-                <li class="sub-step"><span class="sub-bullet"></span><div><strong>Java 21</strong> — the plugin compiles with <code>sourceCompatibility JavaVersion.VERSION_21</code>; JDK 17 will fail</div></li>
+                <li class="sub-step"><span class="sub-bullet"></span><div><strong>Java 17</strong> — the plugin compiles with <code>sourceCompatibility JavaVersion.VERSION_17</code>; use JDK 17 or newer</div></li>
                 <li class="sub-step"><span class="sub-bullet"></span><div><strong>Android Gradle Plugin</strong> 8.9.1 or later</div></li>
                 <li class="sub-step"><span class="sub-bullet"></span><div><strong>Kotlin</strong> 2.1.0 or later</div></li>
                 <li class="sub-step"><span class="sub-bullet"></span><div><strong>minSdk 26</strong> (Android 8.0) — required by the IDmission native SDK</div></li>
@@ -145,12 +145,12 @@
     compileSdkVersion 36
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "21"
+        jvmTarget = "17"
     }
 
     defaultConfig {
@@ -168,12 +168,12 @@
     compileSdk = 36
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     defaultConfig {
