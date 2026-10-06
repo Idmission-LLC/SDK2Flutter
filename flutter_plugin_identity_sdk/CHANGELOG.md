@@ -7,7 +7,7 @@
 * Bumped Identity SDK2 native library to 11.1.19.2.05
 * Plugin module version in `android/build.gradle` corrected to `11.1.19.2.05` (it still said `11.1.18.2.03`; the native dependency itself was already 11.1.19.2.05)
 * Build tooling upgraded: Android Gradle Plugin 8.9.1 → 8.11.1 and Kotlin 2.1.0 → 2.2.20 (plugin and example app), Gradle 8.12 → 8.14 (example app)
-* Example app: `minSdk` raised from 26 to 29. The plugin and the native SDK still support API 26 (Android 8.0)
+* Example app: `minSdk` is 26 (Android 8.0), the same as the plugin and the native SDK
 
 ### iOS
 * Bumped IDentityMediumSDK2.0 to 11.1.19.2.2
