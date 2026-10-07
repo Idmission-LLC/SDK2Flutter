@@ -3,6 +3,8 @@
 **Android native SDK: 11.1.19.2.05**
 **iOS native SDK: 11.1.19.2.2**
 
+* Minimum Flutter raised from 3.3.0 to 3.38.0 and minimum Dart from 3.9.2 to 3.10.0 (`pubspec.yaml` and documentation)
+
 ### Android
 * Bumped Identity SDK2 native library to 11.1.19.2.05
 * Plugin module version in `android/build.gradle` corrected to `11.1.19.2.05` (it still said `11.1.18.2.03`; the native dependency itself was already 11.1.19.2.05)

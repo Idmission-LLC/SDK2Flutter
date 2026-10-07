@@ -3,8 +3,8 @@
 **Plugin:** `flutter_plugin_identity_sdk`  
 **Android native SDK:** 11.1.19.2.05  
 **iOS native SDK:** 11.1.19.2.2  
-**Minimum Flutter:** 3.3.0  
-**Minimum Dart:** 3.9.2
+**Minimum Flutter:** 3.38.0  
+**Minimum Dart:** 3.10.0
 
 ---
 
@@ -12,8 +12,8 @@
 
 | Tool | Minimum version | Notes |
 |------|----------------|-------|
-| Flutter | 3.3.0 | Run `flutter --version` to check |
-| Dart | 3.9.2 | Bundled with Flutter |
+| Flutter | 3.38.0 | Run `flutter --version` to check |
+| Dart | 3.10.0 | Bundled with Flutter |
 | Android minSdk | 26 (Android 8.0) | Set explicitly in your app |
 | Android compileSdk | 36 | |
 | Java | 17 | Plugin compiles with Java 17 — use JDK 17 or newer |

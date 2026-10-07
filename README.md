@@ -1,6 +1,6 @@
 # IDmission Flutter Plugin
 
-![Android](https://img.shields.io/badge/platform-Android-green) ![iOS](https://img.shields.io/badge/platform-iOS-blue) ![Flutter](https://img.shields.io/badge/Flutter-3.3%2B-blue)
+![Android](https://img.shields.io/badge/platform-Android-green) ![iOS](https://img.shields.io/badge/platform-iOS-blue) ![Flutter](https://img.shields.io/badge/Flutter-3.38%2B-blue)
 
 Flutter plugin wrapping the **IDmission Identity SDK** for Android and iOS. Provides identity verification, government ID document capture, face match, liveness detection, and biometric enrollment — all via a single Dart API.
 
@@ -29,7 +29,7 @@ flutter pub get
 |----------|---------|
 | Android | API 26 (Android 8.0), Java 17, AGP 8.9.1+ |
 | iOS | iOS 15.6, CocoaPods |
-| Flutter | 3.3.0 / Dart 3.9.2 |
+| Flutter | 3.38.0 / Dart 3.10.0 |
 
 ## Available services
 
