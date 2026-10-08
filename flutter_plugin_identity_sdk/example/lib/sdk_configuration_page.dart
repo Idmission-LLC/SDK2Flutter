@@ -324,11 +324,11 @@ class _SdkConfigurationPageState extends State<SdkConfigurationPage> {
 
       final result = await FlutterPluginIdentitySdk.idm_sdk_init(
         _apiBaseUrl,
+        _debugMode ? 'y' : 'n',
         _accessToken.trim(),
         enableGPS: _gpsEnabled,
         geolocationRequired: _geolocationRequired,
         enableScreenRecording: _screenRecording,
-        enableDebugMode: _debugMode,
       );
 
       final succeeded = (result ?? '').toLowerCase().contains('success');

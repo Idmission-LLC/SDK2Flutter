@@ -238,7 +238,7 @@ end
 
 > **Why `use_modular_headers!` instead of `use_frameworks!`?** The IDentity SDK ships as a pre-compiled `.xcframework`. Using `use_frameworks!` globally causes linker conflicts.
 
-> **Upgrading from 11.1.13 or earlier?** The iOS SDK no longer depends on Google ML Kit, TensorFlow Lite or GZIP. Remove `pod 'GoogleMLKit/TextRecognition'`, `pod 'GZIP'` and the `plugin 'cocoapods-user-defined-build-types'` / `enable_user_defined_build_types!` lines from your Podfile, then re-run `pod install`.
+> **Upgrading from the zip archive install?** The iOS SDK no longer depends on Google ML Kit, TensorFlow Lite or GZIP. Remove `pod 'GoogleMLKit/TextRecognition'`, `pod 'GZIP'` and the `plugin 'cocoapods-user-defined-build-types'` / `enable_user_defined_build_types!` lines from your Podfile. See [Upgrading from the zip install](#upgrading-from-the-zip-install).
 
 ### 3b. Run pod install
 
@@ -278,6 +278,7 @@ import 'package:flutter_plugin_identity_sdk/flutter_plugin_identity_sdk.dart';
 
 await FlutterPluginIdentitySdk.idm_sdk_init(
   'https://kyc.idmission.com/',   // API base URL — provided by IDmission
+  'n',                             // debug: 'y' for verbose SDK logging; use 'n' in production
   'YOUR_ACCESS_TOKEN',             // access token — provided by IDmission
   // Optional — these are the defaults:
   language: 'en',                  // 'en' or 'es' (Android also 'my' and 'ar')
@@ -285,22 +286,21 @@ await FlutterPluginIdentitySdk.idm_sdk_init(
   geolocationRequired: false,      // block the flow if location access is denied
   isUpdateModelsData: true,        // download the latest SDK models after credential verification
   enableScreenRecording: false,    // allow screen recording / screenshots during capture
-  enableDebugMode: false,          // verbose SDK logging; keep false in production
 );
 ```
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `apiBaseUrl` | `String` | Base URL for IDmission API calls. Provided by IDmission for your environment. |
+| `debug` | `String` | `'y'` enables verbose SDK logging and debug overlays; `'n'` disables them. Use `'n'` in production. |
 | `accessToken` | `String` | Your IDmission API access token. |
 | `language` | `String` (named, optional) | SDK user-interface language: `'en'` or `'es'` (Android also `'my'` and `'ar'`). Unknown values fall back to `'en'`. Default `'en'`. |
 | `enableGPS` | `bool` (named, optional) | Capture the GPS location with submissions. Default `true`. |
 | `geolocationRequired` | `bool` (named, optional) | Block the flow if the user denies location access. Default `false`. |
 | `isUpdateModelsData` | `bool` (named, optional) | Download the latest SDK models after credential verification. Default `true`. |
 | `enableScreenRecording` | `bool` (named, optional) | Allow screen recording / screenshots during capture. Default `false`. |
-| `enableDebugMode` | `bool` (named, optional) | Enable verbose SDK logging and debug overlays. Use `false` in production. Default `false`. |
 
-> **Upgrading from earlier versions:** `idm_sdk_init` no longer takes the `debug` string (`'y'` / `'n'`) as its second argument. Remove it and pass `enableDebugMode: true` if you used `'y'`.
+The three positional parameters are the same as in earlier releases, so existing `idm_sdk_init` calls keep working. The named parameters are optional.
 
 **Return value:** `Future<String?>` — `"SDK Successfully Initialized"` on success (the same text on iOS and Android), or `"Error"` / an error message on failure.
 
@@ -501,16 +501,22 @@ try {
 
 ---
 
-## Migrating from the zip archive install
+## Upgrading from the zip install
 
-If you previously integrated the plugin by downloading a zip from Google Drive, follow these steps to switch to the git-based install:
+If your app was set up from the zip files (`FlutterSDK2AndroidResources.zip` / `FlutterSDK2iOSResources.zip`), switch to the GitHub package. It replaces the files you copied from the zips, and your existing Dart code keeps working.
 
-1. **Remove the copied plugin folder** from your project (the directory you extracted from the zip, typically `flutter_plugin_identity_sdk/`).
-2. **Revert your `app/build.gradle`** — remove any lines you copied from the zip's `android_build_gradle` directory. Keep only the changes described in Step 2 of this guide.
-3. **Revert your `AndroidManifest.xml`** — remove the `<activity>` declaration for `CallPluginActivity` and any `android:theme` you added to `<application>`. These are now provided automatically by the plugin's own manifest.
-4. **Remove copied Java source files** — delete any `.java` files you copied from the zip's `android_java_code` directory.
-5. **Add the git dependency** as described in Step 1.
-6. Run `flutter pub get`.
+1. **Replace the local plugin.** Delete your local copy of the plugin, usually the `flutter_plugin_identity_sdk` folder. In `pubspec.yaml`, replace its `path:` entry with the git entry from [Step 1](#step-1--add-the-dependency). Then run `flutter clean` and `flutter pub get`.
+2. **Android.** If you copied `CallPluginActivity.java` or `FlutterPluginIdentitySdkPlugin.java` into your app, delete them. Also remove the `CallPluginActivity` entry from `AndroidManifest.xml` and the `idmission-mediumsdk` dependency line from `app/build.gradle`; the plugin adds these itself. Keep the IDmission Maven repository ([Step 2b](#2b-add-the-idmission-maven-repository)).
+3. **iOS.** Remove any Swift files you added from the zip to the Runner target (`FlutterPluginIdentitySdkPlugin.swift`, `IDentitySDKHelper.swift`, `ViewController.swift`, `SuccessViewController.swift`, `UserDefaults+IDentitySample.swift`). Replace your Podfile with the one in [Step 3a](#3a-create-or-replace-your-podfile), then reinstall the pods:
+
+   ```bash
+   cd ios
+   rm -rf Pods Podfile.lock
+   LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 pod install --repo-update
+   cd ..
+   ```
+
+4. **Test.** Run your app on a device and test one service.
 
 ---
 

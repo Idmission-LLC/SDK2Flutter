@@ -52,7 +52,7 @@ void main() {
     tearDown(() => FlutterPluginIdentitySdkPlatform.instance = initialPlatform);
 
     test('idm_sdk_init applies the documented option defaults', () async {
-      final result = await FlutterPluginIdentitySdk.idm_sdk_init('https://api.idmission.com/', 'TOKEN');
+      final result = await FlutterPluginIdentitySdk.idm_sdk_init('https://api.idmission.com/', 'n', 'TOKEN');
 
       expect(result, 'SDK Successfully Initialized');
       expect(fake.initArgs, {
@@ -68,8 +68,8 @@ void main() {
     });
 
     test('idm_sdk_init passes the options through', () async {
-      await FlutterPluginIdentitySdk.idm_sdk_init('u', 't',
-          language: 'ar', enableGPS: false, geolocationRequired: true, isUpdateModelsData: false, enableScreenRecording: true, enableDebugMode: true);
+      await FlutterPluginIdentitySdk.idm_sdk_init('u', 'y', 't',
+          language: 'ar', enableGPS: false, geolocationRequired: true, isUpdateModelsData: false, enableScreenRecording: true);
 
       expect(fake.initArgs!['language'], 'ar');
       expect(fake.initArgs!['enableGPS'], false);
@@ -77,6 +77,15 @@ void main() {
       expect(fake.initArgs!['isUpdateModelsData'], false);
       expect(fake.initArgs!['enableScreenRecording'], true);
       expect(fake.initArgs!['enableDebugMode'], true);
+    });
+
+    test('idm_sdk_init keeps the earlier (apiBaseUrl, debug, accessToken) call working', () async {
+      await FlutterPluginIdentitySdk.idm_sdk_init('u', 'y', 't');
+      expect(fake.initArgs!['accessToken'], 't');
+      expect(fake.initArgs!['enableDebugMode'], true);
+
+      await FlutterPluginIdentitySdk.idm_sdk_init('u', 'n', 't');
+      expect(fake.initArgs!['enableDebugMode'], false);
     });
 
     test('getSDKInfo is forwarded to the platform', () async {

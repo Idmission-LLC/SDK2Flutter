@@ -27,8 +27,8 @@ import 'package:flutter_plugin_identity_sdk/flutter_plugin_identity_sdk.dart';
 // 1. Initialise once (e.g. in initState or after splash)
 await FlutterPluginIdentitySdk.idm_sdk_init(
   'https://api.idmission.com/',  // API base URL — provided by IDmission
+  'n',                            // debug — 'y' for verbose logging
   accessToken,                    // access token — see INTEGRATION_GUIDE.md
-  // enableDebugMode: true,       // optional — verbose logging, default false
 );
 
 // 2. Call a service
