@@ -1,7 +1,7 @@
 # IDmission Flutter Plugin — Integration Guide
 
 **Plugin:** `flutter_plugin_identity_sdk`  
-**Android native SDK:** 11.1.19.2.05  
+**Android native SDK:** 11.1.19.2.10  
 **iOS native SDK:** 11.1.19.2.2  
 **Minimum Flutter:** 3.38.0  
 **Minimum Dart:** 3.10.0
