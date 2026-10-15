@@ -1,7 +1,7 @@
 ## 11.1.19
 
 **Android native SDK: 11.1.19.2.10**
-**iOS native SDK: 11.1.19.2.2**
+**iOS native SDK: 11.1.19.2.5**
 
 * Minimum Flutter raised from 3.3.0 to 3.38.0 and minimum Dart from 3.9.2 to 3.10.0 (`pubspec.yaml` and documentation)
 
@@ -13,7 +13,7 @@
 * Java source/target compatibility and Kotlin `jvmTarget` lowered from 21 to 17 (plugin and example app), the same as the React Native wrapper. JDK 17 or newer can build the plugin
 
 ### iOS
-* Bumped IDentityMediumSDK2.0 to 11.1.19.2.2
+* Bumped IDentityMediumSDK2.0 to 11.1.19.2.5
 * Removed the `GoogleMLKit/TextRecognition`, `TensorFlowLiteSwift` and `GZIP` dependencies — the iOS SDK no longer needs them
 * The `cocoapods-user-defined-build-types` plugin is no longer required
 * Fixed service calls (ID Validation, Face Match, etc.) never starting the capture screen, leaving the caller waiting forever, on apps using the UIScene lifecycle

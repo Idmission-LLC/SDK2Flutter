@@ -102,14 +102,14 @@ void main() {
   group('getSDKInfo', () {
     test('returns the version and models', () async {
       reply = {
-        'version': 'IOS_Medium_11.1.19_2_2',
+        'version': 'IOS_Medium_11.1.19_2_5',
         'models': [
           {'name': 'Liveness', 'value': 'liveness.tflite'},
         ],
       };
       final info = await platform.getSDKInfo();
 
-      expect(info['version'], 'IOS_Medium_11.1.19_2_2');
+      expect(info['version'], 'IOS_Medium_11.1.19_2_5');
       expect((info['models'] as List).single['name'], 'Liveness');
     });
 
