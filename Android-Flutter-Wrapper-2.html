@@ -98,8 +98,8 @@
             <ul class="sub-steps" style="margin-bottom: 20px;">
                 <li class="sub-step"><span class="sub-bullet"></span><div><strong>Flutter</strong> 3.38.0 or later — <a href="https://docs.flutter.dev/get-started/install" target="_blank">Flutter installation guide →</a></div></li>
                 <li class="sub-step"><span class="sub-bullet"></span><div><strong>Java 17</strong> — the plugin compiles with <code>sourceCompatibility JavaVersion.VERSION_17</code>; use JDK 17 or newer</div></li>
-                <li class="sub-step"><span class="sub-bullet"></span><div><strong>Android Gradle Plugin</strong> 8.9.1 or later</div></li>
-                <li class="sub-step"><span class="sub-bullet"></span><div><strong>Kotlin</strong> 2.1.0 or later</div></li>
+                <li class="sub-step"><span class="sub-bullet"></span><div><strong>Android Gradle Plugin</strong> 8.11.1 or later</div></li>
+                <li class="sub-step"><span class="sub-bullet"></span><div><strong>Kotlin</strong> 2.2.20 or later</div></li>
                 <li class="sub-step"><span class="sub-bullet"></span><div><strong>minSdk 26</strong> (Android 8.0) — required by the IDmission native SDK</div></li>
             </ul>
             <div class="callout"><strong>Flutter template variables:</strong> <code>flutter create</code> generates <code>compileSdk = flutter.compileSdkVersion</code>, <code>minSdk = flutter.minSdkVersion</code>, and <code>targetSdk = flutter.targetSdkVersion</code>. Replace all three with the hardcoded values shown in Step 2 — the plugin requires exact versions.</div>
@@ -185,13 +185,6 @@
 }</code></pre>
                                 </div>
                             </div>
-                        </div>
-                        <p>If your <code>Application</code> class does not extend <code>MultiDexApplication</code>, also add this to <code>AndroidManifest.xml</code>:</p>
-                        <div class="code-block">
-                            <div class="code-block-header"><span class="code-lang">XML</span><button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
-                            <pre><code>&lt;application
-    android:name="androidx.multidex.MultiDexApplication"
-    ...&gt;</code></pre>
                         </div>
                     </div>
                 </li>

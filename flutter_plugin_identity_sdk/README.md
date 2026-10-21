@@ -57,7 +57,7 @@ await FlutterPluginIdentitySdk.submit_result();
 |-------------|---------|-----|
 | Minimum OS | API 26 (Android 8.0) | iOS 15.6 |
 | Language | Java 17 | Swift 5.0 |
-| Build tools | AGP 8.9.1+, Kotlin 2.1.0+ | CocoaPods |
+| Build tools | AGP 8.11.1+, Kotlin 2.2.20+ | CocoaPods |
 
 > For full setup instructions including Maven repository config, Podfile, Info.plist permissions, and troubleshooting, see the [Integration Guide](../INTEGRATION_GUIDE.md).
 

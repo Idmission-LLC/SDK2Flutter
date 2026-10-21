@@ -27,7 +27,7 @@ flutter pub get
 
 | Platform | Minimum |
 |----------|---------|
-| Android | API 26 (Android 8.0), Java 17, AGP 8.9.1+ |
+| Android | API 26 (Android 8.0), Java 17, AGP 8.11.1+ |
 | iOS | iOS 15.6, CocoaPods |
 | Flutter | 3.38.0 / Dart 3.10.0 |
 

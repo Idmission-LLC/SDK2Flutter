@@ -17,8 +17,8 @@
 | Android minSdk | 26 (Android 8.0) | Set explicitly in your app |
 | Android compileSdk | 36 | |
 | Java | 17 | Plugin compiles with Java 17 — use JDK 17 or newer |
-| Kotlin | 2.1.0+ | |
-| Android Gradle Plugin | 8.9.1+ | |
+| Kotlin | 2.2.20+ | |
+| Android Gradle Plugin | 8.11.1+ | |
 | iOS deployment target | 15.6 | |
 | CocoaPods | latest | Run `sudo gem install cocoapods` |
 
@@ -157,22 +157,6 @@ allprojects {
 ```
 
 > **Important — Kotlin DSL only:** Do **not** place the Maven repository inside `dependencyResolutionManagement.repositories` in `settings.gradle.kts`. Flutter's Gradle plugin uses `includeBuild`, which is incompatible with `dependencyResolutionManagement`. The `allprojects { repositories { ... } }` block in `build.gradle.kts` is the correct location for Flutter projects.
-
-### 2c. Enable multidex (if not already)
-
-If your `Application` class does not already extend `MultiDexApplication`, add this to your `AndroidManifest.xml`:
-
-```xml
-<application
-    android:name="androidx.multidex.MultiDexApplication"
-    ...>
-```
-
-Or extend it in your custom Application class:
-
-```kotlin
-class MyApp : MultiDexApplication() { ... }
-```
 
 > **Physical device required:** The IDentity SDK requires a physical Android device — the Android Emulator does not support camera capture and will not run the SDK flows.
 
