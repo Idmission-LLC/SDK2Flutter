@@ -166,9 +166,12 @@ allprojects {
 
 ### 3a. Create or replace your Podfile
 
-Create `ios/Podfile` if it does not exist (a freshly generated Flutter project does not include one), or replace its entire contents with the following:
+Create `ios/Podfile` if it does not exist (a freshly generated Flutter project does not include one), or replace its entire contents with the following. The two `source` lines come first: IDmission publishes the iOS SDK to its own specs repo, because CocoaPods trunk stops accepting new versions on 2 December 2026, and trunk still serves your other pods.
 
 ```ruby
+source 'https://github.com/Idmission-LLC/cocoapods-specs.git'
+source 'https://cdn.cocoapods.org/'
+
 platform :ios, '15.6'
 
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
