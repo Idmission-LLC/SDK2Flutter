@@ -16,7 +16,7 @@ Provides identity verification, document capture, face match, and biometric enro
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'IDentityMediumSDK2.0'
+  s.dependency 'IDentityMediumSDK2.0', '11.1.19.2.5'
   s.platform = :ios, '15.6'
   
   # Flutter.framework does not contain a i386 slice.
