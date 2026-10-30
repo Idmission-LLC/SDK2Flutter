@@ -2,7 +2,7 @@ PODS:
   - Flutter (1.0.0)
   - flutter_plugin_identity_sdk (11.1.19):
     - Flutter
-    - IDentityMediumSDK2.0
+    - IDentityMediumSDK2.0 (= 11.1.19.2.5)
   - IDentityMediumSDK2.0 (11.1.19.2.5)
   - mobile_scanner (7.0.0):
     - Flutter
@@ -14,35 +14,31 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_plugin_identity_sdk (from `.symlinks/plugins/flutter_plugin_identity_sdk/ios`)
-  - IDentityMediumSDK2.0 (from `https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git`, tag `11.1.19.2.5`)
+  - IDentityMediumSDK2.0 (= 11.1.19.2.5)
   - mobile_scanner (from `.symlinks/plugins/mobile_scanner/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+
+SPEC REPOS:
+  https://github.com/Idmission-LLC/cocoapods-specs.git:
+    - IDentityMediumSDK2.0
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   flutter_plugin_identity_sdk:
     :path: ".symlinks/plugins/flutter_plugin_identity_sdk/ios"
-  IDentityMediumSDK2.0:
-    :git: https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git
-    :tag: 11.1.19.2.5
   mobile_scanner:
     :path: ".symlinks/plugins/mobile_scanner/darwin"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
-CHECKOUT OPTIONS:
-  IDentityMediumSDK2.0:
-    :git: https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git
-    :tag: 11.1.19.2.5
-
 SPEC CHECKSUMS:
-  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  flutter_plugin_identity_sdk: 8889a2be57e8c8c71735415a5a44581db8f79a8d
-  IDentityMediumSDK2.0: 894c4c54aa3d00cbef3cc79ed529ce6e887390b8
+  Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
+  flutter_plugin_identity_sdk: b5678fa5038f603a03aac04b6a3e433164ec46a2
+  IDentityMediumSDK2.0: 6be2858fd3697d9b2bed3b0b20caa50538486907
   mobile_scanner: 9157936403f5a0644ca3779a38ff8404c5434a93
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
 
-PODFILE CHECKSUM: c18edb8dc6422f71d686e902b9b86777cad62039
+PODFILE CHECKSUM: 10b47417696976386baa867273ced62c8df147e9
 
 COCOAPODS: 1.16.2
