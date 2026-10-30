@@ -1,3 +1,7 @@
+# IDmission's specs repo first (CocoaPods trunk is read-only from 2026-12-02), then trunk for everything else
+source 'https://github.com/Idmission-LLC/cocoapods-specs.git'
+source 'https://cdn.cocoapods.org/'
+
 # Uncomment this line to define a global platform for your project
  platform :ios, '15.6'
 
@@ -32,7 +36,7 @@ target 'Runner' do
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
-  pod 'IDentityMediumSDK2.0', :git => 'https://gitlab.idmission.com/apps/sdk2.0/ios/cocoapods/identitymediumsdk2.0.git', :tag => '11.1.19.2.5'
+  pod 'IDentityMediumSDK2.0', '11.1.19.2.5'
 
   target 'RunnerTests' do
     inherit! :search_paths

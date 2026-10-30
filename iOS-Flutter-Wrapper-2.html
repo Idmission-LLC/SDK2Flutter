@@ -112,7 +112,10 @@
                         <div class="callout"><strong>Why <code>use_modular_headers!</code> instead of <code>use_frameworks!</code>?</strong> The IDentity SDK is a pre-compiled <code>.xcframework</code> Using <code>use_frameworks!</code> globally causes linker conflicts.</div>
                         <div class="code-block scrollable">
                             <div class="code-block-header"><span class="code-lang">Ruby — ios/Podfile</span><button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
-                            <pre><code>platform :ios, '15.6'
+                            <pre><code>source 'https://github.com/Idmission-LLC/cocoapods-specs.git'
+source 'https://cdn.cocoapods.org/'
+
+platform :ios, '15.6'
 
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
